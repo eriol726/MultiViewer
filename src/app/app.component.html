@@ -11,6 +11,32 @@
     <div class="column" style="background-color:#aaa;">
       <h2>Column 1</h2>
       <p>Some text..</p>
+      <div
+        cdkDropList
+        #todoList="cdkDropList"
+        [cdkDropListData]="newItems"
+        [cdkDropListConnectedTo]="[doneList]"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <mat-expansion-panel *ngFor="let item of newItems; let i = index" cdkDrag>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                  <ng-container *ngIf="i < 1; else lightGreen" >
+                    <div id="circle" style="background: rgb(38, 143, 85)"></div>{{item}}
+                  </ng-container>
+                  <ng-template #lightGreen>
+                      <ng-container *ngIf="i > 0 && i < 2;else yellow">
+                        <div id="circle" style="background: rgb(59, 253, 91)"></div>{{item}}
+                      </ng-container>
+                  </ng-template>
+                  <ng-template #yellow>
+                      <div id="circle" style="background: rgb(237, 253, 6)"></div>{{item}}
+                  </ng-template>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>I'm visible because I am open</p>
+          </mat-expansion-panel>
+      </div>
     </div>
     <div class="column" style="background-color:#bbb;">
       <h2>Column 2</h2>
@@ -19,37 +45,21 @@
     <div class="column" style="background-color:#ccc;">
       <h2>Column 3</h2>
       <p>Some text..</p>
-      <mat-accordion>
-        <mat-expansion-panel>
+      <div
+        cdkDropList
+        #doneList="cdkDropList"
+        [cdkDropListData]="done"
+        [cdkDropListConnectedTo]="[todoList]"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <mat-expansion-panel *ngFor="let item of done" cdkDrag>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              Personal data
+                <div id="circle" style="background: rgb(3, 37, 231)"></div>{{item}}
             </mat-panel-title>
-            <mat-panel-description>
-              Type your name and age
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-      
-          <mat-form-field>
-            <input matInput placeholder="First name">
-          </mat-form-field>
-      
-          <mat-form-field>
-            <input matInput placeholder="Age">
-          </mat-form-field>
-        </mat-expansion-panel>
-        <mat-expansion-panel (opened)="panelOpenState = true"
-                             (closed)="panelOpenState = false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Self aware panel
-            </mat-panel-title>
-            <mat-panel-description>
-              Currently I am {{panelOpenState ? 'open' : 'closed'}}
-            </mat-panel-description>
           </mat-expansion-panel-header>
           <p>I'm visible because I am open</p>
         </mat-expansion-panel>
-      </mat-accordion>
+      </div>
     </div>
   </div>
