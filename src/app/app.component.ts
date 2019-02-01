@@ -10,7 +10,7 @@ import { PusherService } from './pusher.service';
 })
 export class AppComponent {
   title = 'multiViewer';
-
+  steps = [];
   likes: any = 10;
 
   tasks = { "content" : [
@@ -45,14 +45,26 @@ export class AppComponent {
 
   ngOnInit(){
     this.pusherService.channel.bind('new-like', data => {
+      this.steps = [false,false,false,false];
       this.likes = data.likes;
     });
   }
 
   // add to the number of likes to the server
-  liked() {
+  liked(index) {
+    index = 0;
+    this.steps[0]=true;
     this.likes = parseInt(this.likes, 10) + 1;
+    console.log("index: ", index);
     this.pusherService.like(this.likes);
+    // if(this.steps[index]){
+    //   console.log("close");
+    //   this.steps[index]=false;
+    // }
+    // else{
+    //   console.log("open");
+    //   this.steps[index]=true;
+    // }
     // ..
   }
   //https://blog.angularindepth.com/exploring-drag-and-drop-with-the-angular-material-cdk-2e0237857290
