@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { PusherService } from './pusher.service';
+
 
 @Component({
   selector: 'app-root',
@@ -9,20 +11,26 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 export class AppComponent {
   title = 'multiViewer';
 
-  newItems = [
-    'Item 0',
-    'Item 1',
-    'Item 2',
-    'Item 3',
-  ]
+  likes: any = 10;
 
-  done = [
-    'Get up',
-    'Brush teeth',
-    'Take a shower',
-    'Check e-mail',
-    'Walk dog'
-  ];
+  tasks = { "content" : [
+      {"text": "task 0", "color":"rgb(38, 143, 85)"},
+      {"text": "task 1", "color":"rgb(59, 253, 91)"},
+      {"text": "task 2", "color":"rgb(59, 253, 91)"},
+      {"text": "task 3", "color":"rgb(237, 253, 6)"}
+    ]
+  };
+
+  done = { "content" : [
+    {"text": "done 0", "color":"rgb(3, 37, 231)"},
+    {"text": "done 1", "color":"rgb(3, 37, 231)"}
+  ]
+};
+
+
+  constructor(private pusherService: PusherService) {
+    console.log(this.tasks.content);            
+  } 
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -33,6 +41,19 @@ export class AppComponent {
                         event.previousIndex,
                         event.currentIndex);
     }
+  }
+
+  ngOnInit(){
+    this.pusherService.channel.bind('new-like', data => {
+      this.likes = data.likes;
+    });
+  }
+
+  // add to the number of likes to the server
+  liked() {
+    this.likes = parseInt(this.likes, 10) + 1;
+    this.pusherService.like(this.likes);
+    // ..
   }
   //https://blog.angularindepth.com/exploring-drag-and-drop-with-the-angular-material-cdk-2e0237857290
 }

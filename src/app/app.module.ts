@@ -31,3 +31,5 @@ import { LeftDisplayComponent } from './displays/left-display.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+platformBrowserDynamic().bootstrapModule(AppModule);

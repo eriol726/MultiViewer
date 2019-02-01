@@ -14,23 +14,23 @@
       <div
         cdkDropList
         #todoList="cdkDropList"
-        [cdkDropListData]="newItems"
+        [cdkDropListData]="tasks.content"
         [cdkDropListConnectedTo]="[doneList]"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <mat-expansion-panel *ngFor="let item of newItems; let i = index" cdkDrag>
+        <mat-expansion-panel *ngFor="let item of tasks.content; let i = index" cdkDrag>
             <mat-expansion-panel-header>
               <mat-panel-title>
                   <ng-container *ngIf="i < 1; else lightGreen" >
-                    <div id="circle" style="background: rgb(38, 143, 85)"></div>{{item}}
+                    <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
                   </ng-container>
                   <ng-template #lightGreen>
                       <ng-container *ngIf="i > 0 && i < 2;else yellow">
-                        <div id="circle" style="background: rgb(59, 253, 91)"></div>{{item}}
+                        <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
                       </ng-container>
                   </ng-template>
                   <ng-template #yellow>
-                      <div id="circle" style="background: rgb(237, 253, 6)"></div>{{item}}
+                      <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
                   </ng-template>
               </mat-panel-title>
             </mat-expansion-panel-header>
@@ -48,14 +48,14 @@
       <div
         cdkDropList
         #doneList="cdkDropList"
-        [cdkDropListData]="done"
+        [cdkDropListData]="done.content"
         [cdkDropListConnectedTo]="[todoList]"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <mat-expansion-panel *ngFor="let item of done" cdkDrag>
+        <mat-expansion-panel *ngFor="let item of done.content" cdkDrag>
           <mat-expansion-panel-header>
             <mat-panel-title>
-                <div id="circle" style="background: rgb(3, 37, 231)"></div>{{item}}
+                <div id="circle" style="background: rgb(3, 37, 231)"></div>{{item.text}}
             </mat-panel-title>
           </mat-expansion-panel-header>
           <p>I'm visible because I am open</p>
@@ -63,3 +63,15 @@
       </div>
     </div>
   </div>
+
+  <div class="main-app">
+      <h1>
+        {{ title }}!
+      </h1>
+      <div class="like">
+        <div style="margin-right: 1rem">
+          <h2>{{ likes }} likes</h2>
+        </div>
+        <button class="btn btn-lg btn-success" (click)="liked()">Like Image</button>
+      </div>
+    </div>
