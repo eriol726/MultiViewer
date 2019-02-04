@@ -6,7 +6,6 @@
     </ul>
   <router-outlet></router-outlet>
 </div>
-
   <div class="row">
     <div class="column" style="background-color:#aaa;">
       <h2>Column 1</h2>
@@ -18,9 +17,9 @@
         [cdkDropListConnectedTo]="[doneList]"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <mat-expansion-panel *ngFor="let item of tasks.content; let i = index" [expanded]="steps[i]" cdkDrag>
-          <mat-expansion-panel-header (click)="liked(i)">
-            <mat-panel-title>
+        <mat-expansion-panel *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
+          <mat-expansion-panel-header >
+            <mat-panel-title (click)="show(i)" >
                 <ng-container *ngIf="i < 1; else lightGreen" >
                   <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
                 </ng-container>
@@ -42,7 +41,7 @@
       <h2>Column 2</h2>
       <p>Some text..</p>
     </div>
-    <div class="column" style="background-color:#ccc;">
+    <div class="column" style="background-color:#ccc;" >
       <h2>Column 3</h2>
       <p>Some text..</p>
       <div
@@ -75,3 +74,7 @@
         <button class="btn btn-lg btn-success" (click)="liked()">Like Image</button>
       </div>
     </div>
+    <!-- <app-left-display></app-left-display> -->
+
+    <app-right [expand]="expand" [tasks]="tasks"></app-right>
+

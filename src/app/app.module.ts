@@ -10,12 +10,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 
 
-import { LeftDisplayComponent } from './displays/left-display.component';
+import { LeftDisplayComponent } from "./displays/left-display.component";
+import { RightComponent } from './right/right.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LeftDisplayComponent
+    LeftDisplayComponent,
+    RightComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +29,7 @@ import { LeftDisplayComponent } from './displays/left-display.component';
     MatNativeDateModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
