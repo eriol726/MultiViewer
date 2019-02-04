@@ -1,0 +1,20 @@
+<div class="column" style="background-color:#ccc;" >
+    <h2>Column 3</h2>
+    <p>Some text..</p>
+    <div
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="done.content"
+      [cdkDropListConnectedTo]="[todoList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      <mat-expansion-panel *ngFor="let item of done.content" cdkDrag>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+              <div id="circle" style="background: rgb(3, 37, 231)"></div>{{item.text}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>I'm visible because I am open</p>
+      </mat-expansion-panel>
+    </div>
+  </div>

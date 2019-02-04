@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChildren } from '@angular/core';
 import { AppComponent} from "../app.component";
 import { Injectable } from '@angular/core';
 import { RightComponent } from "../right/right.component";
@@ -11,12 +11,22 @@ import { RightComponent } from "../right/right.component";
 
 export class LeftDisplayComponent implements AfterViewInit {
   @Input() tasks: string;
+  @ViewChildren('panel') rightPanel;
+  @Input() done: string;
   open: any = [];
-  constructor(public myapp: AppComponent) { 
-    console.log("this.myapp ", this.myapp.tasks);
+  constructor() { 
   }
 
-  
+  show(index){
+    if(this.rightPanel._results[index].expanded == false){
+      this.rightPanel._results[index].expanded = true;
+    }
+    else{
+      this.rightPanel._results[index].expanded = false;
+    }
+    
+    console.log("index: ", index , " " , this.rightPanel._results[index]);
+  }
 
   ngAfterViewInit(){
     

@@ -3,6 +3,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import { PusherService } from './pusher.service';
 import {HttpClientModule} from '@angular/common/http';
 import { RightComponent } from './right/right.component';
+import { LeftDisplayComponent } from './displays/left-display.component';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ export class AppComponent {
 
   @ViewChildren('panel') linkRefs;
   @ViewChild(RightComponent) child: RightComponent;
+  @ViewChild(LeftDisplayComponent) leftDisplay: LeftDisplayComponent;
 
   likes: any = 10;
   private myTemplate: any = "";
@@ -63,6 +65,12 @@ export class AppComponent {
   show(index){
     console.log("index: ", index);
     this.child.show(index);
+    //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
+  }
+
+  handleLeftPanel(index){
+    console.log("index: ", index);
+    this.leftDisplay.show(index);
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
