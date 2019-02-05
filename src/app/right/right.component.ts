@@ -32,4 +32,6 @@ export class RightComponent implements AfterViewInit {
     
   }
 
+  
+
 }

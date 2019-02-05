@@ -20,6 +20,10 @@
     border-radius: 50%;
 }
 
+.container {
+  height: 100vh;
+}
+
 
 .example-container {
     width: 400px;

@@ -5,6 +5,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { RightComponent } from './right/right.component';
 import { LeftComponent } from './left/left.component';
 import * as Plotly from 'plotly.js';
+import { MiddleComponent } from './middle/middle.component';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +15,14 @@ import * as Plotly from 'plotly.js';
 
 export class AppComponent {
   title = 'multiViewer';
+  graphDataOriginal = 0;
+  graphDataImproved  = 0;
   
   @ViewChildren('chartTablet') chartTablet;
   @ViewChildren('rightPanel') rightPanelTablet;
   @ViewChild(RightComponent) rightPanel: RightComponent;
   @ViewChild(LeftComponent) leftPanel: LeftComponent;
+  @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
 
   likes: any = 10;
   private myTemplate: any = "";
@@ -77,9 +81,11 @@ export class AppComponent {
 
     if(this.rightPanelTablet._results[index].expanded == false){
       Plotly.restyle('chartTablet', update2, [0]);
+      this.middlePanel.changeColor(update2);
     }
     else{
       Plotly.restyle('chartTablet', update, [0]);
+      this.middlePanel.changeColor(update);
     }
     
 
@@ -105,6 +111,7 @@ export class AppComponent {
       number = 0.1;
     }
 
+    this.graphDataOriginal = number;
     return number;
 
   }
@@ -118,7 +125,8 @@ export class AppComponent {
     else{
       number = 0.1;
     }
-
+    
+    this.graphDataImproved = number;
     return number;
 
   }
@@ -145,10 +153,8 @@ export class AppComponent {
           color: '#ab63fa'
         }
       }
-  ]);
+    ]);
 
-
-  
     var cnt = 0;
     setInterval(function(){
         Plotly.extendTraces('chartTablet',{ y:[[this.getData(cnt)], [this.getData2(cnt)]]} , [0,1]);

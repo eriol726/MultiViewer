@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output  } from '@angular/core';
 import * as Plotly from 'plotly.js';
 
 @Component({
@@ -7,8 +7,11 @@ import * as Plotly from 'plotly.js';
   styleUrls: ['./middle.component.css']
 })
 export class MiddleComponent implements OnInit {
-
+  @Output() childEvent = new EventEmitter();
+  @Input() graphDataOriginal;
+  @Input() graphDataImproved;  
   @ViewChild('chart') el: ElementRef;
+
   public graph = {
     data: [
         { x: [1, 2, 3], y: [2, 6, 3], type: 'scatter', mode: 'lines+points', marker: {color: 'red'} },
@@ -23,38 +26,48 @@ export class MiddleComponent implements OnInit {
     this.basicChart();
   }
 
-  getData(){
-    return Math.random();
+  changeColor(style){
+    Plotly.restyle('chart', style, [0]);
   }
 
   basicChart() {
-    const chartElm = this.el.nativeElement
+    var grayColor = '#ab63fa';
+    Plotly.plot('chart',[
+      {
+        y:[this.graphDataOriginal],
+        type:"scatter",
+        fill: 'tozeroy',
+        fillcolor: '#ab63fa',
+        line: {
+          color: '#ab63fa'
+        }
 
-    const data = [{
-      x: [1, 2, 3, 4, 5],
-      y: [1, 2, 4, 8, 16]
-    }]
+      },
+      {
+        y:[this.graphDataImproved],
+        type:"scatter",
+        fill: 'tozeroy',
+        fillcolor: '#ab63fa',
+        line: {
+          color: '#ab63fa'
+        }
+      }
+    ]);
 
-    const style = {
-      margin: { t: 0 }
-    }
-
-    Plotly.plot(chartElm,[{
-      y:[this.getData()],
-      type:"scatter"
-    }]);
-  
     var cnt = 0;
     setInterval(function(){
-        Plotly.extendTraces(chartElm,{ y:[[this.getData()]]}, [0]);
+        Plotly.extendTraces('chart',{ y:[[this.graphDataOriginal], [this.graphDataImproved]]} , [0,1]);
         cnt++;
-        if(cnt > 500) {
-            Plotly.relayout(chartElm,{
-                xaxis: {
-                    range: [cnt-500,cnt]
-                }
-            });
-        }
+
+        Plotly.relayout('chart',{
+            xaxis: {
+                range: [cnt-50,cnt]
+            },
+            yaxis: {
+                range: [-0.2,1]
+            }
+        });
+ 
     }.bind(this),15);
   }
 

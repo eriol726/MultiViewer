@@ -1,3 +1,4 @@
+<div class="container">
 <div class="row">
     <div class="column">
       <div
@@ -28,9 +29,7 @@
       </div>
     </div>
     <div class="column">
-      <div id="chartTablet" #chartTablet>
-        <!-- Chart will appear here -->
-      </div>
+      <div id="chartTablet" #chartTablet></div>
     </div>
     <div class="column" >
       <div
@@ -51,10 +50,19 @@
       </div>
     </div>
   </div>
+</div>
 
-    <app-left [expand]="expand" [tasks]="tasks"></app-left>
-    <app-middle></app-middle>
-    <app-right [done]="done"></app-right>
+<div class="container">
+  <app-left [expand]="expand" [tasks]="tasks"></app-left>
+</div>
+
+<div class="container">
+  <app-middle [graphDataOriginal]="graphDataOriginal" [graphDataImproved]="graphDataImproved" ></app-middle>
+</div>
+
+<div class="container">
+  <app-right [done]="done"></app-right>
+</div>
     
     
 
