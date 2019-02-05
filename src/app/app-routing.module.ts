@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LeftDisplayComponent } from 'src/app/displays/left-display.component';
+import { LeftComponent } from "./left/left.component";
 
 const routes: Routes = [
-  { path: 'displayLeft', component: LeftDisplayComponent},
+  { path: 'displayLeft', component: LeftComponent},
   { path: '', redirectTo: '/', pathMatch: 'full'}
 ];
 

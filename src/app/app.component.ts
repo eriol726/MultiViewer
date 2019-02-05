@@ -3,7 +3,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import { PusherService } from './pusher.service';
 import {HttpClientModule} from '@angular/common/http';
 import { RightComponent } from './right/right.component';
-import { LeftDisplayComponent } from './displays/left-display.component';
+import { LeftComponent } from './left/left.component';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +14,8 @@ import { LeftDisplayComponent } from './displays/left-display.component';
 export class AppComponent {
   title = 'multiViewer';
 
-  @ViewChildren('panel') linkRefs;
-  @ViewChild(RightComponent) child: RightComponent;
-  @ViewChild(LeftDisplayComponent) leftDisplay: LeftDisplayComponent;
+  @ViewChild(RightComponent) rightPanel: RightComponent;
+  @ViewChild(LeftComponent) leftPanel: LeftComponent;
 
   likes: any = 10;
   private myTemplate: any = "";
@@ -55,22 +54,21 @@ export class AppComponent {
   }
 
   ngOnInit(){
-    console.log("linkRefs: ", this.linkRefs);
     this.pusherService.channel.bind('new-like', data => {
       //this.expand = [false,false,false,false];
       this.likes = data.likes;
     });
   }
 
-  show(index){
+  handleRightPanel(index){
     console.log("index: ", index);
-    this.child.show(index);
+    this.rightPanel.show(index);
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
   handleLeftPanel(index){
     console.log("index: ", index);
-    this.leftDisplay.show(index);
+    this.leftPanel.show(index);
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 

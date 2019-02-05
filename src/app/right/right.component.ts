@@ -1,33 +1,35 @@
-import { Component, ViewChildren, OnInit, Input } from '@angular/core';
-import { AppComponent } from '../app.component';
+import { Component, AfterViewInit, Input, ViewChildren } from '@angular/core';
+import { AppComponent} from "../app.component";
+import { Injectable } from '@angular/core';
+import { LeftComponent } from "../left/left.component";
 
 @Component({
   selector: 'app-right',
   templateUrl: './right.component.html',
   styleUrls: ['./right.component.css']
 })
-export class RightComponent implements OnInit {
+
+export class RightComponent implements AfterViewInit {
   @Input() tasks: string;
-  @Input() expand;
-  @ViewChildren('panel') panel;
-
-
-  constructor() {
-
+  @ViewChildren('panel') leftPanel;
+  @Input() done: string;
+  open: any = [];
+  constructor() { 
   }
 
   show(index){
-    if(this.panel._results[index].expanded == false){
-      this.panel._results[index].expanded = true;
+    if(this.leftPanel._results[index].expanded == false){
+      this.leftPanel._results[index].expanded = true;
     }
     else{
-      this.panel._results[index].expanded = false;
+      this.leftPanel._results[index].expanded = false;
     }
     
-    console.log("index: ", index , " " , this.panel._results[index]);
+    console.log("index: ", index , " " , this.leftPanel._results[index]);
   }
 
-  ngOnInit() {
+  ngAfterViewInit(){
+    
   }
 
 }

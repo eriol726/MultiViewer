@@ -10,13 +10,13 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 
 
-import { LeftDisplayComponent } from "./displays/left-display.component";
+import { LeftComponent } from "./left/left.component";
 import { RightComponent } from './right/right.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LeftDisplayComponent,
+    LeftComponent,
     RightComponent
   ],
   imports: [
