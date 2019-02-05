@@ -14,7 +14,9 @@ import * as Plotly from 'plotly.js';
 
 export class AppComponent {
   title = 'multiViewer';
-
+  
+  @ViewChildren('chartTablet') chartTablet;
+  @ViewChildren('rightPanel') rightPanelTablet;
   @ViewChild(RightComponent) rightPanel: RightComponent;
   @ViewChild(LeftComponent) leftPanel: LeftComponent;
 
@@ -39,7 +41,6 @@ export class AppComponent {
 };
 
   constructor(private pusherService: PusherService) {
-    this.myTemplate = this.url;
     console.log(this.tasks.content);           
   } 
 
@@ -55,11 +56,34 @@ export class AppComponent {
   }
 
   ngOnInit(){
-    this.basicChart();
+    this.basicChart('#ab63fa');
   }
 
   handleRightPanel(index){
-    console.log("index: ", index);
+    console.log("this.chartTablet: ", this.chartTablet);
+    var update = {
+      fillcolor: 'gray',
+      line: {
+        color: 'gray'
+      }
+    };
+
+    var update2 = {
+      fillcolor: '#ab63fa',
+      line: {
+        color: '#ab63fa'
+      }
+    };
+
+    if(this.rightPanelTablet._results[index].expanded == false){
+      Plotly.restyle('chartTablet', update2, [0]);
+    }
+    else{
+      Plotly.restyle('chartTablet', update, [0]);
+    }
+    
+
+    '#ab63fa'
     this.rightPanel.show(index);
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
@@ -73,12 +97,12 @@ export class AppComponent {
   getData(time){
     
 
-    var number =  Math.random() * (0.8 - 0.3)+0.3;
+    var number =  Math.random() * (0.8 - 0.1)+0.1;
     if(time%20 == 0){
         number = 0.7;
     }
     else{
-      number = 0.3;
+      number = 0.1;
     }
 
     return number;
@@ -87,22 +111,39 @@ export class AppComponent {
 
   getData2(time){
 
-    return this.getData(time)-0.1;
+    var number =  Math.random() * (0.8 - 0.1)+0.1;
+    if(time%20 == 0){
+        number = 0.7-0.2;
+    }
+    else{
+      number = 0.1;
+    }
+
+    return number;
 
   }
 
-  basicChart() {
-    
+  basicChart(changeColor) {
+    var grayColor = '#ab63fa';
     Plotly.plot('chartTablet',[
       {
         y:[this.getData(0)],
         type:"scatter",
-        fill: 'tonexty',
+        fill: 'tozeroy',
+        fillcolor: '#ab63fa',
+        line: {
+          color: '#ab63fa'
+        }
+
       },
       {
         y:[this.getData2(0)],
         type:"scatter",
-        fill: 'tonexty'
+        fill: 'tozeroy',
+        fillcolor: '#ab63fa',
+        line: {
+          color: '#ab63fa'
+        }
       }
   ]);
 
@@ -110,21 +151,19 @@ export class AppComponent {
   
     var cnt = 0;
     setInterval(function(){
-        Plotly.extendTraces('chartTablet',{ y:[[this.getData(cnt)], [this.getData(cnt)-0.1]]} , [0,1]);
+        Plotly.extendTraces('chartTablet',{ y:[[this.getData(cnt)], [this.getData2(cnt)]]} , [0,1]);
         cnt++;
       
 
         Plotly.relayout('chartTablet',{
             xaxis: {
                 range: [cnt-50,cnt]
+            },
+            yaxis: {
+                range: [-0.2,1]
             }
         });
  
-        Plotly.relayout('chartTablet', {
-            yaxis: {
-                range: [0,1]
-            }
-        });
     }.bind(this),15);
   }
 
