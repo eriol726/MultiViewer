@@ -4,6 +4,7 @@ import { PusherService } from './pusher.service';
 import {HttpClientModule} from '@angular/common/http';
 import { RightComponent } from './right/right.component';
 import { LeftComponent } from './left/left.component';
+import * as Plotly from 'plotly.js';
 
 @Component({
   selector: 'app-root',
@@ -54,10 +55,7 @@ export class AppComponent {
   }
 
   ngOnInit(){
-    this.pusherService.channel.bind('new-like', data => {
-      //this.expand = [false,false,false,false];
-      this.likes = data.likes;
-    });
+    this.basicChart();
   }
 
   handleRightPanel(index){
@@ -72,23 +70,64 @@ export class AppComponent {
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
-  // add to the number of likes to the server
-  liked(index) {
-    index = 0;
-    this.expand[0]=true;
-    this.likes = parseInt(this.likes, 10) + 1;
-    console.log("index: ", index);
-    //this.pusherService.like(this.likes);
-    // if(this.steps[index]){
-    //   console.log("close");
-    //   this.steps[index]=false;
-    // }
-    // else{
-    //   console.log("open");
-    //   this.steps[index]=true;
-    // }
-    // ..
+  getData(time){
+    
+
+    var number =  Math.random() * (0.8 - 0.3)+0.3;
+    if(time%20 == 0){
+        number = 0.7;
+    }
+    else{
+      number = 0.3;
+    }
+
+    return number;
+
   }
+
+  getData2(time){
+
+    return this.getData(time)-0.1;
+
+  }
+
+  basicChart() {
+    
+    Plotly.plot('chartTablet',[
+      {
+        y:[this.getData(0)],
+        type:"scatter",
+        fill: 'tonexty',
+      },
+      {
+        y:[this.getData2(0)],
+        type:"scatter",
+        fill: 'tonexty'
+      }
+  ]);
+
+
+  
+    var cnt = 0;
+    setInterval(function(){
+        Plotly.extendTraces('chartTablet',{ y:[[this.getData(cnt)], [this.getData(cnt)-0.1]]} , [0,1]);
+        cnt++;
+      
+
+        Plotly.relayout('chartTablet',{
+            xaxis: {
+                range: [cnt-50,cnt]
+            }
+        });
+ 
+        Plotly.relayout('chartTablet', {
+            yaxis: {
+                range: [0,1]
+            }
+        });
+    }.bind(this),15);
+  }
+
 
   ngAfterViewInit() {
     //this.child.show(0);

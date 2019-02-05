@@ -8,16 +8,19 @@ import {MatNativeDateModule} from '@angular/material';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
+import { PlotlyModule } from 'angular-plotly.js';
 
 
 import { LeftComponent } from "./left/left.component";
 import { RightComponent } from './right/right.component';
+import { MiddleComponent } from './middle/middle.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LeftComponent,
-    RightComponent
+    RightComponent,
+    MiddleComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,8 @@ import { RightComponent } from './right/right.component';
     FormsModule,
     HttpClientModule,
     MatNativeDateModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PlotlyModule
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent]

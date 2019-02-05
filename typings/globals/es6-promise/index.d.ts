@@ -79,3 +79,5 @@ declare module 'es6-promise' {
 	}
 	export = rsvp;
 }
+
+// declare var Plotly: any;
