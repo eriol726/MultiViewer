@@ -79,12 +79,31 @@ export class AppComponent {
       }
     };
 
+    var update3 = {
+      fillcolor: 'rgba(0,0,0,0)',
+      line: {
+        color: 'rgba(0,0,0,0)'
+      }
+    };
+
     if(this.rightPanelTablet._results[index].expanded == false){
-      Plotly.restyle('chartTablet', update2, [0]);
+      if(index == 0){
+        Plotly.restyle('chartTablet', update2, [0]);
+      }
+      else if(index == 1){
+        Plotly.restyle('chartTablet', update3, [2]);
+      }
+      
       this.middlePanel.changeColor(update2);
     }
     else{
-      Plotly.restyle('chartTablet', update, [0]);
+      if(index == 0){
+        Plotly.restyle('chartTablet', update, [0]);
+      }
+      else if(index == 1){
+        Plotly.restyle('chartTablet', update2, [2]);
+      }
+
       this.middlePanel.changeColor(update);
     }
     
@@ -131,6 +150,21 @@ export class AppComponent {
 
   }
 
+  getData3(time){
+
+    var number =  Math.random() * (0.0 + 0.2)+0.2;
+    if(time%20 == 0){
+        number = 0.0-0.2;
+    }
+    else{
+      number = 0.0;
+    }
+    
+    this.graphDataImproved = number;
+    return number;
+
+  }
+
   basicChart(changeColor) {
     var grayColor = '#ab63fa';
     Plotly.plot('chartTablet',[
@@ -152,12 +186,21 @@ export class AppComponent {
         line: {
           color: '#ab63fa'
         }
+      },
+      {
+        y:[this.getData3(0)],
+        type:"scatter",
+        fill: 'tozeroy',
+        fillcolor: 'rgba(0,0,1,0)',
+        line: {
+          color: 'rgba(0,0,1,0)'
+        }
       }
     ]);
 
     var cnt = 0;
-    //setInterval(function(){
-        Plotly.extendTraces('chartTablet',{ y:[[this.getData(cnt)], [this.getData2(cnt)]]} , [0,1]);
+    setInterval(function(){
+        Plotly.extendTraces('chartTablet',{ y:[[this.getData(cnt)], [this.getData2(cnt)], [this.getData3(cnt)]] }, [0,1,2]);
         cnt++;
       
 
@@ -170,7 +213,7 @@ export class AppComponent {
             }
         });
  
-    //}.bind(this),15);
+    }.bind(this),15);
   }
 
 
