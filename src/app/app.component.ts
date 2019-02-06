@@ -44,7 +44,7 @@ export class AppComponent {
   ]
 };
 
-  constructor(private pusherService: PusherService) {
+  constructor() {
     console.log(this.tasks.content);           
   } 
 
@@ -156,7 +156,7 @@ export class AppComponent {
     ]);
 
     var cnt = 0;
-    setInterval(function(){
+    //setInterval(function(){
         Plotly.extendTraces('chartTablet',{ y:[[this.getData(cnt)], [this.getData2(cnt)]]} , [0,1]);
         cnt++;
       
@@ -170,7 +170,7 @@ export class AppComponent {
             }
         });
  
-    }.bind(this),15);
+    //}.bind(this),15);
   }
 
 

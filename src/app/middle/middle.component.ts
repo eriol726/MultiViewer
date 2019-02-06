@@ -55,7 +55,7 @@ export class MiddleComponent implements OnInit {
     ]);
 
     var cnt = 0;
-    setInterval(function(){
+   // setInterval(function(){
         Plotly.extendTraces('chart',{ y:[[this.graphDataOriginal], [this.graphDataImproved]]} , [0,1]);
         cnt++;
 
@@ -68,7 +68,7 @@ export class MiddleComponent implements OnInit {
             }
         });
  
-    }.bind(this),15);
+   // }.bind(this),15);
   }
 
   // Plotly.plot('chart', [{
