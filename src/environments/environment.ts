@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  ws_url: 'http://localhost:5000',
   pusher: {
     key: "e7100f37e202ae59ed18",
     cluster: "eu",

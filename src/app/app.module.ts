@@ -9,6 +9,8 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 import { PlotlyModule } from 'angular-plotly.js';
+import { ChatService } from './chat.service';
+import { WebsocketService } from './websocket.service';
 
 
 import { LeftComponent } from "./left/left.component";
@@ -35,7 +37,10 @@ import { TabletComponent } from './tablet/tablet.component';
     ReactiveFormsModule,
     PlotlyModule
   ],
-  providers: [AppComponent],
+  providers: [
+    AppComponent,
+    ChatService,
+    WebsocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

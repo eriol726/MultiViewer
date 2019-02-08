@@ -1,4 +1,4 @@
-import { Component, ViewChildren, ViewChild, Input } from '@angular/core';
+import { Component, ViewChildren, ViewChild, Input, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { PusherService } from './pusher.service';
 import {HttpClientModule} from '@angular/common/http';
@@ -7,6 +7,7 @@ import { LeftComponent } from './left/left.component';
 import * as Plotly from 'plotly.js';
 import { MiddleComponent } from './middle/middle.component';
 import { ActionService } from './action.service';
+import { ChatService} from './chat.service';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +15,17 @@ import { ActionService } from './action.service';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
-  constructor( private actionService: ActionService) {
-    actionService.changeEmitted$.subscribe(
-    text => {
-        console.log(text);
-    });
+export class AppComponent implements OnInit{
+  constructor( private chat: ChatService) {}
+
+  ngOnInit(){
+    this.chat.messages.subscribe(msg => {
+      console.log(msg);
+    })
+  }
+
+  sendMessage(){
+    this.chat.sendMsg("test message");
   }
   
   //https://blog.angularindepth.com/exploring-drag-and-drop-with-the-angular-material-cdk-2e0237857290

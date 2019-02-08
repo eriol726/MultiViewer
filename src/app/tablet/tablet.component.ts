@@ -5,6 +5,7 @@ import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ChatService} from '../chat.service';
 
 @Component({
   selector: 'app-tablet',
@@ -35,8 +36,12 @@ export class TabletComponent implements OnInit {
 
   done = {};
 
-  constructor(private actionService : ActionService) { 
+  constructor(private actionService : ActionService, private chat : ChatService) { 
     
+  }
+
+  sendMessage(){
+    this.chat.sendMsg("test message");
   }
 
 
@@ -52,6 +57,11 @@ export class TabletComponent implements OnInit {
   }
 
   ngOnInit(){
+
+    this.chat.messages.subscribe(msg => {
+      console.log(msg);
+    })
+
     this.basicChart('#ab63fa');
     this.tasks = this.actionService.getActions();
     console.log("done ", this.actionService.getCountermeasures())
