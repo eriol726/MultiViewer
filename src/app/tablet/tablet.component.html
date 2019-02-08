@@ -1,0 +1,71 @@
+<div id="container">
+  <div id="container2">
+    <div class="box">
+      <div class="row">
+        <div class="column">
+          <div
+            cdkDropList
+            #todoList="cdkDropList"
+            [cdkDropListData]="tasks.content"
+            [cdkDropListConnectedTo]="[doneList]"
+            class="example-list"
+            (cdkDropListDropped)="drop($event)">
+            <mat-expansion-panel *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
+              <mat-expansion-panel-header (click)="handleLeftPanel(i)">
+                <mat-panel-title >
+                    <ng-container *ngIf="i < 1; else lightGreen" >
+                      <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
+                    </ng-container>
+                    <ng-template #lightGreen>
+                        <ng-container *ngIf="i > 0 && i < 2;else yellow">
+                          <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
+                        </ng-container>
+                    </ng-template>
+                    <ng-template #yellow>
+                        <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
+                    </ng-template>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <p>I'm visible because I am open</p>
+            </mat-expansion-panel>
+          </div>
+        </div>
+        <div class="column">
+          <div id="chartTablet" #chartTablet></div>
+        </div>
+        <div class="column" >
+          <div
+            cdkDropList
+            #doneList="cdkDropList"
+            [cdkDropListData]="done.content"
+            [cdkDropListConnectedTo]="[todoList]"
+            class="example-list"
+            (cdkDropListDropped)="drop($event)">
+            <mat-expansion-panel *ngFor="let item of done.content; let i = index" (click)="handleRightPanel(i)" #rightPanel cdkDrag>
+              <mat-expansion-panel-header>
+                <mat-panel-title >
+                    <div id="circle" style="background: rgb(3, 37, 231)"></div>{{item.text}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <p>I'm visible because I am open</p>
+            </mat-expansion-panel>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="box">
+      <app-left [expand]="expand" [tasks]="tasks"></app-left>
+    </div>
+
+    <div class="box">
+      <app-middle [graphDataOriginal]="graphDataOriginal" [graphDataImproved]="graphDataImproved" ></app-middle>
+    </div>
+
+    <div class="box">
+      <app-right [done]="done"></app-right>
+    </div>
+  </div>
+</div>    
+    
+

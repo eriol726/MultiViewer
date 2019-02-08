@@ -1,5 +1,6 @@
-import { Component, ViewChildren, OnInit, Input } from '@angular/core';
-import { AppComponent } from '../app.component';
+import { Component, ViewChildren, OnInit, Input, Inject } from '@angular/core';
+import { forwardRef } from '@angular/core';
+import { ActionService } from '../action.service';
 
 @Component({
   selector: 'app-left',
@@ -7,13 +8,19 @@ import { AppComponent } from '../app.component';
   styleUrls: ['./left.component.css']
 })
 export class LeftComponent implements OnInit {
-  @Input() tasks: string;
+  @Input() tasks;
   @Input() expand;
   @ViewChildren('panel') panel;
 
+  tasks2: {};
+  constructor(private actionService : ActionService) {
 
-  constructor() {
+  }
 
+  onClick(){
+    console.log("click");
+    this.actionService.emitChange('Data from child');
+  
   }
 
   show(index){
@@ -28,6 +35,10 @@ export class LeftComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+    this.tasks = this.actionService.getActions();
+    console.log("tasks: ", this.tasks);
   }
+
 
 }

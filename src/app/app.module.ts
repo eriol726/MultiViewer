@@ -14,13 +14,15 @@ import { PlotlyModule } from 'angular-plotly.js';
 import { LeftComponent } from "./left/left.component";
 import { RightComponent } from './right/right.component';
 import { MiddleComponent } from './middle/middle.component';
+import { TabletComponent } from './tablet/tablet.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LeftComponent,
     RightComponent,
-    MiddleComponent
+    MiddleComponent,
+    TabletComponent
   ],
   imports: [
     BrowserModule,

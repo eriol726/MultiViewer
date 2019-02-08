@@ -4,7 +4,7 @@
       [cdkDropListData]="tasks.content"
       class="example-list">
       <mat-expansion-panel *ngFor="let item of tasks.content; let i = index; " #panel>
-        <mat-expansion-panel-header >
+        <mat-expansion-panel-header (click)="onClick()">
           <mat-panel-title>
               <ng-container *ngIf="i < 1; else lightGreen"  >
                 <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}

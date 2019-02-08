@@ -1,7 +1,3 @@
-:host ::ng-deep app-child-component {
-    color:yellow;
-  }
-
 #circle {
     background: #f00;
     width: 20px;

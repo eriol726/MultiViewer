@@ -1,7 +1,8 @@
-import { Component, AfterViewInit, Input, ViewChildren } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChildren, OnInit } from '@angular/core';
 import { AppComponent} from "../app.component";
 import { Injectable } from '@angular/core';
 import { LeftComponent } from "../left/left.component";
+import { ActionService } from '../action.service';
 
 @Component({
   selector: 'app-right',
@@ -9,12 +10,13 @@ import { LeftComponent } from "../left/left.component";
   styleUrls: ['./right.component.css']
 })
 
-export class RightComponent implements AfterViewInit {
-  @Input() tasks: string;
+export class RightComponent implements OnInit {
+  // @Input() tasks: string;
   @ViewChildren('panel') leftPanel;
-  @Input() done: string;
+  @Input() done;
   open: any = [];
-  constructor() { 
+  done2: {};
+  constructor(private actionService : ActionService) {
   }
 
   show(index){
@@ -29,6 +31,13 @@ export class RightComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(){
+    
+  }
+
+  ngOnInit(){
+    
+    this.done = this.actionService.getCountermeasures();
+    console.log("this.done: ", this.done);
     
   }
 
