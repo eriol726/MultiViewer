@@ -8,25 +8,40 @@ import * as Plotly from 'plotly.js';
 import { MiddleComponent } from './middle/middle.component';
 import { ActionService } from './action.service';
 import { ChatService} from './chat.service';
+import { WebsocketService } from './websocket.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [WebsocketService]
 })
 
-export class AppComponent implements OnInit{
-  constructor( private chat: ChatService) {}
+export class AppComponent {
+  index = 0;
 
-  ngOnInit(){
-    this.chat.messages.subscribe(msg => {
-      console.log(msg);
-    })
+  constructor( private _chatService: WebsocketService) {
+
+
+    this._chatService.newMessageReceived()
+    .subscribe(data=>{
+      this.index = data.state
+    });
+
+
+
   }
 
   sendMessage(){
-    this.chat.sendMsg("test message");
+    
+    this._chatService.sendMessage({state:0});
   }
+
+  // ngOnInit(){
+  //     this.chat.messages.subscribe(msg => {
+  //     console.log(msg);
+  //   })
+  // }
   
   //https://blog.angularindepth.com/exploring-drag-and-drop-with-the-angular-material-cdk-2e0237857290
 }

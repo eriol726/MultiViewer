@@ -36,14 +36,11 @@ export class TabletComponent implements OnInit {
 
   done = {};
 
-  constructor(private actionService : ActionService, private chat : ChatService) { 
+  constructor(private actionService : ActionService) { 
     
   }
 
-  sendMessage(){
-    this.chat.sendMsg("test message");
-  }
-
+  
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
@@ -58,9 +55,7 @@ export class TabletComponent implements OnInit {
 
   ngOnInit(){
 
-    this.chat.messages.subscribe(msg => {
-      console.log(msg);
-    })
+
 
     this.basicChart('#ab63fa');
     this.tasks = this.actionService.getActions();
@@ -112,8 +107,6 @@ export class TabletComponent implements OnInit {
       this.middlePanel.changeColor(update);
     }
     
-
-    '#ab63fa'
     this.rightPanel.show(index);
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
@@ -121,6 +114,7 @@ export class TabletComponent implements OnInit {
   handleLeftPanel(index){
     console.log("index: ", index);
     this.leftPanel.show(index);
+    //this.chat.sendMsg(index);
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 

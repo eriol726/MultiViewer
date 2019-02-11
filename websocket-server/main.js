@@ -15,13 +15,13 @@ io.on('connection', (socket) => {
     // When we receive a 'message' event from our client, print out
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
-    socket.on('message', (message) => {
-        console.log("Message Received: " + message);
-        io.emit('message', {type:'new-message', text: message});    
+    socket.on('state', (message) => {
+        console.log("Message Received, state: " + message.state);
+        io.emit('state', {type:'new-message', state: message});    
     });
 });
 
 // Initialize our websocket server on port 5000
-http.listen(5000, () => {
-    console.log('started on port 5000');
+http.listen(3000, () => {
+    console.log('started on port 3000');
 });
