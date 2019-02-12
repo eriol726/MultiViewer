@@ -52,6 +52,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
   }
 
+  sendMessage(index){
+    //this.tabletComp.handleLeftPanel(0);
+    this.chat.sendMessage(index);
+  }
+
   
 
   drop(event: CdkDragDrop<string[]>) {
@@ -134,18 +139,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
     })
 
 
-    if(this.leftPanel){
-      this.leftPanel.show(index);
-    }
+    // if(this.leftPanel){
+    //   this.leftPanel.show(index);
+    // }
     
     //this.chat.sendMessage(index);
-    if(this.currentState){
-      this.actionService.expandPanel();
-      this.currentState = false;
-    }else{
-      this.actionService.closePanel();
-      this.currentState = true;
-    }
+    // if(this.currentState){
+    //   this.actionService.expandPanel();
+    //   this.currentState = false;
+    // }else{
+    //   this.actionService.closePanel();
+    //   this.currentState = true;
+    // }
     
     // this.actionService.panelStatus.subscribe(state => {
     //   console.log("state: ", this.panel);
@@ -157,14 +162,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
     // }else{
     //   this.actionService.closePanel();
     // }
-    if(this.panel){
-      if(this.panel._results[index].expanded == false){
-        this.panel._results[index].expanded = true;
-      }
-      else{
-        this.panel._results[index].expanded = false;
-      }
-    }
+    // if(this.panel){
+    //   if(this.panel._results[index].expanded == false){
+    //     this.panel._results[index].expanded = true;
+    //   }
+    //   else{
+    //     this.panel._results[index].expanded = false;
+    //   }
+    // }
     
 
     
@@ -277,10 +282,19 @@ export class TabletComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.actionService.panelStatus.subscribe(state => {
         console.log("state: ", this.panel);
-        this.panel._results[0].expanded =  state;
+       // this.panel._results[0].expanded =  state;
         this.currentState = state;
 
+        if(this.panel._results[0].expanded == false){
+          //this.panel._results[0].expanded = true;
+        }
+        else{
+          //this.panel._results[0].expanded = false;
+        }
+
     })
+
+    
     console.log("this.rightPanelTablet: ", this.rightPanelTablet);
     this.thePanel = this.panel;
     console.log("this.panel: ", this.panel);

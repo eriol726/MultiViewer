@@ -24,20 +24,20 @@ export class AppComponent {
   index = 0;
   nr = 0;
 
-  constructor( private _chatService: WebsocketService, private tabletComp : TabletComponent) {
+  constructor( private _chatService: WebsocketService, private tabletComp : TabletComponent, private actionService : ActionService, ) {
 
 
-    this._chatService.newMessageReceived()
-    .subscribe(data=>{
-      this.index = data.state
-    });
+    // this._chatService.newMessageReceived()
+    // .subscribe(data=>{
+    //   this.index = data.state
+    // });
 
 
 
   }
 
   sendMessage(){
-    this.tabletComp.handleLeftPanel(0);
+    //this.tabletComp.handleLeftPanel(0);
     this._chatService.sendMessage(this.nr++);
   }
 

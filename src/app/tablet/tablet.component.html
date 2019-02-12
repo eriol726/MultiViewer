@@ -14,7 +14,7 @@
             class="example-list"
             (cdkDropListDropped)="drop($event)">
             <mat-expansion-panel *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
-              <mat-expansion-panel-header (click)="handleLeftPanel(i)">
+              <mat-expansion-panel-header (click)="sendMessage(i)">
                 <mat-panel-title >
                     <ng-container *ngIf="i < 1; else lightGreen" >
                       <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
