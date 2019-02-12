@@ -9,18 +9,22 @@ import { MiddleComponent } from './middle/middle.component';
 import { ActionService } from './action.service';
 import { ChatService} from './chat.service';
 import { WebsocketService } from './websocket.service';
+import { TabletComponent } from './tablet/tablet.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [WebsocketService]
+  styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
-  index = 0;
 
-  constructor( private _chatService: WebsocketService) {
+export class AppComponent {
+
+  //@ViewChild(LeftComponent) leftPanel: LeftComponent;
+  index = 0;
+  nr = 0;
+
+  constructor( private _chatService: WebsocketService, private tabletComp : TabletComponent) {
 
 
     this._chatService.newMessageReceived()
@@ -33,8 +37,8 @@ export class AppComponent {
   }
 
   sendMessage(){
-    
-    this._chatService.sendMessage({state:0});
+    this.tabletComp.handleLeftPanel(0);
+    this._chatService.sendMessage(this.nr++);
   }
 
   // ngOnInit(){

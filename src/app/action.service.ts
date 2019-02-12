@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActionService {
+  public selectedCategoryName: string = '';
+  private events = new BehaviorSubject<boolean>(false);
 
   actions = { "content" : [
       {"text": "task 0", "color":"rgb(38, 143, 85)"},
@@ -21,6 +23,19 @@ export class ActionService {
   };
 
   constructor() { }
+
+  public expandPanel(){
+    console.log("expand");
+    this.events.next(true);
+  }
+
+  public closePanel(){
+    this.events.next(false);
+  }
+
+  public get panelStatus() : Observable<boolean> {
+    return this.events.asObservable();
+  }
 
   // Observable string sources
   private emitChangeSource = new Subject<any>();

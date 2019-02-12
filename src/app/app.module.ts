@@ -17,6 +17,7 @@ import { LeftComponent } from "./left/left.component";
 import { RightComponent } from './right/right.component';
 import { MiddleComponent } from './middle/middle.component';
 import { TabletComponent } from './tablet/tablet.component';
+import { ActionService } from './action.service';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { TabletComponent } from './tablet/tablet.component';
     RightComponent,
     MiddleComponent,
     TabletComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -40,7 +42,12 @@ import { TabletComponent } from './tablet/tablet.component';
   providers: [
     AppComponent,
     ChatService,
-    WebsocketService],
+    WebsocketService,
+    LeftComponent,
+    TabletComponent,
+    ActionService
+  ],
+    
   bootstrap: [AppComponent]
 })
 export class AppModule { }

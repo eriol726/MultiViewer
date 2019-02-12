@@ -1,8 +1,6 @@
 import { Component, ViewChildren, OnInit, Input, Inject } from '@angular/core';
 import { forwardRef } from '@angular/core';
 import { ActionService } from '../action.service';
-import { ChatService } from '../chat.service';
-import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-left',
@@ -15,7 +13,6 @@ export class LeftComponent implements OnInit {
   @ViewChildren('panel') panel;
 
   tasks2: {};
-  message2 : any;
   constructor(private actionService : ActionService) {
 
   }
@@ -27,24 +24,15 @@ export class LeftComponent implements OnInit {
   }
 
   show(index){
-
-    // this.chat.messages.subscribe(data => {
-    //   this.message2 = data.state;
-    //    console.log("message: ", this.message2);
+    console.log("index: ", index , " " , this.panel);
+    if(this.panel._results[index].expanded == false){
+      this.panel._results[index].expanded = true;
+    }
+    else{
+      this.panel._results[index].expanded = false;
+    }
     
-      
-    //   if(this.panel._results[this.message2].expanded == false){
-    //     this.panel._results[this.message2].expanded = true;
-    //   }
-    //   else{
-    //     this.panel._results[this.message2].expanded = false;
-    //   }
-    // })
-
-       
-
     
-    console.log("index: ", index , " " , this.panel._results[index]);
   }
 
   ngOnInit() {

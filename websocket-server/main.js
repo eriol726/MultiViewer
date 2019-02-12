@@ -2,6 +2,10 @@ let app = require('express')();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 
+// app.get('/', function(req, res){
+//     res.sendFile('index.html', {"root": '.'});
+//   });
+
 io.on('connection', (socket) => {
 
     // Log whenever a user connects
@@ -16,7 +20,7 @@ io.on('connection', (socket) => {
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
     socket.on('state', (message) => {
-        console.log("Message Received, state: " + message.state);
+        console.log("Message Received, state: " + message);
         io.emit('state', {type:'new-message', state: message});    
     });
 });

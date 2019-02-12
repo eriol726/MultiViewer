@@ -1,18 +1,19 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input } from '@angular/core';
-import { ActionService } from '../action.service';
+import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit } from '@angular/core';
 import * as Plotly from 'plotly.js';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChatService} from '../chat.service';
+import { WebsocketService } from '../websocket.service';
+import { ActionService } from '../action.service';
 
 @Component({
   selector: 'app-tablet',
   templateUrl: './tablet.component.html',
   styleUrls: ['./tablet.component.css']
 })
-export class TabletComponent implements OnInit {
+export class TabletComponent implements OnInit, AfterViewInit {
 
   
 
@@ -25,6 +26,8 @@ export class TabletComponent implements OnInit {
   @ViewChild(RightComponent) rightPanel: RightComponent;
   @ViewChild(LeftComponent) leftPanel: LeftComponent;
   @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
+  @ViewChildren('panel') panel;
+  @ViewChild('appCompButton') appCompButton;
 
   likes: any = 10;
   private myTemplate: any = "";
@@ -34,9 +37,18 @@ export class TabletComponent implements OnInit {
 
   expand = [false,false,false,false];
 
-  done = {};
+  messageState : number = 0;
+  panelIndex : number = 0;
+  currentState : boolean = false
 
-  constructor(private actionService : ActionService) { 
+  done = {};
+  public thePanel;
+
+  constructor(private actionService : ActionService, private chat : WebsocketService) { 
+    this.chat.newMessageReceived()
+        .subscribe(data=>{this.messageState = data.state});
+
+    
     
   }
 
@@ -111,10 +123,54 @@ export class TabletComponent implements OnInit {
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
-  handleLeftPanel(index){
-    console.log("index: ", index);
-    this.leftPanel.show(index);
-    //this.chat.sendMsg(index);
+  public handleLeftPanel(index){
+    console.log("this.messageState: ", this.messageState, " \n this: ", this, " \n state: ", this.currentState);
+    
+    this.actionService.panelStatus.subscribe(state => {
+      console.log("state: ", this);
+      // this.panel._results[0].expanded =  state;
+      // this.currentState = state;
+
+    })
+
+
+    if(this.leftPanel){
+      this.leftPanel.show(index);
+    }
+    
+    //this.chat.sendMessage(index);
+    if(this.currentState){
+      this.actionService.expandPanel();
+      this.currentState = false;
+    }else{
+      this.actionService.closePanel();
+      this.currentState = true;
+    }
+    
+    // this.actionService.panelStatus.subscribe(state => {
+    //   console.log("state: ", this.panel);
+    //   this.currentState = state;
+
+    // })
+    // if(this.currentState){
+    //   this.actionService.expandPanel();
+    // }else{
+    //   this.actionService.closePanel();
+    // }
+    if(this.panel){
+      if(this.panel._results[index].expanded == false){
+        this.panel._results[index].expanded = true;
+      }
+      else{
+        this.panel._results[index].expanded = false;
+      }
+    }
+    
+
+    
+
+
+    //this.messageState;
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
@@ -219,6 +275,15 @@ export class TabletComponent implements OnInit {
 
 
   ngAfterViewInit() {
+    this.actionService.panelStatus.subscribe(state => {
+        console.log("state: ", this.panel);
+        this.panel._results[0].expanded =  state;
+        this.currentState = state;
+
+    })
+    console.log("this.rightPanelTablet: ", this.rightPanelTablet);
+    this.thePanel = this.panel;
+    console.log("this.panel: ", this.panel);
     //this.child.show(0);
   }
 

@@ -37,7 +37,7 @@ export class RightComponent implements OnInit {
   ngOnInit(){
     
     this.done = this.actionService.getCountermeasures();
-    console.log("this.done: ", this.done);
+    console.log("this.done: ", this.leftPanel);
     
   }
 
