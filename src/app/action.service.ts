@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { Actions} from './action.model'
 
 @Injectable({
   providedIn: 'root'
@@ -47,9 +48,22 @@ export class ActionService {
       this.emitChangeSource.next(change);
   }
 
+  public setActions(actions){
+    console.log("actions: ", actions);
+    this.actions = actions;
+  }
 
-  getActions(){
-    return this.actions;
+
+  public getActions() : any{
+    console.log("this.actions: ", this.actions);
+    const data = new Observable(observer => {
+      setTimeout(() => {
+        
+        observer.next(this.actions);
+      },1000);
+    });
+
+    return data;
   }
 
   getCountermeasures(){

@@ -33,7 +33,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private myTemplate: any = "";
   @Input() url: string = "app/right.display.component.html";
 
-  tasks = {};
+  tasks = { "content" : [
+    {"text": "task 0", "color":"rgb(38, 143, 85)"},
+  ]
+};
 
   expand = [false,false,false,false];
 
@@ -45,23 +48,32 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public thePanel;
 
   constructor(private actionService : ActionService, private chat : WebsocketService) { 
-    this.chat.newMessageReceived()
-        .subscribe(data=>{this.messageState = data.state});
-
-    
+    // this.chat.newMessageReceived().subscribe(data=>{
+    //   console.log("data: ", data);
+    //   this.messageState = data.state
+    // });
     
   }
 
   sendMessage(index){
     //this.tabletComp.handleLeftPanel(0);
-    this.chat.sendMessage(index);
+    this.chat.sendMessage(index,1);
   }
 
   
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      console.log("event: ", event);
+      moveItemInArray(this.tasks.content, event.previousIndex, event.currentIndex);
+      //this.tasks.content[0] = this.tasks.content[2];
+      this.chat.sendMessage(event.previousIndex,event.currentIndex);
+      this.actionService.setActions(this.tasks);
+      console.log("this.tasks: ", this.tasks.content, " \n " , event.container.data);
+      // this.tasks.content.forEach(element => {
+      //   element.color
+      // });
     } else {
       transferArrayItem(event.previousContainer.data,
                         event.container.data,
@@ -75,7 +87,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
     this.basicChart('#ab63fa');
-    this.tasks = this.actionService.getActions();
+    const tasksObservable = this.actionService.getActions();
+    tasksObservable.subscribe(tasksData => {
+      this.tasks = tasksData;
+      console.log("tasks: ", tasksData);
+    })
     console.log("done ", this.actionService.getCountermeasures())
     this.done = this.actionService.getCountermeasures();
   }
@@ -131,52 +147,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public handleLeftPanel(index){
     console.log("this.messageState: ", this.messageState, " \n this: ", this, " \n state: ", this.currentState);
     
-    this.actionService.panelStatus.subscribe(state => {
-      console.log("state: ", this);
-      // this.panel._results[0].expanded =  state;
-      // this.currentState = state;
-
-    })
-
-
-    // if(this.leftPanel){
-    //   this.leftPanel.show(index);
-    // }
-    
-    //this.chat.sendMessage(index);
-    // if(this.currentState){
-    //   this.actionService.expandPanel();
-    //   this.currentState = false;
-    // }else{
-    //   this.actionService.closePanel();
-    //   this.currentState = true;
-    // }
-    
-    // this.actionService.panelStatus.subscribe(state => {
-    //   console.log("state: ", this.panel);
-    //   this.currentState = state;
-
-    // })
-    // if(this.currentState){
-    //   this.actionService.expandPanel();
-    // }else{
-    //   this.actionService.closePanel();
-    // }
-    // if(this.panel){
-    //   if(this.panel._results[index].expanded == false){
-    //     this.panel._results[index].expanded = true;
-    //   }
-    //   else{
-    //     this.panel._results[index].expanded = false;
-    //   }
-    // }
-    
-
-    
-
-
-    //this.messageState;
-    //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
   getData(time){
@@ -280,25 +250,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
-    this.actionService.panelStatus.subscribe(state => {
-        console.log("state: ", this.panel);
-       // this.panel._results[0].expanded =  state;
-        this.currentState = state;
 
-        if(this.panel._results[0].expanded == false){
-          //this.panel._results[0].expanded = true;
-        }
-        else{
-          //this.panel._results[0].expanded = false;
-        }
-
-    })
-
-    
-    console.log("this.rightPanelTablet: ", this.rightPanelTablet);
-    this.thePanel = this.panel;
-    console.log("this.panel: ", this.panel);
-    //this.child.show(0);
   }
 
 }

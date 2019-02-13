@@ -38,7 +38,7 @@ export class AppComponent {
 
   sendMessage(){
     //this.tabletComp.handleLeftPanel(0);
-    this._chatService.sendMessage(this.nr++);
+    this._chatService.sendMessage(this.nr++,0);
   }
 
   // ngOnInit(){

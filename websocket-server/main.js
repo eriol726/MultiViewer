@@ -19,10 +19,15 @@ io.on('connection', (socket) => {
     // When we receive a 'message' event from our client, print out
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
-    socket.on('state', (message) => {
-        console.log("Message Received, state: " + message);
-        io.emit('state', {type:'new-message', state: message});    
+    socket.on('state1', (message, prevIndex) => {
+        console.log("Message Received, state: " + message + " " + prevIndex);
+        io.emit('state1', {type:'new-message', state: message, state2: prevIndex});    
     });
+
+    // socket.on('drop', (message) => {
+    //     console.log("Message Received, state: " + message);
+    //     io.emit('state', {type:'new-message', state: message});    
+    // });
 });
 
 // Initialize our websocket server on port 5000

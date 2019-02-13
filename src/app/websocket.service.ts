@@ -27,9 +27,9 @@ export class WebsocketService {
 
     // We define our observable which will observe any incoming messages
     // from our socket.io server.
-    let observable = new Observable<{type:String, state:number}>(observer => {
-        this.socket.on('state', (data) => {
-          console.log("Received message from Websocket Server: ", data.state);
+    let observable = new Observable<{type:String, state:number, state2: number}>(observer => {
+        this.socket.on('state1', (data) => {
+          console.log("Received message from Websocket Server: ", data );
           //this.tabletComp.handleLeftPanel(0);
           observer.next(data);
         });
@@ -37,14 +37,14 @@ export class WebsocketService {
           this.socket.disconnect();
         }
     });
-    
+  
     // We define our Observer which will listen to messages
     // from our other components and send messages back to our
     // socket server whenever the `next()` method is called.
     // let observer = {
     //     next: (data: Object) => {
     //         this.socket.emit('message', data);
-    //     },
+    //     }, 
     // };
     console.log("observable: ", observable);
     // we return our Rx.Subject which is a combination
@@ -52,8 +52,9 @@ export class WebsocketService {
     return observable;
   }
 
-  sendMessage(data){
+  sendMessage(data, data2){
     
-    this.socket.emit('state', data);
+    this.socket.emit('state1', data, data2 );
+    //this.socket.emit('state', data2);
   }
 }
