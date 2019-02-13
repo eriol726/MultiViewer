@@ -21,40 +21,40 @@ export class WebsocketService {
   private socket = io('http://localhost:3000');
 
   newMessageReceived() {
-    // If you aren't familiar with environment variables then
-    // you can hard code `environment.ws_url` as `http://localhost:5000`
-       
-
-    // We define our observable which will observe any incoming messages
-    // from our socket.io server.
     let observable = new Observable<{type:String, state:number, state2: number}>(observer => {
         this.socket.on('state1', (data) => {
           console.log("Received message from Websocket Server: ", data );
-          //this.tabletComp.handleLeftPanel(0);
+
           observer.next(data);
         });
         return () => {
           this.socket.disconnect();
         }
     });
-  
-    // We define our Observer which will listen to messages
-    // from our other components and send messages back to our
-    // socket server whenever the `next()` method is called.
-    // let observer = {
-    //     next: (data: Object) => {
-    //         this.socket.emit('message', data);
-    //     }, 
-    // };
-    console.log("observable: ", observable);
-    // we return our Rx.Subject which is a combination
-    // of both an observer and observable.
     return observable;
   }
 
-  sendMessage(data, data2){
-    
-    this.socket.emit('state1', data, data2 );
+  moveItem() {
+    let observable = new Observable<{type:String, previousIndex:number, currentIndex: number}>(observer => {
+        this.socket.on('moveItem', (data) => {
+          console.log("Received message from Websocket Server: ", data );
+
+          observer.next(data);
+        });
+        return () => {
+          this.socket.disconnect();
+        }
+    });
+    return observable;
+  }
+
+  sendExpand(data){
+    this.socket.emit('state1', data );
+    //this.socket.emit('state', data2);
+  }
+
+  sendMove(data, data2){
+    this.socket.emit('moveItem', data ,data2);
     //this.socket.emit('state', data2);
   }
 }

@@ -73,7 +73,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
         this.panel._results[data.state].expanded = false;
       }
       
-      moveItemInArray(this.tasks3.content, data.state, data.state2);
+      
       // this.tasks3.content[]
       // this.tasks3[data.state] = this.tasks3[data.state2];
       console.log("this.tasks: ", this.tasks3);
@@ -82,6 +82,11 @@ export class LeftComponent implements OnInit, AfterViewInit {
       //state den han var på
       //state2 den han kom till
     });
+
+    this.chat.moveItem().subscribe(data=>{
+      moveItemInArray(this.tasks3.content, data.previousIndex, data.currentIndex);
+      console.log("this.tasks: ", this.tasks3);
+    })
     // this.actionService.panelStatus.subscribe(state =>{
     //   if(this.panel._results[0].expanded == false){
     //     this.panel._results[0].expanded = true;

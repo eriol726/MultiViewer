@@ -57,7 +57,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   sendMessage(index){
     //this.tabletComp.handleLeftPanel(0);
-    this.chat.sendMessage(index,1);
+    this.chat.sendExpand(index);
   }
 
   
@@ -68,8 +68,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("event: ", event);
       moveItemInArray(this.tasks.content, event.previousIndex, event.currentIndex);
       //this.tasks.content[0] = this.tasks.content[2];
-      this.chat.sendMessage(event.previousIndex,event.currentIndex);
-      this.actionService.setActions(this.tasks);
+      this.chat.sendMove(event.previousIndex,event.currentIndex);
+      //this.actionService.setActions(this.tasks);
       console.log("this.tasks: ", this.tasks.content, " \n " , event.container.data);
       // this.tasks.content.forEach(element => {
       //   element.color

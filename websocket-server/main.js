@@ -24,6 +24,11 @@ io.on('connection', (socket) => {
         io.emit('state1', {type:'new-message', state: message, state2: prevIndex});    
     });
 
+    socket.on('moveItem', (prevIndex, currIndex) => {
+        console.log("Message Received, state: " + prevIndex + " " + currIndex);
+        io.emit('moveItem', {type:'new-message', previousIndex: prevIndex, currentIndex: currIndex});    
+    });
+
     // socket.on('drop', (message) => {
     //     console.log("Message Received, state: " + message);
     //     io.emit('state', {type:'new-message', state: message});    
