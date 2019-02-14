@@ -80,7 +80,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
-      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data[event.currentIndex]);
+      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data);
       console.log("green transfer prevData: ", event.container.data[event.previousIndex], " \n currentData" , event.container.data[event.currentIndex]);
     }
   }
@@ -103,8 +103,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
-      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data[event.previousIndex]);
-      console.log("blue transfer prevData: ", event.previousContainer.data, " \n currentData" , event.container.data[event.previousIndex]);
+      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data);
+      console.log("blue transfer prevData: ", event.previousContainer.data, " \n currentData" , event.container.data);
     }
   }
 

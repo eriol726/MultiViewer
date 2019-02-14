@@ -87,12 +87,13 @@ export class LeftComponent implements OnInit, AfterViewInit {
         moveItemInArray(this.tasks3.content, data.previousIndex, data.currentIndex);
       }
       else{
-        console.log("data.containerData: ", data.containerData[0]);
-        if(JSON.stringify(data.containerData[0].color) === "rgb(3, 37, 231)"){
-          transferArrayItem(data.containerData,
-            this.tasks3.content,
-            data.previousIndex,
-            data.currentIndex);
+        console.log("data.containerData: ", data.containerData);
+        if(data.containerData[data.currentIndex].color === "rgb(3, 37, 231)"){
+          this.tasks3.content.splice(0, 0, data.containerData[data.currentIndex]);
+          // transferArrayItem(data.containerData,
+          //   this.tasks3.content,
+          //   data.previousIndex,
+          //   data.currentIndex);
         }else{
           transferArrayItem(this.tasks3.content,
             [],
