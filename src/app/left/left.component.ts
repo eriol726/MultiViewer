@@ -78,15 +78,25 @@ export class LeftComponent implements OnInit, AfterViewInit {
       // this.tasks3[data.state] = this.tasks3[data.state2];
       console.log("this.tasks: ", this.tasks3);
       console.log("data.state: ", data.state);
-      console.log("data.state2: ", data.state2);
       //state den han var på
       //state2 den han kom till
     });
 
     this.chat.moveItem().subscribe(data=>{
-      moveItemInArray(this.tasks3.content, data.previousIndex, data.currentIndex);
-      console.log("this.tasks: ", this.tasks3);
+      if(data.containerData.length === this.tasks3.content.length){
+        moveItemInArray(this.tasks3.content, data.previousIndex, data.currentIndex);
+      }
+      else{
+        console.log("data.containerData: ", data);
+        transferArrayItem(this.tasks3.content,
+          data.containerData,
+          data.previousIndex,
+          data.currentIndex);
+      } 
+      
+      console.log("this.tasks: ", this.tasks3, " \n currentData: ", data.containerData);
     })
+
     // this.actionService.panelStatus.subscribe(state =>{
     //   if(this.panel._results[0].expanded == false){
     //     this.panel._results[0].expanded = true;

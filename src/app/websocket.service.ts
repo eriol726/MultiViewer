@@ -21,8 +21,8 @@ export class WebsocketService {
   private socket = io('http://localhost:3000');
 
   newMessageReceived() {
-    let observable = new Observable<{type:String, state:number, state2: number}>(observer => {
-        this.socket.on('state1', (data) => {
+    let observable = new Observable<{type:String, state:number}>(observer => {
+        this.socket.on('state', (data) => {
           console.log("Received message from Websocket Server: ", data );
 
           observer.next(data);
@@ -35,7 +35,7 @@ export class WebsocketService {
   }
 
   moveItem() {
-    let observable = new Observable<{type:String, previousIndex:number, currentIndex: number}>(observer => {
+    let observable = new Observable<{type:String, previousIndex:number, currentIndex: number, containerData: Array<{"text": string, "color":string}>}>(observer => {
         this.socket.on('moveItem', (data) => {
           console.log("Received message from Websocket Server: ", data );
 
@@ -49,12 +49,12 @@ export class WebsocketService {
   }
 
   sendExpand(data){
-    this.socket.emit('state1', data );
+    this.socket.emit('state', data );
     //this.socket.emit('state', data2);
   }
 
-  sendMove(data, data2){
-    this.socket.emit('moveItem', data ,data2);
+  sendMove(data, data2, data3){
+    this.socket.emit('moveItem', data ,data2, data3);
     //this.socket.emit('state', data2);
   }
 }
