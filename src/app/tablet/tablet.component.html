@@ -43,7 +43,7 @@
             [cdkDropListData]="done.content"
             [cdkDropListConnectedTo]="[todoList]"
             class="example-list"
-            (cdkDropListDropped)="drop($event)">
+            (cdkDropListDropped)="drop1($event)">
             <mat-expansion-panel *ngFor="let item of done.content; let i = index" (click)="handleRightPanel(i)" #rightPanel cdkDrag>
               <mat-expansion-panel-header>
                 <mat-panel-title >

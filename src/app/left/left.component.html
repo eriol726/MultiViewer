@@ -4,6 +4,7 @@
       cdkDropList
       #doneList="cdkDropList"
       [cdkDropListData]="tasks3.content"
+      [cdkDropListConnectedTo]="[doneList]"
       class="example-list">
       <mat-expansion-panel *ngFor="let item of tasks3.content; let i = index; " #panel cdkDrag>
         <mat-expansion-panel-header (click)="onClick()">
