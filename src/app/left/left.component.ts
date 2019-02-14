@@ -72,7 +72,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
       else{
         this.panel._results[data.state].expanded = false;
       }
-      
+    
       
       // this.tasks3.content[]
       // this.tasks3[data.state] = this.tasks3[data.state2];
@@ -87,15 +87,25 @@ export class LeftComponent implements OnInit, AfterViewInit {
         moveItemInArray(this.tasks3.content, data.previousIndex, data.currentIndex);
       }
       else{
-        console.log("data.containerData: ", data);
-        transferArrayItem(this.tasks3.content,
-          data.containerData,
-          data.previousIndex,
-          data.currentIndex);
+        console.log("data.containerData: ", data.containerData[0]);
+        if(JSON.stringify(data.containerData[0].color) === "rgb(3, 37, 231)"){
+          transferArrayItem(data.containerData,
+            this.tasks3.content,
+            data.previousIndex,
+            data.currentIndex);
+        }else{
+          transferArrayItem(this.tasks3.content,
+            [],
+            data.previousIndex,
+            data.currentIndex);
+        }
+        
+          //this.tasks3.content.push(data.containerData[data.previousIndex]) ;
       } 
       
       console.log("this.tasks: ", this.tasks3, " \n currentData: ", data.containerData);
     })
+
 
     // this.actionService.panelStatus.subscribe(state =>{
     //   if(this.panel._results[0].expanded == false){

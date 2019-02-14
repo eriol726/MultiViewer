@@ -80,8 +80,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
-      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data);
-      console.log("transfer prevData: ", event.previousContainer.data, " \n currentData" , event.container.data);
+      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data[event.currentIndex]);
+      console.log("green transfer prevData: ", event.container.data[event.previousIndex], " \n currentData" , event.container.data[event.currentIndex]);
     }
   }
 
@@ -91,7 +91,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("event: ", event);
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       //this.tasks.content[0] = this.tasks.content[2];
-      //this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data);
+     // this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data);
       //this.actionService.setActions(this.tasks);
       console.log("this.tasks: ", this.tasks.content, " \n " , event.container.data);
       // this.tasks.content.forEach(element => {
@@ -103,8 +103,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
-      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data);
-      console.log("transfer prevData: ", event.previousContainer.data, " \n currentData" , event.container.data);
+      this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data[event.previousIndex]);
+      console.log("blue transfer prevData: ", event.previousContainer.data, " \n currentData" , event.container.data[event.previousIndex]);
     }
   }
 
