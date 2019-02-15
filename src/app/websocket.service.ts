@@ -20,7 +20,7 @@ export class WebsocketService {
 
   private socket = io('http://localhost:3000');
 
-  newMessageReceived() {
+  expandItem() {
     let observable = new Observable<{type:String, state:number}>(observer => {
         this.socket.on('state', (data) => {
           console.log("Received message from Websocket Server: ", data );
@@ -48,8 +48,8 @@ export class WebsocketService {
     return observable;
   }
 
-  sendExpand(data){
-    this.socket.emit('state', data );
+  sendExpand(data, data1){
+    this.socket.emit('state', data, data1 );
     //this.socket.emit('state', data2);
   }
 

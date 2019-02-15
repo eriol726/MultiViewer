@@ -12,9 +12,9 @@
             [cdkDropListData]="tasks.content"
             [cdkDropListConnectedTo]="[doneList]"
             class="example-list"
-            (cdkDropListDropped)="drop($event)">
+            (cdkDropListDropped)="dropTasks($event)">
             <mat-expansion-panel *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
-              <mat-expansion-panel-header (click)="sendMessage(i)">
+              <mat-expansion-panel-header (click)="expandTaskPanel(i)">
                 <mat-panel-title >
                     <ng-container *ngIf="i < 1; else lightGreen" >
                       <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
@@ -43,9 +43,9 @@
             [cdkDropListData]="done.content"
             [cdkDropListConnectedTo]="[todoList]"
             class="example-list"
-            (cdkDropListDropped)="drop1($event)">
-            <mat-expansion-panel *ngFor="let item of done.content; let i = index" (click)="handleRightPanel(i)" #rightPanel cdkDrag>
-              <mat-expansion-panel-header>
+            (cdkDropListDropped)="dropDones($event)">
+            <mat-expansion-panel *ngFor="let item of done.content; let i = index"  #rightPanel cdkDrag>
+              <mat-expansion-panel-header (click)="expandDonePanel(i)">
                 <mat-panel-title >
                     <div id="circle" style="background: rgb(3, 37, 231)"></div>{{item.text}}
                 </mat-panel-title>
@@ -66,7 +66,7 @@
     </div>
 
     <div class="box">
-      <app-right [done]="done"></app-right>
+      <!-- <app-right ></app-right> -->
     </div>
   </div>
 </div>    

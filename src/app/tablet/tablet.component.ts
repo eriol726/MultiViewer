@@ -34,9 +34,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @Input() url: string = "app/right.display.component.html";
 
   tasks = { "content" : [
-    {"text": "task 0", "color":"rgb(38, 143, 85)"},
-  ]
-};
+      {"text": "task 0", "color":"rgb(38, 143, 85)"},
+    ]
+  };
+
+  done = { "content" : [
+      {"text": "task 0", "color":"rgb(38, 143, 85)"},
+    ]
+  };
 
   expand = [false,false,false,false];
 
@@ -44,7 +49,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   panelIndex : number = 0;
   currentState : boolean = false
 
-  done = {};
+ 
   public thePanel;
 
   constructor(private actionService : ActionService, private chat : WebsocketService) { 
@@ -55,25 +60,22 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
   }
 
-  sendMessage(index){
+  expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
-    this.chat.sendExpand(index);
+    this.chat.sendExpand("task",index);
+  }
+
+  expandDonePanel(index){
+    //this.tabletComp.handleLeftPanel(0);
+    this.chat.sendExpand("done",index);
   }
 
   
 
-  drop(event: CdkDragDrop<string[]>) {
+  dropTasks(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
-      //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      console.log("event: ", event);
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      //this.tasks.content[0] = this.tasks.content[2];
-      this.chat.sendMove("add",event.previousIndex,event.currentIndex,event.container.data);
-      //this.actionService.setActions(this.tasks);
-      console.log("this.tasks: ", this.tasks.content, " \n " , event.container.data);
-      // this.tasks.content.forEach(element => {
-      //   element.color
-      // });
+      this.chat.sendMove("change",event.previousIndex,event.currentIndex,event.container.data);
     } else {
       
       transferArrayItem(event.previousContainer.data,
@@ -85,41 +87,33 @@ export class TabletComponent implements OnInit, AfterViewInit {
     }
   }
 
-  drop1(event: CdkDragDrop<string[]>) {
+  dropDones(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
-      //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      console.log("event: ", event);
+      console.log("move done");
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      //this.tasks.content[0] = this.tasks.content[2];
-     // this.chat.sendMove(event.previousIndex,event.currentIndex,event.container.data);
-      //this.actionService.setActions(this.tasks);
-      console.log("this.tasks: ", this.tasks.content, " \n " , event.container.data);
-      // this.tasks.content.forEach(element => {
-      //   element.color
-      // });
+      this.chat.sendMove("changeDone",event.previousIndex,event.currentIndex,event.container.data);
+
     } else {
-      
       transferArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
       this.chat.sendMove("remove",event.previousIndex,event.currentIndex,event.container.data);
-      console.log("blue transfer prevData: ", event.previousContainer.data, " \n currentData" , event.container.data);
     }
+    console.log("blue transfer prevData:")
   }
 
   ngOnInit(){
-
-
 
     this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
     tasksObservable.subscribe(tasksData => {
       this.tasks = tasksData;
-      console.log("tasks: ", tasksData);
     })
-    console.log("done ", this.actionService.getCountermeasures())
-    this.done = this.actionService.getCountermeasures();
+    const doneObservable = this.actionService.getCountermeasures();
+    doneObservable.subscribe(doneData => {
+      this.done = doneData; 
+    })
   }
 
   handleRightPanel(index){

@@ -19,7 +19,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   tasks3 = { "content" : [
     {"text": "task 0", "color":"rgb(38, 143, 85)"},
   ]};
-  constructor(private actionService : ActionService, private chat : WebsocketService) {
+  constructor(private actionService : ActionService, private display : WebsocketService) {
 
   }
 
@@ -59,64 +59,40 @@ export class LeftComponent implements OnInit, AfterViewInit {
       this.tasks3 = tasksData;
       console.log("tasks: ", tasksData);
     })
-    
-   //this.tasks = this.actionService.getActions();
-    console.log("tasks: ", this.tasks3);
+
   }
 
   ngAfterViewInit(){
-    this.chat.newMessageReceived().subscribe(data=>{
-      if(this.panel._results[data.state].expanded == false){
-        this.panel._results[data.state].expanded = true;
+    this.display.expandItem().subscribe(data=>{
+      if(data.type === "task"){
+        if(this.panel._results[data.state].expanded == false){
+          this.panel._results[data.state].expanded = true;
+        }
+        else{
+          this.panel._results[data.state].expanded = false;
+        }
       }
-      else{
-        this.panel._results[data.state].expanded = false;
-      }
-    
-      
-      // this.tasks3.content[]
-      // this.tasks3[data.state] = this.tasks3[data.state2];
-      console.log("this.tasks: ", this.tasks3);
-      console.log("data.state: ", data.state);
-      //state den han var på
-      //state2 den han kom till
     });
 
-    this.chat.moveItem().subscribe(data=>{
-      if(data.containerData.length === this.tasks3.content.length){
+    this.display.moveItem().subscribe(data=>{
+      if(data.type === "change"){
         moveItemInArray(this.tasks3.content, data.previousIndex, data.currentIndex);
       }
-      else{
+      else if(data.type === "add"){
         console.log("data.type: ", data.type);
-        if(data.type === "add"){
-          this.tasks3.content = data.containerData;
-          //this.tasks3.content.splice(0, 0, data.containerData[data.currentIndex]);
-          // transferArrayItem(data.containerData,
-          //   this.tasks3.content,
-          //   data.previousIndex,
-          //   data.currentIndex);
-        }else{
-          transferArrayItem(this.tasks3.content,
-            [],
-            data.previousIndex,
-            data.currentIndex);
-        }
         
-          //this.tasks3.content.push(data.containerData[data.previousIndex]) ;
-      } 
+          this.tasks3.content = data.containerData;
+
+      } else if(data.type === "remove"){
+        transferArrayItem(this.tasks3.content,
+          [],
+          data.previousIndex,
+          data.currentIndex);
+      }
       
       console.log("this.tasks: ", this.tasks3, " \n currentData: ", data.containerData);
     })
 
-
-    // this.actionService.panelStatus.subscribe(state =>{
-    //   if(this.panel._results[0].expanded == false){
-    //     this.panel._results[0].expanded = true;
-    //   }
-    //   else{
-    //     this.panel._results[0].expanded = false;
-    //   }
-    // })
   }
 
 

@@ -19,9 +19,9 @@ io.on('connection', (socket) => {
     // When we receive a 'message' event from our client, print out
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
-    socket.on('state', (itemIndex) => {
+    socket.on('state', (panel, itemIndex) => {
         console.log("Message Received, state: " + itemIndex);
-        io.emit('state', {type:'new-message', state: itemIndex});    
+        io.emit('state', {type:panel, state: itemIndex});    
     });
 
     socket.on('moveItem', (action, prevIndex, currIndex, indexData) => {

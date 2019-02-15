@@ -66,7 +66,13 @@ export class ActionService {
     return data;
   }
 
-  getCountermeasures(){
-    return this.countermeasures;
+  public getCountermeasures() : any{
+    const data = new Observable(observer => {
+      setTimeout(() => {
+        observer.next(this.countermeasures);
+      },1000)
+    } )
+    return data;
+
   }
 }

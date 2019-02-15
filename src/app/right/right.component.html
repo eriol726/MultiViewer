@@ -2,11 +2,9 @@
   <div
     cdkDropList
     #doneList="cdkDropList"
-    [cdkDropListData]="done.content"
-    [cdkDropListConnectedTo]="[todoList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    <mat-expansion-panel *ngFor="let item of done.content" #panel cdkDrag>
+    [cdkDropListData]="done1.content"
+    class="example-list">
+    <mat-expansion-panel *ngFor="let item of done1.content" #panel cdkDrag>
       <mat-expansion-panel-header>
         <mat-panel-title>
             <div id="circle" style="background: rgb(3, 37, 231)"></div>{{item.text}}
