@@ -24,9 +24,9 @@ io.on('connection', (socket) => {
         io.emit('state', {type:'new-message', state: itemIndex});    
     });
 
-    socket.on('moveItem', (prevIndex, currIndex, indexData) => {
+    socket.on('moveItem', (action, prevIndex, currIndex, indexData) => {
         console.log("Message Received, state: " + prevIndex + " " + currIndex);
-        io.emit('moveItem', {type:'new-message', previousIndex: prevIndex, currentIndex: currIndex, containerData: indexData});    
+        io.emit('moveItem', {type: action, previousIndex: prevIndex, currentIndex: currIndex, containerData: indexData});    
     });
 
     // socket.on('drop', (message) => {

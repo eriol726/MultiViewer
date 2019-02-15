@@ -53,8 +53,8 @@ export class WebsocketService {
     //this.socket.emit('state', data2);
   }
 
-  sendMove(data, data2, data3){
-    this.socket.emit('moveItem', data ,data2, data3);
+  sendMove(data, data1, data2, data3){
+    this.socket.emit('moveItem',data, data1 ,data2, data3);
     //this.socket.emit('state', data2);
   }
 }
