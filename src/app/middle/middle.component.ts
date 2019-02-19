@@ -52,16 +52,19 @@ export class MiddleComponent implements OnInit {
 
   createChart() {
 
-    var tempData = d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv", 
+    var tempData = d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered_wide.csv", 
       function(d) {
-        return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value };
+        return d;//{ date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value };
       }
       
     );
 
     tempData.then(function(finalResult) {
-      var tja = finalResult.map((v) =>  v.date );
-      console.log("this: ", this);
+      var dateData = finalResult.map((v) =>  v.year );
+
+      var keys = finalResult.columns.slice(1)
+
+      console.log("finalResult: ", finalResult);
       this.svg = d3.select('svg');
 
       this.margin = {top: 10, right: 30, bottom: 30, left: 50};
@@ -79,32 +82,44 @@ export class MiddleComponent implements OnInit {
 
       console.log("data: ", TEMPERATURES[0].values[0]);
       
-      this.x = d3.scaleTime()
-        .domain(d3.extent(tja, (d: Date) => d ))
+      var x = d3.scaleTime()
+        .domain(d3.extent(finalResult, function(d) { return d.year; }))
         .range([ 0, this.width ]);
         this.svg.append("g")
         .attr("transform", "translate(0," + this.height + ")")
-        .call(d3.axisBottom(this.x));
+        .call(d3.axisBottom(x).ticks(5));
         console.log("this.data: ",this.svg);
       // Add Y axis
-      this.y = d3.scaleLinear()
-        .domain([0, d3.max(finalResult, (d: any) => +d.value )])
+      // Add Y axis
+        var y = d3.scaleLinear()
+        .domain([-100000, 100000])
         .range([ this.height, 0 ]);
         this.svg.append("g")
-        .call(d3.axisLeft(this.y))
+        .call(d3.axisLeft(y));
 
-        console.log("(d=>) : ", (d: any) => d.date);
+        // color palette
+        var color = d3.scaleOrdinal()
+        .domain(keys)
+        .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])
+
+      //stack the data?
+      var stackedData = d3.stack()
+        .offset(d3.stackOffsetSilhouette)
+        .keys(keys)
+        (finalResult)
+
+        console.log("stackedData: ", stackedData);
         // Add the area
-      this.svg.append("path")
-      .datum(finalResult)
-      .attr("fill", "#cce5df")
-      .attr("stroke", "#69b3a2")
-      .attr("stroke-width", 1.5)
-      .attr("class", "area")
-      .attr("d", d3.area()
-        .x((d: any) => this.x(d.date) )
-        .y0(this.height)
-        .y1((d: any) => this.y(d.value))
+        this.svg
+        .selectAll("mylayers")
+        .data(stackedData)
+        .enter()
+        .append("path")
+          .style("fill", function(d) { return color(d.key); })
+          .attr("d", d3.area()
+            .x(function(d, i) { return x(d.data.year); })
+            .y0(function(d) { return y(d[0]); })
+            .y1(function(d) { return y(d[1]); })
         )
 
     }.bind(this));
