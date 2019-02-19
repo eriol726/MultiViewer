@@ -8,6 +8,13 @@ import { ChatService} from '../chat.service';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
+import * as d3Scale from 'd3-scale';
+import * as d3ScaleChromatic from 'd3-scale-chromatic';
+import * as d3Shape from 'd3-shape';
+import * as d3Array from 'd3-array';
+import * as d3Axis from 'd3-axis';
+import { HttpClient } from '@angular/common/http';
+import { TEMPERATURES } from '../../data/temperatures';
 
 @Component({
   selector: 'app-tablet',
@@ -31,11 +38,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild('appCompButton') appCompButton;
 
   @ViewChild('chart') private chartContainer: ElementRef;
-  @Input() private data: Array<any>;
-  private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
+ // @Input() private data: Array<any>;
+  //private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
   private chart: any;
-  private width: number;
-  private height: number;
+  //private width: number;
+  //private height: number;
   private xScale: any;
   private yScale: any;
   private colors: any;
@@ -57,6 +64,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   };
 
   chartData = [];
+  //data = [];
 
   expand = [false,false,false,false];
 
@@ -64,10 +72,24 @@ export class TabletComponent implements OnInit, AfterViewInit {
   panelIndex : number = 0;
   currentState : boolean = false
 
+  data: any;
+
+    svg: any;
+    margin = {top: 20, right: 80, bottom: 30, left: 50};
+    g: any;
+    width: number;
+    height: number;
+    x;
+    y;
+    z;
+    line;
+
+    
+  
  
   public thePanel;
 
-  constructor(private actionService : ActionService, private chat : WebsocketService) { 
+  constructor(private actionService : ActionService, private chat : WebsocketService, private http: HttpClient) { 
     // this.chat.newMessageReceived().subscribe(data=>{
     //   console.log("data: ", data);
     //   this.messageState = data.state
@@ -86,13 +108,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   generateData() {
-    this.data = [];
-    for (let i = 0; i < (8 + Math.floor(Math.random() * 10)); i++) {
-    this.data.push([
-    `Index ${i}`,
-    Math.floor(Math.random() * 100)
-    ]);
-   }
+  //   this.data = [];
+  //   for (let i = 0; i < (8 + Math.floor(Math.random() * 10)); i++) {
+  //   this.data.push([
+  //   `Index ${i}`,
+  //   Math.floor(Math.random() * 100)
+  //   ]);
+  //  }
  }
 
   
@@ -130,6 +152,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   ngOnInit(){
     this.generateData();
+
+    this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
     //this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
     tasksObservable.subscribe(tasksData => {
@@ -140,96 +164,145 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.done = doneData; 
     })
 
-    this.createChart();
-    if (this.data) {
-      this.updateChart();
-    }
+    var margin = {top: 20, right: 30, bottom: 0, left: 10},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+    // d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv", function(err, data){
+    //   console.log("data: " , data);
+    // });
+
+    this.initChart();
+   // this.drawAxis();
+   // this.drawPath();
+            
+    // this.createChart();
+    // if (this.data) {
+    //   this.updateChart();
+    // }
   }
+
+  private initChart(): void {
+    this.svg = d3.select('svg');
+
+    this.margin = {top: 10, right: 30, bottom: 30, left: 50};
+    this.width = 460 - this.margin.left - this.margin.right;
+    this.height = 400 - this.margin.top - this.margin.bottom;
+
+    // append the svg object to the body of the page
+    this.svg = d3.select('svg')
+    .append("svg")
+    .attr("width", this.width + this.margin.left + this.margin.right)
+    .attr("height", this.height + this.margin.top + this.margin.bottom)
+    .append("g")
+    .attr("transform",
+    "translate(" + this.margin.left + "," + this.margin.top + ")");
+
+    // this.width = this.svg.attr('width') - this.margin.left - this.margin.right;
+    // this.height = this.svg.attr('height') - this.margin.top - this.margin.bottom;
+
+    // this.g = this.svg.append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+
+    // this.x = d3Scale.scaleTime().range([0, this.width]);
+    // this.y = d3Scale.scaleLinear().range([this.height, 0]);
+    // this.z = d3Scale.scaleOrdinal(d3ScaleChromatic.schemeCategory10);
+
+    // set the dimensions and margins of the graph
+
+    // get the data
+
+    console.log("data: ", TEMPERATURES[0].values[0]);
+    
+    this.x = d3.scaleTime()
+      .domain(d3.extent(this.data, (d: Date) => d ))
+      .range([ 0, this.width ]);
+      this.svg.append("g")
+      .attr("transform", "translate(0," + this.height + ")")
+      .call(d3.axisBottom(this.x));
+      console.log("this.data: ",this.svg);
+     // Add Y axis
+     this.y = d3.scaleLinear()
+      .domain([0, d3.max(TEMPERATURES, function(c) { return d3Array.max(c.values, function(d) { return d.temperature; }); }) ])
+      .range([ this.height, 0 ]);
+      this.svg.append("g")
+      .call(d3.axisLeft(this.y))
+
+      console.log("(d=>) : ", (d: any) => d.date);
+      // Add the area
+    this.svg.append("path")
+    .datum(TEMPERATURES[0].values)
+    .attr("fill", "#cce5df")
+    .attr("stroke", "#69b3a2")
+    .attr("stroke-width", 2.5)
+    .attr("class", "area")
+    .attr("d", d3.area()
+      .x((d: any) => this.x(d.date) )
+      .y0(this.height)
+      .y1((d: any) => this.y(d.temperature))
+      )
+    /*
+
+    this.line = d3Shape.line()
+        .curve(d3Shape.curveBasis)
+        .x( (d: any) => this.x(d.date) )
+        .y( (d: any) => this.y(d.temperature) );
+
+    this.x.domain(d3Array.extent(this.data, (d: Date) => d ));
+
+    this.y.domain([
+        d3Array.min(TEMPERATURES, function(c) { return d3Array.min(c.values, function(d) { return d.temperature; }); }),
+        d3Array.max(TEMPERATURES, function(c) { return d3Array.max(c.values, function(d) { return d.temperature; }); })
+    ]);
+
+    this.z.domain(TEMPERATURES.map(function(c) { return c.id; }));*/
+}
+
+private drawAxis(): void {
+    this.g.append('g')
+        .attr('class', 'axis axis--x')
+        .attr('transform', 'translate(0,' + this.height + ')')
+        .call(d3Axis.axisBottom(this.x));
+
+    this.g.append('g')
+        .attr('class', 'axis axis--y')
+        .call(d3Axis.axisLeft(this.y))
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 6)
+        .attr('dy', '0.71em')
+        .attr('fill', '#000')
+        .text('Temperature, ºF');
+}
+
+private drawPath(): void {
+    let city = this.g.selectAll('.city')
+        .data(TEMPERATURES)
+        .enter().append('g')
+        .attr('class', 'city');
+
+    city.append('path')
+        .attr('class', 'line')
+        .attr('d', (d) => this.line(d.values) )
+        .style('stroke', (d) => this.z(d.id) );
+
+    city.append('text')
+        .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
+        .attr('transform', (d) => 'translate(' + this.x(d.value.date) + ',' + this.y(d.value.temperature) + ')' )
+        .attr('x', 3)
+        .attr('dy', '0.35em')
+        .style('font', '10px sans-serif')
+        .text(function(d) { return d.id; });
+}
 
   ngOnChanges() {
-    if (this.chart) {
-      this.updateChart();
-    }
+
   }
 
 
 
-  createChart() {
-    let element = this.chartContainer.nativeElement;
-    this.width = element.offsetWidth - this.margin.left - this.margin.right;
-    this.height = element.offsetHeight - this.margin.top - this.margin.bottom;
-    this.height = 500;
-    this.width = 300;
-    let svg = d3.select(element).append('svg')
-      .attr('width', element.offsetWidth)
-      .attr('height', '600px');
+  
 
-    // chart plot area
-    this.chart = svg.append('g')
-      .attr('class', 'bars')
-      .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
-    
-    
-
-    // define X & Y domains
-    let xDomain = this.data.map(d => d[0]);
-    let yDomain = [0, d3.max(this.data, d => d[1])];
-
-    // create scales
-    this.xScale = d3.scaleBand().padding(0.1).domain(xDomain).rangeRound([0, this.width]);
-    this.yScale = d3.scaleLinear().domain(yDomain).range([this.height, 0]);
-
-    // bar colors
-    this.colors = d3.scaleLinear().domain([0, this.data.length]).range(<any[]>['red', 'blue']);
-
-    // x & y axis
-    this.xAxis = svg.append('g')
-      .attr('class', 'axis axis-x')
-      .attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.height})`)
-      .call(d3.axisBottom(this.xScale));
-    this.yAxis = svg.append('g')
-      .attr('class', 'axis axis-y')
-      .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
-      .call(d3.axisLeft(this.yScale));
-  }
-
-  updateChart() {
-    // update scales & axis
-    this.xScale.domain(this.data.map(d => d[0]));
-    this.yScale.domain([0, d3.max(this.data, d => d[1])]);
-    this.colors.domain([0, this.data.length]);
-    this.xAxis.transition().call(d3.axisBottom(this.xScale));
-    this.yAxis.transition().call(d3.axisLeft(this.yScale));
-
-    let update = this.chart.selectAll('.bar')
-      .data(this.data);
-
-    // remove exiting bars
-    update.exit().remove();
-
-    // update existing bars
-    this.chart.selectAll('.bar').transition()
-      .attr('x', d => this.xScale(d[0]))
-      .attr('y', d => this.yScale(d[1]))
-      .attr('width', d => this.xScale.bandwidth())
-      .attr('height', d => this.height - this.yScale(d[1]))
-      .style('fill', (d, i) => this.colors(i));
-
-    // add new bars
-    update
-      .enter()
-      .append('rect')
-      .attr('class', 'bar')
-      .attr('x', d => this.xScale(d[0]))
-      .attr('y', d => this.yScale(0))
-      .attr('width', this.xScale.bandwidth())
-      .attr('height', 0)
-      .style('fill', (d, i) => this.colors(i))
-      .transition()
-      .delay((d, i) => i * 10)
-      .attr('y', d => this.yScale(d[1]))
-      .attr('height', d => this.height - this.yScale(d[1]));
-  }
+  
 
   handleRightPanel(index){
     console.log("this.chartTablet: ", this.chartTablet);
