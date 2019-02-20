@@ -52,7 +52,7 @@ export class MiddleComponent implements OnInit {
 
   createChart() {
 
-    var tempData = d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered_wide.csv", 
+    var tempData = d3.csv("assets/5_OneCatSevNumOrdered_wide.csv", 
       function(d) {
         return d;//{ date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value };
       }
@@ -83,7 +83,7 @@ export class MiddleComponent implements OnInit {
       console.log("data: ", TEMPERATURES[0].values[0]);
       
       var x = d3.scaleTime()
-        .domain(d3.extent(finalResult, function(d) { return d.year; }))
+        .domain(d3.extent(dateData, (d: number) => d ))
         .range([ 0, this.width ]);
         this.svg.append("g")
         .attr("transform", "translate(0," + this.height + ")")
@@ -117,9 +117,9 @@ export class MiddleComponent implements OnInit {
         .append("path")
           .style("fill", function(d) { return color(d.key); })
           .attr("d", d3.area()
-            .x(function(d, i) { return x(d.data.year); })
-            .y0(function(d) { return y(d[0]); })
-            .y1(function(d) { return y(d[1]); })
+          .x(function(d, i) { return x(d.data.year); })
+          .y0(function(d) { return y(d[0]); })
+          .y1(function(d) { return y(d[1]); })
         )
 
     }.bind(this));
