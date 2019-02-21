@@ -14,5 +14,8 @@
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "pusher": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^5.7.1"
   }
 }
