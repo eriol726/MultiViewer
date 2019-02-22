@@ -89,3 +89,17 @@
   width: 100px;
   height: 100px;
 }
+
+.brush .extent {
+  stroke: #fff;
+  fill: steelblue;
+  fill-opacity: .25;
+  shape-rendering: crispEdges;
+}
+
+rect.mover {
+          stroke: red;
+          stroke-opacity: .1;
+          fill: lightSteelBlue;
+          fill-opacity: .5;
+      }

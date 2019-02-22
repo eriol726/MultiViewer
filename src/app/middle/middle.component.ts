@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole  } from '@angular/core';
 import * as Plotly from 'plotly.js';
 import * as d3 from 'd3';
 import * as d3Array from 'd3-array';
@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MiddleComponent implements OnInit {
   @ViewChild('chart') private chartContainer: ElementRef;
+  @ViewChild('row') private rowContainer: ElementRef;
   @Input() private data: Array<any>;
  // private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
   private chart: any;
@@ -42,22 +43,33 @@ export class MiddleComponent implements OnInit {
     //this.createChart();
     var parseDate  = d3.timeParse('%Y-%m-%d');
     var jsonPromise = d3.json('assets/data.json');
-    jsonPromise.then((rawData) =>{
+    jsonPromise.then((rawData : any) =>{
       //console.log("jsonPromise: ", parseDate(rawData.lines.line1[0].date));
       //var tt = rawData[0].map((v) => {v.line.line1} );
 
-
-      console.log("rawData.lines.line1: ", rawData );
-      var line1 = rawData.lines.line1.map(function (d) {
+      console.log("TEMPERATURES: ", TEMPERATURES[0].values);
+      var line1 = TEMPERATURES.map((v) => v.values.map(function (d) {
         return {
-          date:  parseDate(d.date),
-          pct05: d.pct05 / 1500 ,
-          // pct25: d.pct25 / 1000 +4,
-          pct50: d.pct50 / 1500 ,
-          pct75: d.pct75 / 1500 ,
-          pct95: d.pct95 / 1800  
-        };
-      });
+            date:  d.date,
+            pct05: d.temperature / 1 -1,
+            // pct25: d.pct25 / 1000 +4,
+            pct50: d.temperature / 1 +0,
+            pct75: d.temperature / 1 +1,
+            pct95: d.temperature / 1 +2 
+          };
+        }
+      ));
+      console.log("line1: ", line1);
+      // var line1 = TEMPERATURES[0].values.map(function (d) {
+      //   return {
+      //     date:  d.date,
+      //     pct05: d.temperature / 1 -1,
+      //     // pct25: d.pct25 / 1000 +4,
+      //     pct50: d.temperature / 1 +0,
+      //     pct75: d.temperature / 1 +1,
+      //     pct95: d.temperature / 1 +2 
+      //   };
+      // });
     
       var line2 = rawData.lines.line2.map(function (d) {
         return {
@@ -198,7 +210,14 @@ export class MiddleComponent implements OnInit {
       .y1((d: any) => y(d.pct05));
 
     console.log("svg: ", svg);
-    svg.datum(data);
+    this.g = svg.append('g');
+    let city = this.g.selectAll('.city')
+            .data(TEMPERATURES)
+            .enter().append('g')
+            .attr('class', 'city');
+    // svg.append('g')
+    svg.data(data);
+
   
     svg.append('path')
       .attr('class', 'area upper outer')
@@ -280,19 +299,19 @@ export class MiddleComponent implements OnInit {
   
   makeChart (data,data1, markers) {
     var svgWidth  = 960,
-        svgHeight = 500,
+        svgHeight = 550,
         margin = { top: 20, right: 20, bottom: 40, left: 40 },
         chartWidth  = svgWidth  - margin.left - margin.right,
         chartHeight = svgHeight - margin.top  - margin.bottom;
-  
+    console.log("data: ", data);
     var x = d3.scaleTime().range([0, chartWidth])
-                .domain(d3.extent(data, (d:Date) => d.date)),
+                .domain(d3.extent(data[0], (d:any) => +d.date)),
               //.domain([new Date("January 1, 1940 00:00:00"), new Date("January 4, 1980 00:00:00")]),
               //.domain(d3.extent(data, (d:Date) => d)),
         y = d3.scaleLinear().range([chartHeight, 0])
-              .domain([0, d3.max(data, (d: number) => d.pct95)]);
+              .domain([0, d3.max(data[0], (d: any) => +d.pct95)]);
               //.domain(d3.extent(data, function (d) { return d.date; })),
-              console.log("d3.extent(data, (d:Date) => d): ", d3.extent(data, (d:Date) => d.date));
+              //console.log("d3.extent(data, (d:Date) => d): ", d3.extent(data, (d:Date) => d.date));
     var xAxis = d3.axisBottom(x).scale(x)
                   .tickSizeInner(-chartHeight).tickSizeOuter(0).tickPadding(10),
         yAxis = d3.axisLeft(y)
@@ -313,16 +332,17 @@ export class MiddleComponent implements OnInit {
     //console.log("x: ", x(data));
     this.addAxesAndLegend(svg, xAxis, yAxis, margin, chartWidth, chartHeight);
     this.drawPaths(svg, data, x, y);
-    this.drawPaths(svg, data1, x, y);
+    //this.drawPaths(svg, data1, x, y);
     this.startTransitions(svg, chartWidth, chartHeight, rectClip, markers, x);
-
-    svg.append("rect")
+    
+    console.log("svg: ", svg);
+    d3.select('svg').append("rect")
     .attr("transform", "translate(0, " + (chartHeight + margin.bottom) + ")")
     .attr("class", "mover")
     .attr("x", 0)
     .attr("y", 0)
     .attr("height", 40)
-    .attr("width", Math.round(2 * chartWidth)/data.length)
+    .attr("width", 55)
     .attr("pointer-events", "all")
     .attr("cursor", "ew-resize")
     .call(d3.drag().on("drag", this.display));
@@ -330,40 +350,40 @@ export class MiddleComponent implements OnInit {
   }
   
   display () {
-    var x = parseInt(d3.select(this).attr("x")),
-        nx = x + d3.event.dx,
-        w = parseInt(d3.select(this).attr("width")),
-        f, nf, new_data, rects;
+//     var x = parseInt(d3.select(this).attr("x")),
+//         nx = x + d3.event.dx,
+//         w = parseInt(d3.select(this).attr("width")),
+//         f, nf, new_data, rects;
 
-    if ( nx < 0 || nx + w > width ) return;
+//     if ( nx < 0 || nx + w > width ) return;
 
-    d3.select(this).attr("x", nx);
+//     d3.select(this).attr("x", nx);
 
-    f = displayed(x);
-    nf = displayed(nx);
+//     f = displayed(x);
+//     nf = displayed(nx);
 
-    if ( f === nf ) return;
+//     if ( f === nf ) return;
 
-    new_data = data.slice(nf, nf + numBars);
+//     new_data = data.slice(nf, nf + numBars);
 
-    xscale.domain(new_data.map(function (d) { return d.label; }));
-    diagram.select(".x.axis").call(xAxis);
+//     xscale.domain(new_data.map(function (d) { return d.label; }));
+//     diagram.select(".x.axis").call(xAxis);
 
-    rects = bars.selectAll("rect")
-      .data(new_data, function (d) {return d.label; });
+//     rects = bars.selectAll("rect")
+//       .data(new_data, function (d) {return d.label; });
 
-	 	rects.attr("x", function (d) { return xscale(d.label); });
+// 	 	rects.attr("x", function (d) { return xscale(d.label); });
 
-// 	  rects.attr("transform", function(d) { return "translate(" + xscale(d.label) + ",0)"; })
+// // 	  rects.attr("transform", function(d) { return "translate(" + xscale(d.label) + ",0)"; })
 
-    rects.enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function (d) { return xscale(d.label); })
-      .attr("y", function (d) { return yscale(d.value); })
-      .attr("width", xscale.rangeBand())
-      .attr("height", function (d) { return height - yscale(d.value); });
+//     rects.enter().append("rect")
+//       .attr("class", "bar")
+//       .attr("x", function (d) { return xscale(d.label); })
+//       .attr("y", function (d) { return yscale(d.value); })
+//       .attr("width", xscale.rangeBand())
+//       .attr("height", function (d) { return height - yscale(d.value); });
 
-    rects.exit().remove();
+//     rects.exit().remove();
 }
   
 
