@@ -6,6 +6,12 @@
   font: 14px 'Open Sans';
 } */
 
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -22,7 +28,23 @@
 }
 
 .area {
-  stroke-width: 1;
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.areaOuterLower{
+fill: rgba(230, 230, 255, 0.8);
+stroke: rgba(216, 216, 255, 0.8);
+}
+
+.areaOuterUpper{
+  fill: rgba(230, 230, 255, 0.8);
+  stroke: rgba(216, 216, 255, 0.8);
+}
+
+.areaInner {
+fill: rgba(127, 127, 255, 0.8);
+stroke: rgba(96, 96, 255, 0.8);
 }
 
 .area.outer,
