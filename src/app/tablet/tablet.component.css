@@ -1,3 +1,4 @@
+@import './tabletChart.css';
 /* body{
   overflow: hidden;
   width:100vw;
@@ -7,7 +8,7 @@
 /* Create three equal columns that floats next to each other */
 .column {
     float: left;
-    width: calc(100vw/3 - 20px);
+    width: calc(100vw/3 - 40px);
     padding: 10px;
     /*height: 300px;  Should be removed. Only for demonstration */
 }
