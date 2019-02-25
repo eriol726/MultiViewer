@@ -1,7 +1,6 @@
 import { Component, ViewChildren, OnInit, Input, Inject, AfterViewInit } from '@angular/core';
 import { forwardRef } from '@angular/core';
 import { ActionService } from '../action.service';
-import { ChatService } from '../chat.service';
 import { WebsocketService } from '../websocket.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
@@ -83,7 +82,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
         
           this.tasks3.content = data.containerData;
 
-      } else if(data.type === "remove"){
+      }else if(data.type === "remove"){
         transferArrayItem(this.tasks3.content,
           [],
           data.previousIndex,

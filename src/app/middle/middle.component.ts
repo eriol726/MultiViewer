@@ -6,10 +6,13 @@ import * as d3Shape from 'd3-shape';
 import * as d3Axis from 'd3-axis';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
+import {event as currentEvent} from 'd3-selection';
 import * as d3TimeFormat from 'd3-time-format';
 import { csvToJson } from 'convert-csv-to-json/src/csvToJson.js';
 import { TEMPERATURES } from '../../data/temperatures';
 import { HttpClient } from '@angular/common/http';
+import { WebsocketService } from '../websocket.service';
+import { selectAll } from 'd3';
 
 export interface Margin {
   top: number;
@@ -62,13 +65,15 @@ export class MiddleComponent implements OnInit {
   private upperInnerArea: any;
   private lowerOuterArea: any;
 
+  private zoomFromTablet : boolean = false;
+
 
     g: any;
 
     z;
     line;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private display : WebsocketService) { }
 
   ngOnInit() {
     //this.createChart();
@@ -115,7 +120,9 @@ export class MiddleComponent implements OnInit {
         .scaleExtent([1, Infinity])
         .translateExtent([[0, 0], [this.width, this.height]])
         .extent([[0, 0], [this.width, this.height]])
-        .on('zoom', this.zoomed.bind(this));
+        .on('zoom', function() { 
+          this.zoomed(false);
+        }.bind(this));
 
 
     this.upperOuterArea = d3.area()
@@ -159,7 +166,9 @@ export class MiddleComponent implements OnInit {
   }
 
   private brushed() {
+    
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
+    
     let s = d3.event.selection || this.x2.range();
     //this.x.domain(s.map(this.x2.invert, this.x2));
     // this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
@@ -172,20 +181,42 @@ export class MiddleComponent implements OnInit {
         .translate(-s[0], 0));
   }
 
-  private zoomed() {
-      if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
-      let t = d3.event.transform;
-      this.x.domain(t.rescaleX(this.x2).domain());
-      this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+  private zoomed(zoomFromTablet, xDomainMin, xDomainMax) {
+  
+    console.log("zoomFromTablet: ", zoomFromTablet, " \n " , xDomainMin);
+    this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
       this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
       this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
       this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
       this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
 
       this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+    if(zoomFromTablet && currentEvent){
+      if (currentEvent.sourceEvent && currentEvent.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
+
+      
+      let t = d3.event.transform;
+      // this.svg.selectAll("focus")
+      // .attr("transform", {k: 2.000000000000001,
+      //   x: -83.39590298432509,
+      //   y: -88.48355090140652})
+      //   console.log("d3: ", d3.event.transform);
+
+      //this.x.domain(t.rescaleX(this.x2).domain());
+     // this.x.domain([TEMPERATURES[0].values[10].date, TEMPERATURES[0].values[20].date]);
+      
       
       this.focus.select('.axis--x').call(this.xAxis);
       this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+    }
+    if(zoomFromTablet){
+      this.x.domain([xDomainMin, xDomainMax]);
+      this.focus.select('.axis--x').call(this.xAxis);
+    }
+
+    
+
+    
   }
 
 
@@ -424,7 +455,18 @@ export class MiddleComponent implements OnInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
   }
+
+  ngAfterViewInit(){
+    this.display.zoomChart().subscribe(data =>{
+      console.log("zoom: ", data);
+        let minDate = new Date(data.xDomainMin);
+        let maxDate = new Date(data.xDomainMax);
+        this.zoomFromTablet = true;
+        this.zoomed(data.state,minDate,maxDate);
+ 
+    })
   
+  }
   
  
   

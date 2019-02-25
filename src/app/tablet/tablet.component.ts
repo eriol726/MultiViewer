@@ -4,7 +4,6 @@ import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChatService} from '../chat.service';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
@@ -111,22 +110,19 @@ export class TabletComponent implements OnInit, AfterViewInit {
  
   public thePanel;
 
-  constructor(private actionService : ActionService, private chat : WebsocketService, private http: HttpClient) { 
-    // this.chat.newMessageReceived().subscribe(data=>{
-    //   console.log("data: ", data);
-    //   this.messageState = data.state
-    // });
+  constructor(private actionService : ActionService, private socket : WebsocketService, private http: HttpClient) { 
+
     
   }
 
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
-    this.chat.sendExpand("task",index);
+    this.socket.sendExpand("task",index);
   }
 
   expandDonePanel(index){
     //this.tabletComp.handleLeftPanel(0);
-    this.chat.sendExpand("done",index);
+    this.socket.sendExpand("done",index);
   }
 
   generateData() {
@@ -144,14 +140,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
   dropTasks(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.chat.sendMove("change",event.previousIndex,event.currentIndex,event.container.data);
+      this.socket.sendMove("change",event.previousIndex,event.currentIndex,event.container.data);
     } else {
       
       transferArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
-      this.chat.sendMove("add",event.previousIndex,event.currentIndex,event.container.data);
+      this.socket.sendMove("add",event.previousIndex,event.currentIndex,event.container.data);
       console.log("green transfer prevData: ", event.container.data[event.previousIndex], " \n currentData" , event.container.data[event.currentIndex]);
     }
   }
@@ -160,14 +156,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
     if (event.previousContainer === event.container) {
       console.log("move done");
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.chat.sendMove("changeDone",event.previousIndex,event.currentIndex,event.container.data);
+      this.socket.sendMove("changeDone",event.previousIndex,event.currentIndex,event.container.data);
 
     } else {
       transferArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
-      this.chat.sendMove("remove",event.previousIndex,event.currentIndex,event.container.data);
+      this.socket.sendMove("remove",event.previousIndex,event.currentIndex,event.container.data);
     }
     console.log("blue transfer prevData:")
   }
@@ -242,7 +238,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) || 1)
       .y0((d: any) => this.y(d.temperature )+0)
-      .y1((d: any) => this.y(d.temperature )-10);
+      .y1((d: any) => this.y(d.temperature )-Math.floor(Math.random() * (10 - 0 + 1)) + 0);
 
 
     this.area2 = d3Shape.area()
@@ -281,20 +277,22 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   private zoomed() {
-    console.log("zoom");
-      if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
-      let t = d3.event.transform;
-      this.x.domain(t.rescaleX(this.x2).domain());
-      this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    console.log("zoom: ", d3.event);
+    if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
+    let t = d3.event.transform;
+    this.x.domain(t.rescaleX(this.x2).domain());
+    this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
 
-      this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
-      
-      this.focus.select('.axis--x').call(this.xAxis);
-      this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+    this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+    
+    this.focus.select('.axis--x').call(this.xAxis);
+    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+
+    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1]);
   }
 
   
@@ -483,9 +481,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
 
-  
-
-  
 
   handleRightPanel(index){
     console.log("this.chartTablet: ", this.chartTablet);
@@ -495,10 +490,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
-  public handleLeftPanel(index){
-    console.log("this.messageState: ", this.messageState, " \n this: ", this, " \n state: ", this.currentState);
-    
-  }
 
 
 

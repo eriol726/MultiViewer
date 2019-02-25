@@ -7,7 +7,6 @@ import { LeftComponent } from './left/left.component';
 import * as Plotly from 'plotly.js';
 import { MiddleComponent } from './middle/middle.component';
 import { ActionService } from './action.service';
-import { ChatService} from './chat.service';
 import { WebsocketService } from './websocket.service';
 import { TabletComponent } from './tablet/tablet.component';
 

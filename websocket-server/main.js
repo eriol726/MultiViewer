@@ -19,14 +19,19 @@ io.on('connection', (socket) => {
     // When we receive a 'message' event from our client, print out
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
-    socket.on('state', (panel, itemIndex) => {
+    socket.on('expandItem', (panel, itemIndex) => {
         console.log("Message Received, state: " + itemIndex);
-        io.emit('state', {type:panel, state: itemIndex});    
+        io.emit('expandItem', {type:panel, state: itemIndex});    
     });
 
     socket.on('moveItem', (action, prevIndex, currIndex, indexData) => {
         console.log("Message Received, state: " + prevIndex + " " + currIndex);
         io.emit('moveItem', {type: action, previousIndex: prevIndex, currentIndex: currIndex, containerData: indexData});    
+    });
+
+    socket.on('zoomChart', (zoom, min, max) => {
+        console.log("Message Received, zoom: " + zoom);
+        io.emit('zoomChart', {state: zoom, xDomainMin: min, xDomainMax: max});    
     });
 
     // socket.on('drop', (message) => {

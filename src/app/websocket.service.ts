@@ -23,7 +23,7 @@ export class WebsocketService {
 
   expandItem() {
     let observable = new Observable<{type:String, state:number}>(observer => {
-        this.socket.on('state', (data) => {
+        this.socket.on('expandItem', (data) => {
           console.log("Received message from Websocket Server: ", data );
 
           observer.next(data);
@@ -49,13 +49,31 @@ export class WebsocketService {
     return observable;
   }
 
+  zoomChart() {
+    let observable = new Observable<{state:boolean, xDomainMin: Date, xDomainMax: Date}>(observer => {
+        this.socket.on('zoomChart', (data) => {
+          console.log("Received message from Websocket Server Zoom: ", data );
+
+          observer.next(data);
+        });
+        return () => {
+          this.socket.disconnect();
+        }
+    });
+    return observable;
+  }
+
   sendExpand(data, data1){
-    this.socket.emit('state', data, data1 );
+    this.socket.emit('expandItem', data, data1 );
     //this.socket.emit('state', data2);
   }
 
   sendMove(data, data1, data2, data3){
     this.socket.emit('moveItem',data, data1 ,data2, data3);
     //this.socket.emit('state', data2);
+  }
+
+  sendZoom(data, data1, data2){
+    this.socket.emit('zoomChart',data, data1, data2);
   }
 }

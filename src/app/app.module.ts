@@ -9,7 +9,6 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 import { PlotlyModule } from 'angular-plotly.js';
-import { ChatService } from './chat.service';
 import { WebsocketService } from './websocket.service';
 
 
@@ -41,7 +40,6 @@ import { ActionService } from './action.service';
   ],
   providers: [
     AppComponent,
-    ChatService,
     WebsocketService,
     LeftComponent,
     TabletComponent,
