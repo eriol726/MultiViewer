@@ -290,9 +290,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
     
     this.focus.select('.axis--x').call(this.xAxis);
+    console.log("t: ", t);
+    console.log("t: ", t.invertX);
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
 
-    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1]);
+    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],t.x);
   }
 
   
@@ -467,7 +469,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .call(this.xAxis2);
 
     this.context.append('g')
-        .attr('class', 'brush')
+        .attr('class', 'brush') 
         .call(this.brush)
         .call(this.brush.move, this.x.range());
 

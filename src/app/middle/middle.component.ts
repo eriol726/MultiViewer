@@ -56,6 +56,7 @@ export class MiddleComponent implements OnInit {
 
   private context: any;
   private brush: any;
+  private brush2: any;
   private zoom: any;
   private area: any;
   private area2: any;
@@ -115,6 +116,10 @@ export class MiddleComponent implements OnInit {
     this.brush = d3Brush.brushX()
         .extent([[0, 0], [this.width, this.height2]])
         .on('brush end', this.brushed.bind(this));
+    
+    this.brush2 = d3Brush.brushX()
+    .extent([[0, 0], [this.width, 500]])
+    .on('brush end', this.brushed.bind(this));
 
     this.zoom = d3Zoom.zoom()
         .scaleExtent([1, Infinity])
@@ -181,7 +186,7 @@ export class MiddleComponent implements OnInit {
         .translate(-s[0], 0));
   }
 
-  private zoomed(zoomFromTablet, xDomainMin, xDomainMax) {
+  private zoomed(zoomFromTablet, xDomainMin, xDomainMax, xBrush) {
   
     console.log("zoomFromTablet: ", zoomFromTablet, " \n " , xDomainMin);
     this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
@@ -205,13 +210,15 @@ export class MiddleComponent implements OnInit {
       //this.x.domain(t.rescaleX(this.x2).domain());
      // this.x.domain([TEMPERATURES[0].values[10].date, TEMPERATURES[0].values[20].date]);
       
-      
+      console.log("t: ", t);
       this.focus.select('.axis--x').call(this.xAxis);
-      this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+      this.context.select('.brush').call(this.brush.move, [t.x+100,t.x+120]);
     }
     if(zoomFromTablet){
       this.x.domain([xDomainMin, xDomainMax]);
       this.focus.select('.axis--x').call(this.xAxis);
+      this.focus.select('.brush').call(this.brush.move, [xBrush+240,xBrush+365]);
+      //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
     }
 
     
@@ -428,6 +435,13 @@ export class MiddleComponent implements OnInit {
     .attr('class', 'axis axis--y')
     .call(this.yAxis);
 
+    this.focus.append('g')
+    .attr('class', 'brush')
+    .call(this.brush2)
+    .call(this.brush2.move, [500,700]);
+
+    console.log("range: ", this.x.range());
+
     this.context.append('path')
         .datum(TEMPERATURES[0].values)
         .attr('class', 'area')
@@ -462,7 +476,7 @@ export class MiddleComponent implements OnInit {
         let minDate = new Date(data.xDomainMin);
         let maxDate = new Date(data.xDomainMax);
         this.zoomFromTablet = true;
-        this.zoomed(data.state,minDate,maxDate);
+        this.zoomed(data.state,minDate,maxDate,data.xBrush);
  
     })
   

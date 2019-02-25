@@ -50,7 +50,7 @@ export class WebsocketService {
   }
 
   zoomChart() {
-    let observable = new Observable<{state:boolean, xDomainMin: Date, xDomainMax: Date}>(observer => {
+    let observable = new Observable<{state:boolean, xDomainMin: Date, xDomainMax: Date, xBrush: number}>(observer => {
         this.socket.on('zoomChart', (data) => {
           console.log("Received message from Websocket Server Zoom: ", data );
 
@@ -73,7 +73,7 @@ export class WebsocketService {
     //this.socket.emit('state', data2);
   }
 
-  sendZoom(data, data1, data2){
-    this.socket.emit('zoomChart',data, data1, data2);
+  sendZoom(data, data1, data2,data3){
+    this.socket.emit('zoomChart',data, data1, data2,data3);
   }
 }

@@ -29,9 +29,9 @@ io.on('connection', (socket) => {
         io.emit('moveItem', {type: action, previousIndex: prevIndex, currentIndex: currIndex, containerData: indexData});    
     });
 
-    socket.on('zoomChart', (zoom, min, max) => {
+    socket.on('zoomChart', (zoom, min, max, x) => {
         console.log("Message Received, zoom: " + zoom);
-        io.emit('zoomChart', {state: zoom, xDomainMin: min, xDomainMax: max});    
+        io.emit('zoomChart', {state: zoom, xDomainMin: min, xDomainMax: max, xBrush: x});    
     });
 
     // socket.on('drop', (message) => {
