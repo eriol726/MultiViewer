@@ -186,7 +186,7 @@ export class MiddleComponent implements OnInit {
         .translate(-s[0], 0));
   }
 
-  private zoomed(zoomFromTablet, xDomainMin, xDomainMax, xBrush) {
+  private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushT) {
   
     console.log("zoomFromTablet: ", zoomFromTablet, " \n " , xDomainMin);
     this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
@@ -217,7 +217,14 @@ export class MiddleComponent implements OnInit {
     if(zoomFromTablet){
       this.x.domain([xDomainMin, xDomainMax]);
       this.focus.select('.axis--x').call(this.xAxis);
-      this.focus.select('.brush').call(this.brush.move, [xBrush+240,xBrush+365]);
+      this.focus.select('.brush').call(this.brush.move, this.x.range().map(function(x){
+        console.log("x: ", x)
+        console.log("t", brushT );
+        console.log("this.t", this.x );
+        return (x-brushT.x)/brushT.k
+      },0
+    ));
+      console.log("brushT: ", this.x.range());
       //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
     }
 
@@ -476,7 +483,7 @@ export class MiddleComponent implements OnInit {
         let minDate = new Date(data.xDomainMin);
         let maxDate = new Date(data.xDomainMax);
         this.zoomFromTablet = true;
-        this.zoomed(data.state,minDate,maxDate,data.xBrush);
+        this.zoomed(data.state,minDate,maxDate,data.brushTransform);
  
     })
   

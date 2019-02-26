@@ -291,10 +291,26 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     this.focus.select('.axis--x').call(this.xAxis);
     console.log("t: ", t);
-    console.log("t: ", t.invertX);
-    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
-
-    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],t.x);
+    console.log("invertX: ", this.x.range().map(t.invertX, t));
+    console.log("myOwn: ", this.x.range().map(function(x){
+        console.log("x: ", x)
+        console.log("t", t );
+        console.log("this.t", this.x );
+        return (x-t.x)/t.k
+      },t
+    ));
+    let brushTransform = {'x':t.x,
+                          'y':t.y,
+                          'k':t.k };
+    this.context.select('.brush').call(this.brush.move, this.x.range().map(function(x){
+        console.log("x: ", x)
+        console.log("t.x", t.x );
+        console.log("this.x", this.x );
+        return (x-t.x)/t.k
+      },t
+    ));
+    
+    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushTransform);
   }
 
   
