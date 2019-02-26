@@ -175,6 +175,12 @@ export class MiddleComponent implements OnInit {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
     
     let s = d3.event.selection || this.x2.range();
+
+    let dateInit1 = TEMPERATURES[0].values[100].date;
+    let dateInit2 = TEMPERATURES[0].values[120].date;
+    
+    //s = [this.x(dateInit1),this.x(dateInit2)];
+    console.log("s: ", s);
     //this.x.domain(s.map(this.x2.invert, this.x2));
     // this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
     // this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
@@ -190,17 +196,23 @@ export class MiddleComponent implements OnInit {
   
     console.log("zoomFromTablet: ", zoomFromTablet, " \n " , xDomainMin);
     this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-      this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+    
+    let t = d3.event.transform;
+    let dateInit1 = TEMPERATURES[0].values[100].date;
+    let dateInit2 = TEMPERATURES[0].values[120].date;
 
-      this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+    this.focus.select('.brush').call(this.brush.move, [this.x(dateInit1),this.x(dateInit2)]);
     if(zoomFromTablet && currentEvent){
       if (currentEvent.sourceEvent && currentEvent.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
 
       
-      let t = d3.event.transform;
+      
       // this.svg.selectAll("focus")
       // .attr("transform", {k: 2.000000000000001,
       //   x: -83.39590298432509,
@@ -209,21 +221,19 @@ export class MiddleComponent implements OnInit {
 
       //this.x.domain(t.rescaleX(this.x2).domain());
      // this.x.domain([TEMPERATURES[0].values[10].date, TEMPERATURES[0].values[20].date]);
-      
+     
+     
+     //s = [this.x(dateInit1),this.x(dateInit2)];
       console.log("t: ", t);
       this.focus.select('.axis--x').call(this.xAxis);
-      this.context.select('.brush').call(this.brush.move, [t.x+100,t.x+120]);
+      this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+      //this.context.select('.brush').call(this.brush.move, [this.x(dateInit1),this.x(dateInit2)]);
     }
     if(zoomFromTablet){
       this.x.domain([xDomainMin, xDomainMax]);
       this.focus.select('.axis--x').call(this.xAxis);
-      this.focus.select('.brush').call(this.brush.move, this.x.range().map(function(x){
-        console.log("x: ", x)
-        console.log("t", brushT );
-        console.log("this.t", this.x );
-        return (x-brushT.x)/brushT.k
-      },0
-    ));
+      this.focus.select('.brush').call(this.brush2.move, this.x.range().map(function(x){
+        return (x-brushT.x)/brushT.k},0));
       console.log("brushT: ", this.x.range());
       //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
     }
@@ -441,11 +451,12 @@ export class MiddleComponent implements OnInit {
     this.focus.append('g')
     .attr('class', 'axis axis--y')
     .call(this.yAxis);
-
+    
+    //brush2
     this.focus.append('g')
     .attr('class', 'brush')
-    .call(this.brush2)
-    .call(this.brush2.move, [500,700]);
+    .call(this.brush2, this.x.range());
+   // .call(this.brush2.move, [500,700]);
 
     console.log("range: ", this.x.range());
 

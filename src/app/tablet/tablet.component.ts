@@ -264,22 +264,76 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private brushed() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
+    let dateInit1 = TEMPERATURES[0].values[100].date;
+    let dateInit2 = TEMPERATURES[0].values[120].date;
     let s = d3.event.selection || this.x2.range();
+
+    
+    
+    s = [this.x(dateInit1),this.x(dateInit2)];
     //this.x.domain(s.map(this.x2.invert, this.x2));
     // this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
     // this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
     // this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-    
+    console.log("s: ", s);
+    console.log("this.x2.range(): ", this.x2.range());
     //this.focus.select('.axis--x').call(this.xAxis);
     this.svg.select('.zoom').call(this.zoom.transform, d3Zoom.zoomIdentity
         .scale(this.width / (s[1] - s[0]))
         .translate(-s[0], 0));
+  }
+  private getDayMounthYear(date: Date){
+    console.log("date: ", date);
+    let day = date.getDate();
+    let mounth = date.getMonth();
+    let year = date.getFullYear();
+    let dateString = day+"-"+mounth+"-"+year;
+    console.log(dateString);
+    return dateString;
   }
 
   private zoomed() {
     console.log("zoom: ", d3.event);
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
     let t = d3.event.transform;
+    let zoomDate1 = t.rescaleX(this.x2).domain()[0];
+    let zoomDate2 = t.rescaleX(this.x2).domain()[1];
+    
+    console.log("zoomDate1: ", zoomDate1);
+    let index1= TEMPERATURES[0].values.findIndex((d: any) => {
+
+      zoomDate1.setHours(2,0,0,0);
+      d.date.setHours(2,0,0,0);
+
+      if(d.date.getTime() === zoomDate1.getTime()){
+        //console.log("zoomDate: ", zoomDate1);
+      }
+      return d.date.getTime() === zoomDate1.getTime()
+    });
+
+    let index2 = TEMPERATURES[0].values.findIndex((d: any) => {
+
+      zoomDate2.setHours(2,0,0,0);
+      d.date.setHours(2,0,0,0);
+
+      if(d.date.getTime() === zoomDate2.getTime()){
+        //console.log("zoomDate: ", zoomDate2);
+      }
+      return d.date.getTime() === zoomDate2.getTime()
+    });
+    //TEMPERATURES[0].values.findIndex((d: any) => {d.date === t.rescaleX(this.x2).domain()[0]});
+    
+    let zoomBoundaries = t.rescaleX(this.x2).domain();
+    let dateVariable1 = TEMPERATURES[0].values[index1].date;
+    let dateVariable2 = TEMPERATURES[1].values[index2].date;
+
+    let dateInit1 = TEMPERATURES[0].values[100].date;
+    let dateInit2 = TEMPERATURES[0].values[120].date;
+    let dateInitX1 = this.x(dateInit1);
+    let dateInitX2 = this.x(dateInit2);
+    let s = [dateInitX1,dateInitX2];
+    console.log("zoomBoundaries: ", zoomBoundaries);
+    //this.x.domain([dateInit1,dateInit2]);
     this.x.domain(t.rescaleX(this.x2).domain());
     this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
     this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
@@ -290,27 +344,24 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
     
     this.focus.select('.axis--x').call(this.xAxis);
-    console.log("t: ", t);
-    console.log("invertX: ", this.x.range().map(t.invertX, t));
-    console.log("myOwn: ", this.x.range().map(function(x){
-        console.log("x: ", x)
-        console.log("t", t );
-        console.log("this.t", this.x );
-        return (x-t.x)/t.k
-      },t
-    ));
+
     let brushTransform = {'x':t.x,
                           'y':t.y,
                           'k':t.k };
-    this.context.select('.brush').call(this.brush.move, this.x.range().map(function(x){
-        console.log("x: ", x)
-        console.log("t.x", t.x );
-        console.log("this.x", this.x );
-        return (x-t.x)/t.k
-      },t
-    ));
+    //this.context.select('.brush').call(this.brush.move,[this.x(dateInitX1), this.x(dateInitX2)]);
+    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+    //this.x = d3.scaleTime().range([0, this.width]);
+    console.log("this.x range: ", this.x.range());
+    console.log("s: ", s);
+    // this.context.select('.brush').call(this.brush.move, this.x.range().map(function(x){
+    //     console.log("x: ", x)
+    //     console.log("t.x", t.x );
+    //     console.log("this.x", this.x );
+    //     return (x-t.x)/t.k
+    //   },t
+    // ));
     
-    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushTransform);
+    //this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushTransform);
   }
 
   
