@@ -202,12 +202,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.height = +this.svg.attr('height') - this.margin.top - this.margin.bottom;
     this.height2 = +this.svg.attr('height') - this.margin2.top - this.margin2.bottom;
 
-    this.x = d3.scaleTime().
-    domain([TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date])    
-    .range([0, this.width]);
+    this.x = d3.scaleTime().range([0, this.width]);
     this.x2 = d3.scaleTime().range([0, this.width]);
     this.y = d3.scaleLinear().range([this.height, 0]);
     this.y2 = d3.scaleLinear().range([this.height2, 0]);
+
 
     this.xAxis = d3Axis.axisBottom(this.x);
     this.xAxis2 = d3Axis.axisBottom(this.x2);
@@ -262,93 +261,60 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.context = this.svg.append('g')
         .attr('class', 'context')
         .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
+
+    
   }
 
   private brushed() {
     
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
-
-    let dateInit1 = TEMPERATURES[0].values[100].date;
-    let dateInit2 = TEMPERATURES[0].values[120].date;
-    let s = d3.event.selection || this.x.range();
-
-    if(d3.event.sourceEvent){
-      s = d3.event.selection;
-      // s[0] = s[0]+this.x(dateInit1);
-      // s[1] = s[1]-this.x(dateInit2);
-    }else{
-      s = [this.x(dateInit1),this.x(dateInit2)];
-    }
-    console.log("brushed: ", s);
+    let s = d3.event.selection || this.x2.range();
     
-    //s = [this.x(dateInit1),this.x(dateInit2)];
-    //this.x.domain(s.map(this.x2.invert, this.x2));
-    // this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
-    // this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-    // this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    this.x.domain(s.map(this.x2.invert, this.x2));
+    this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
+    this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
 
-    //this.focus.select('.axis--x').call(this.xAxis);
+    this.focus.select('.axis--x').call(this.xAxis);
     this.svg.select('.zoom').call(this.zoom.transform, d3Zoom.zoomIdentity
         .scale(this.width / (s[1] - s[0]))
         .translate(-s[0], 0));
   }
 
   private zoomed() {
-    let t = d3.event.transform;
-    let zoomDate1 = t.rescaleX(this.x2).domain()[0];
-    let zoomDate2 = t.rescaleX(this.x2).domain()[1];
-    let index1= TEMPERATURES[0].values.findIndex((d: any) => {
+    
+    // let zoomDate1 = t.rescaleX(this.x2).domain()[0];
+    // let zoomDate2 = t.rescaleX(this.x2).domain()[1];
+    // let index1= TEMPERATURES[0].values.findIndex((d: any) => {
 
-      zoomDate1.setHours(2,0,0,0);
-      d.date.setHours(2,0,0,0);
+    //   zoomDate1.setHours(2,0,0,0);
+    //   d.date.setHours(2,0,0,0);
 
-      if(d.date.getTime() === zoomDate1.getTime()){
-        //console.log("zoomDate: ", zoomDate1);
-      }
-      return d.date.getTime() === zoomDate1.getTime()
-    });
+    //   if(d.date.getTime() === zoomDate1.getTime()){
+    //     //console.log("zoomDate: ", zoomDate1);
+    //   }
+    //   return d.date.getTime() === zoomDate1.getTime()
+    // });
 
-    let index2 = TEMPERATURES[0].values.findIndex((d: any) => {
+    // let index2 = TEMPERATURES[0].values.findIndex((d: any) => {
 
-      zoomDate2.setHours(2,0,0,0);
-      d.date.setHours(2,0,0,0);
+    //   zoomDate2.setHours(2,0,0,0);
+    //   d.date.setHours(2,0,0,0);
 
-      if(d.date.getTime() === zoomDate2.getTime()){
-        //console.log("zoomDate: ", zoomDate2);
-      }
-      return d.date.getTime() === zoomDate2.getTime()
-    });
+    //   if(d.date.getTime() === zoomDate2.getTime()){
+    //     //console.log("zoomDate: ", zoomDate2);
+    //   }
+    //   return d.date.getTime() === zoomDate2.getTime()
+    // });
 
-    //this.brush.extent([TEMPERATURES[0].values[index1].date,  TEMPERATURES[0].values[index2].date]);
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
+    let t = d3.event.transform;
     
-    
-    //TEMPERATURES[0].values.findIndex((d: any) => {d.date === t.rescaleX(this.x2).domain()[0]});
-    
-    let zoomBoundaries = t.rescaleX(this.x2).domain();
-    let dateVariable1 = TEMPERATURES[0].values[100].date;
-    let dateVariable2 = TEMPERATURES[1].values[120].date;
-
-    
-    let dateInitX1 = this.x(dateVariable1);
-    let dateInitX2 = this.x(dateVariable2);
-    let s = [dateInitX1,dateInitX2];
-
-    //this.x.domain([dateInit1,dateInit2]);
-    //console.log("brush: ", this.brush.empty());
-    // let t2 = d3.zoomTransform( this.svg.node()); 
-    // console.log("t2: ", t2);
-    console.log("t: ", t.rescaleX(this.x2));
-    
-    var newX = d3.event.transform.rescaleX(this.x);
-    //this.xAxis.call(d3.axisBottom(newX));
-
-    
-    
-    
-    
-    this.x.domain([t.rescaleX(this.x2).domain()[0].getTime(), t.rescaleX(this.x2).domain()[1].getTime()]);
-
+    //this.x.domain([t.rescaleX(this.x2).domain()[0].getTime(), t.rescaleX(this.x2).domain()[1].getTime()]);
+    this.x.domain(t.rescaleX(this.x2).domain());
 
 
     this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
@@ -356,10 +322,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
     this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
     this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-
     this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
     
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
+    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
 
     // https://bl.ocks.org/mbostock/431a331294d2b5ddd33f947cf4c81319
 
@@ -370,7 +336,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.context.select('.brush').call(this.brush.move,[this.x(dateInitX1), this.x(dateInitX2)]);
     
     
-    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+    
     //this.x = d3.scaleTime().range([0, this.width]);
 
     // this.context.select('.brush').call(this.brush.move, this.x.range().map(function(x){
@@ -468,10 +434,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private drawChart(data) {
 
-    this.x.domain(d3Array.extent(data[0].values, (d: any) => d.date));
-    this.y.domain([0, d3Array.max(data[0].values, (d: any) => d.temperature)]);
+    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+    this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
+
+    // this.x.domain(d3Array.extent(data[0].values, (d: any) => d.date));
+    // this.y.domain([0, d3Array.max(data[0].values, (d: any) => d.temperature)]);
+    // this.x2.domain(this.x.domain());
+    // this.y2.domain(this.y.domain());
 
 
     this.focus.append('path')
@@ -566,6 +537,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('height', this.height)
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
+
+        this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
   }
 
 
