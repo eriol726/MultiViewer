@@ -333,11 +333,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
-
+ 
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+    console.log("t: ", t);
+    let brushT = {"k": t.k, "x": t.x, "y": t.y};
     
-    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],null);
+    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);
   }
 
   

@@ -196,7 +196,7 @@ export class MiddleComponent implements OnInit {
         .translate(-s[0], 0));
   }
 
-  private zoomed(zoomFromTablet, xDomainMin, xDomainMax) {
+  private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
     
 
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
@@ -225,8 +225,8 @@ export class MiddleComponent implements OnInit {
       console.log("xDomainMin: ", xDomainMin);
       this.x.domain([new Date(xDomainMin),new Date(xDomainMax)]);
       // this.focus.select('.axis--x').call(this.xAxis);
-      // this.focus.select('.brush').call(this.brush2.move, this.x.range().map(function(x){
-      // return (x-brushT.x)/brushT.k},0));
+      this.focus.select('.brush').call(this.brush2.move, this.x.range().map(function(x){
+      return (x-brushTransform.x)/brushTransform.k},0));
       console.log("brushT: ", this.x.range());
       //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
       
@@ -346,7 +346,7 @@ export class MiddleComponent implements OnInit {
         console.log("data: ", data);
         this.initZoomMax = data.xDomainMax;
         this.initZoomMin = data.xDomainMin;
-        this.zoomed(true,data.xDomainMax,data.xDomainMin);
+        this.zoomed(true,data.xDomainMax,data.xDomainMin,data.brushTransform);
         
     })
   
