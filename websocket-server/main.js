@@ -6,12 +6,13 @@ let io = require('socket.io')(http);
 //     res.sendFile('index.html', {"root": '.'});
 //   });
 
+
 io.on('connection', (socket) => {
 
     // Log whenever a user connects
     console.log('user connected');
 
-    // Log whenever a client disconnects from our websocket server
+    //Log whenever a client disconnects from our websocket server
     socket.on('disconnect', function(){
         console.log('user disconnected');
     });
@@ -34,11 +35,8 @@ io.on('connection', (socket) => {
         io.emit('zoomChart', {state: zoom, xDomainMin: min, xDomainMax: max, brushTransform: xyk});    
     });
 
-    // socket.on('drop', (message) => {
-    //     console.log("Message Received, state: " + message);
-    //     io.emit('state', {type:'new-message', state: message});    
-    // });
-});
+
+},{reconnection:false});
 
 // Initialize our websocket server on port 5000
 http.listen(3000, () => {

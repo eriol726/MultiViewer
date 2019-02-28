@@ -23,7 +23,7 @@ export class ActionService {
     ]
   };
 
-  constructor() { }
+  constructor() { console.log("ActionService")}
 
   public expandPanel(){
     console.log("expand");

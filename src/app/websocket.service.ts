@@ -9,17 +9,20 @@ import { TabletComponent } from './tablet/tablet.component';
 
 
 
-@Injectable({
-  providedIn: 'root'
-})
+// @Injectable({
+//   providedIn: 'root'
+// })
 export class WebsocketService {
 
   //private socket; // socket that connects to our socket.io server
   //@ViewChild(LeftComponent) leftPanel: LeftComponent;
 
-  constructor() { }
+  constructor() { 
+    console.log("this.socket: ", this.socket);
+  }
 
   private socket = io('http://localhost:3000');
+  
 
   expandItem() {
     let observable = new Observable<{type:String, state:number}>(observer => {

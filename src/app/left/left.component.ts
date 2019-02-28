@@ -52,7 +52,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-
+    console.log("ngInit");
     const tasksObservable = this.actionService.getActions();
     tasksObservable.subscribe(tasksData => {
       this.tasks3 = tasksData;

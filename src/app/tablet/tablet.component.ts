@@ -184,7 +184,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.initMargins();
     this.initSvg();
-
+    console.log("init");
     this.drawChart(TEMPERATURES);
 
   
@@ -197,10 +197,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private initSvg() {
     this.svg = d3.select('svg');
+    this.margin = {top: 20, right: 20, bottom: 110, left: 40};
+    this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
+    this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
+    this.height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
+    this.height2 = +this.svg.attr("height") -this.margin2.top - this.margin2.bottom;
 
-    this.width = +this.svg.attr('width') - this.margin.left - this.margin.right;
-    this.height = +this.svg.attr('height') - this.margin.top - this.margin.bottom;
-    this.height2 = +this.svg.attr('height') - this.margin2.top - this.margin2.bottom;
+    // this.width = +this.svg.attr('width') - this.margin.left - this.margin.right;
+    // this.height = +this.svg.attr('height') - this.margin.top - this.margin.bottom;
+    // this.height2 = +this.svg.attr('height') - this.margin2.top - this.margin2.bottom;
 
     this.x = d3.scaleTime().range([0, this.width]);
     this.x2 = d3.scaleTime().range([0, this.width]);
@@ -208,15 +213,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.y2 = d3.scaleLinear().range([this.height2, 0]);
 
 
-    this.xAxis = d3Axis.axisBottom(this.x);
-    this.xAxis2 = d3Axis.axisBottom(this.x2);
-    this.yAxis = d3Axis.axisLeft(this.y);
+    this.xAxis = d3.axisBottom(this.x);
+    this.xAxis2 = d3.axisBottom(this.x2);
+    this.yAxis = d3.axisLeft(this.y);
 
-    this.brush = d3Brush.brushX()
+    this.brush = d3.brushX()
         .extent([[0, 0], [this.width, this.height2]])
         .on('brush end', this.brushed.bind(this));
 
-    this.zoom = d3Zoom.zoom()
+    this.zoom = d3.zoom()
         .scaleExtent([1, Infinity])
         .translateExtent([[0, 0], [this.width, this.height]])
         .extent([[0, 0], [this.width, this.height]])
@@ -225,7 +230,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.upperOuterArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
+      .x((d: any) => this.x(d.date))
       .y0((d: any) => this.y(d.temperature )+20)
       .y1((d: any) => this.y(d.temperature )+10);
 
@@ -243,7 +248,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
     this.area2 = d3Shape.area()
-      .curve(d3Shape.curveMonotoneX)
+      .curve(d3.curveBasis)
       .x((d: any) => this.x2(d.date))
       .y0((d: any) => this.y2(d.temperature)+5)
       .y1((d: any) => this.y2(d.temperature));
@@ -255,8 +260,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('height', this.height);
 
     this.focus = this.svg.append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
-        .attr('class', 'focus');
+        .attr('class', 'focus')
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+        
 
     this.context = this.svg.append('g')
         .attr('class', 'context')
@@ -268,18 +274,21 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private brushed() {
     
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
+    console.log("brushed");
     let s = d3.event.selection || this.x2.range();
     
     this.x.domain(s.map(this.x2.invert, this.x2));
-    this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
+    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
+    this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
+    this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
+    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
 
+    console.log("s: ", s);
     this.focus.select('.axis--x').call(this.xAxis);
-    this.svg.select('.zoom').call(this.zoom.transform, d3Zoom.zoomIdentity
+    this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
         .scale(this.width / (s[1] - s[0]))
         .translate(-s[0], 0));
   }
@@ -311,43 +320,24 @@ export class TabletComponent implements OnInit, AfterViewInit {
     // });
 
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
-    let t = d3.event.transform;
+    console.log("zoom");
+    var t = d3.event.transform;
     
-    //this.x.domain([t.rescaleX(this.x2).domain()[0].getTime(), t.rescaleX(this.x2).domain()[1].getTime()]);
+    console.log(t.rescaleX(this.x2).domain());
     this.x.domain(t.rescaleX(this.x2).domain());
-
-
-    this.focus.selectAll('.areaOuterUpper').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaInner2').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaInner').attr('d', function(d)  {return this.upperInnerArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaOuterLower').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaOuterLower2').attr('d', function(d)  {return this.lowerOuterArea(d.values)}.bind(this));
-    this.focus.selectAll('.areaOuterUpper2').attr('d', function(d)  {return this.upperOuterArea(d.values)}.bind(this));
     
+    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
+    this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
+    this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
+    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
-
-    // https://bl.ocks.org/mbostock/431a331294d2b5ddd33f947cf4c81319
-
-   // this.focus.selectAll('.areaOuterUpper').attr("transform", d3.event.transform)
-    let brushTransform = {'x':t.x,
-                          'y':t.y,
-                          'k':t.k };
-    //this.context.select('.brush').call(this.brush.move,[this.x(dateInitX1), this.x(dateInitX2)]);
     
-    
-    
-    //this.x = d3.scaleTime().range([0, this.width]);
-
-    // this.context.select('.brush').call(this.brush.move, this.x.range().map(function(x){
-    //     console.log("x: ", x)
-    //     console.log("t.x", t.x );
-    //     console.log("this.x", this.x );
-    //     return (x-t.x)/t.k
-    //   },t
-    // ));
-    
-    //this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushTransform);
+    this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],null);
   }
 
   
@@ -356,81 +346,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   }
 
-  addAxesAndLegend (svg, xAxis, yAxis, margin, chartWidth, chartHeight) {
-    var legendWidth  = 200,
-        legendHeight = 100;
-  
-    // clipping to make sure nothing appears behind legend
-    svg.append('clipPath')
-      .attr('id', 'axes-clip')
-      .append('polygon')
-        .attr('points', (-margin.left)                 + ',' + (-margin.top)                 + ' ' +
-                        (chartWidth - legendWidth - 1) + ',' + (-margin.top)                 + ' ' +
-                        (chartWidth - legendWidth - 1) + ',' + legendHeight                  + ' ' +
-                        (chartWidth + margin.right)    + ',' + legendHeight                  + ' ' +
-                        (chartWidth + margin.right)    + ',' + (chartHeight + margin.bottom) + ' ' +
-                        (-margin.left)                 + ',' + (chartHeight + margin.bottom));
-  
-    var axes = svg.append('g')
-      .attr('clip-path', 'url(#axes-clip)');
-  
-    axes.append('g')
-      .attr('class', 'x axis')
-      .attr('transform', 'translate(0,' + chartHeight + ')')
-      .call(xAxis);
-  
-    axes.append('g')
-      .attr('class', 'y axis')
-      .call(yAxis)
-      .append('text')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', 6)
-        .attr('dy', '.71em')
-        .style('text-anchor', 'end')
-        .text('Time (s)');
-  
-    var legend = svg.append('g')
-      .attr('class', 'legend')
-      .attr('transform', 'translate(' + (chartWidth - legendWidth) + ', 0)');
-  
-    legend.append('rect')
-      .attr('class', 'legend-bg')
-      .attr('width',  legendWidth)
-      .attr('height', legendHeight);
-  
-    legend.append('rect')
-      .attr('class', 'outer')
-      .attr('width',  75)
-      .attr('height', 20)
-      .attr('x', 10)
-      .attr('y', 10);
-  
-    legend.append('text')
-      .attr('x', 115)
-      .attr('y', 25)
-      .text('5% - 95%');
-  
-    legend.append('rect')
-      .attr('class', 'inner')
-      .attr('width',  75)
-      .attr('height', 20)
-      .attr('x', 10)
-      .attr('y', 40);
-  
-    legend.append('text')
-      .attr('x', 115)
-      .attr('y', 55)
-      .text('25% - 75%');
-  
-    legend.append('path')
-      .attr('class', 'median-line')
-      .attr('d', 'M10,80L85,80');
-  
-    legend.append('text')
-      .attr('x', 115)
-      .attr('y', 85)
-      .text('Median');
-  }
 
   private drawChart(data) {
 
@@ -444,61 +359,49 @@ export class TabletComponent implements OnInit, AfterViewInit {
     // this.x2.domain(this.x.domain());
     // this.y2.domain(this.y.domain());
 
+    // this.focus.append('path')
+    // .datum(TEMPERATURES[0].values)
+    // .attr('class', 'areaOuterUpper')
+    // .attr('d',this.upperOuterArea)
+    // .attr('clip-path', 'url(#rect-clip)');
+
 
     this.focus.append('path')
-      .datum(TEMPERATURES[0])
+      .datum(TEMPERATURES[0].values)
       .attr('class', 'areaOuterUpper')
-      .attr('d',function(d){
-          console.log("d first: ", d);
-          return this.upperOuterArea(d);
-      }.bind(this))
+      .attr('d',this.upperOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[0])
+      .datum(TEMPERATURES[0].values)
       .attr('class', 'areaInner')
-      .attr('d',function(d){
-          console.log("d first: ", d);
-          return this.upperInnerArea(d);
-      }.bind(this))
+      .attr('d',this.upperInnerArea)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[0])
+      .datum(TEMPERATURES[0].values)
       .attr('class', 'areaOuterLower')
-      .attr('d',function(d){
-          console.log("d second: ", d);
-          return this.lowerOuterArea(d);
-      }.bind(this))
+      .attr('d',this.lowerOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
 
     //next line
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1])
+      .datum(TEMPERATURES[1].values)
       .attr('class', 'areaOuterUpper2')
-      .attr('d',function(d){
-          console.log("d first: ", d);
-          return this.upperOuterArea(d);
-      }.bind(this))
+      .attr('d',this.upperOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1])
+      .datum(TEMPERATURES[1].values)
       .attr('class', 'areaInner2')
-      .attr('d',function(d){
-          console.log("d first: ", d);
-          return this.upperInnerArea(d);
-      }.bind(this))
+      .attr('d',this.upperInnerArea)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1])
+      .datum(TEMPERATURES[1].values)
       .attr('class', 'areaOuterLower2')
-      .attr('d',function(d){
-          console.log("d second: ", d);
-          return this.lowerOuterArea(d);
-      }.bind(this))
+      .attr('d',this.lowerOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
     
 
@@ -516,10 +419,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('class', 'area')
         .attr('d', this.area2);
     
-    this.context.append('path')
-        .datum(TEMPERATURES[1].values)
-        .attr('class', 'area')
-        .attr('d', this.area2);
+    // this.context.append('path')
+    //     .datum(TEMPERATURES[1].values)
+    //     .attr('class', 'area')
+    //     .attr('d', this.area2);
 
     this.context.append('g')
         .attr('class', 'axis axis--x')
@@ -538,7 +441,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
-        this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
+    this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
   }
 
 

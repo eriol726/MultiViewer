@@ -23,9 +23,9 @@ export class AppComponent {
   index = 0;
   nr = 0;
 
-  constructor( private _chatService: WebsocketService, private tabletComp : TabletComponent, private actionService : ActionService, ) {
+  constructor(  ) {
 
-
+    console.log("app component init");
     // this._chatService.newMessageReceived()
     // .subscribe(data=>{
     //   this.index = data.state

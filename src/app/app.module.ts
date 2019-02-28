@@ -50,4 +50,4 @@ import { ActionService } from './action.service';
 })
 export class AppModule { }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+//platformBrowserDynamic().bootstrapModule(AppModule);
