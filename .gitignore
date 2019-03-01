@@ -29,3 +29,5 @@ hs_err_pid*
 /src/environments/environment.ts
 
 /server/node_modules
+
+dist/

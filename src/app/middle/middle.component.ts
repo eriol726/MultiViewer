@@ -174,13 +174,8 @@ export class MiddleComponent implements OnInit {
         .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
   }
 
-  private brushed() {
+  private brushed(dragFromTablet,xDomainMin,xDomainMax,brushTransform) {
     
-    if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
-
-    let s = d3.event.selection || this.x2.range();
-    
-    this.x.domain(s.map(this.x2.invert, this.x2));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
@@ -188,12 +183,19 @@ export class MiddleComponent implements OnInit {
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+    if(!dragFromTablet){
 
-    console.log("s: ", s);
+      if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
+
+      let s = d3.event.selection || this.x2.range();
+
+    }
+
+    if(dragFromTablet){
+
+    }
     this.focus.select('.axis--x').call(this.xAxis);
-    this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
-        .scale(this.width / (s[1] - s[0]))
-        .translate(-s[0], 0));
+
   }
 
   private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
@@ -210,25 +212,13 @@ export class MiddleComponent implements OnInit {
     if(!zoomFromTablet){
       if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
       var t = d3.event.transform;
-    
-      console.log("zoom");
-
-      this.x.domain(t.rescaleX(this.x2).domain());
-
-      this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
-      //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
-      this.focus.select('.brush').call(this.brush2.move, this.x.range().map(t.invertX, t));
+      
     }
     
     
     if(zoomFromTablet){
-      console.log("xDomainMin: ", xDomainMin);
-      this.x.domain([new Date(xDomainMin),new Date(xDomainMax)]);
-      // this.focus.select('.axis--x').call(this.xAxis);
-      this.focus.select('.brush').call(this.brush2.move, this.x.range().map(function(x){
-      return (x-brushTransform.x)/brushTransform.k},0));
-      console.log("brushT: ", this.x.range());
-      //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+
+      this.focus.select(".brush").call(this.brush2.move, [xDomainMin, xDomainMax].map(this.x2));
       
     }
 
@@ -304,7 +294,7 @@ export class MiddleComponent implements OnInit {
     this.focus.append('g')
         .attr('class', 'brush') 
         .call(this.brush2)
-        .call(this.brush2.move, this.x.range());
+        .call(this.brush2.move, this.x2.range());
 
     this.context.append('path')
         .datum(TEMPERATURES[0].values)
@@ -333,20 +323,18 @@ export class MiddleComponent implements OnInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
-    //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
-    //this.focus.select(".brush").call(this.brush2.move, [TEMPERATURES[0].values[this.initZoomMax].date, TEMPERATURES[0].values[this.initZoomMin].date].map(this.x));
   }
 
   ngAfterViewInit(){
     this.display.zoomChart().subscribe(data =>{
-      console.log("zoom: ", data);
+
         let minDate = new Date(data.xDomainMin);
         let maxDate = new Date(data.xDomainMax);
         this.zoomFromTablet = true;
-        console.log("data: ", data);
+        console.log("x init1: ", [minDate, maxDate].map(this.x2));
         this.initZoomMax = data.xDomainMax;
         this.initZoomMin = data.xDomainMin;
-        this.zoomed(true,data.xDomainMax,data.xDomainMin,data.brushTransform);
+        this.zoomed(true,minDate,maxDate,data.brushTransform);
         
     })
   

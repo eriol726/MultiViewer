@@ -295,35 +295,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private zoomed() {
     
-    // let zoomDate1 = t.rescaleX(this.x2).domain()[0];
-    // let zoomDate2 = t.rescaleX(this.x2).domain()[1];
-    // let index1= TEMPERATURES[0].values.findIndex((d: any) => {
-
-    //   zoomDate1.setHours(2,0,0,0);
-    //   d.date.setHours(2,0,0,0);
-
-    //   if(d.date.getTime() === zoomDate1.getTime()){
-    //     //console.log("zoomDate: ", zoomDate1);
-    //   }
-    //   return d.date.getTime() === zoomDate1.getTime()
-    // });
-
-    // let index2 = TEMPERATURES[0].values.findIndex((d: any) => {
-
-    //   zoomDate2.setHours(2,0,0,0);
-    //   d.date.setHours(2,0,0,0);
-
-    //   if(d.date.getTime() === zoomDate2.getTime()){
-    //     //console.log("zoomDate: ", zoomDate2);
-    //   }
-    //   return d.date.getTime() === zoomDate2.getTime()
-    // });
 
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
     console.log("zoom");
     var t = d3.event.transform;
-    
-    console.log(t.rescaleX(this.x2).domain());
+    console.log("t.rescaleX(this.x2).domain(): ", t.rescaleX(this.x2).domain());
     this.x.domain(t.rescaleX(this.x2).domain());
     
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
@@ -333,7 +309,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
- 
+
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
     console.log("t: ", t);
@@ -341,8 +317,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);
   }
-
-  
 
   ngOnChanges() {
 
@@ -444,6 +418,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .call(this.zoom);
 
     this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
+    
   }
 
 
