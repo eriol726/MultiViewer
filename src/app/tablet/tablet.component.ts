@@ -104,7 +104,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private upperOuterArea: any;
   private upperInnerArea: any;
   private lowerOuterArea: any;
+  private upperOuterArea2: any;
 
+  private focusIndexMin: any = 100;
+  private focusIndexMax: any = 120;
     
   
  
@@ -117,6 +120,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
+    this.focus.select('.areaOuterUpper')
+      .attr("d", this.upperOuterArea2.bind(this))
     this.socket.sendExpand("task",index);
   }
 
@@ -231,20 +236,34 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.upperOuterArea = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date))
-      .y0((d: any) => this.y(d.temperature )+20)
-      .y1((d: any) => this.y(d.temperature )+10);
+      .y0((d: any) => this.y(d.temperature ))
+      .y1((d: any) => this.y(d.temperature -10));
+
+      this.upperOuterArea2 = d3.area()
+      .curve(d3.curveBasis)
+      .x((d: any) => this.x(d.date))
+      .y0((d: any, i: number) => {
+        
+        if(i> 110 && i < 115 ){
+          
+          return this.y(d.temperature)+10;
+        }else{
+          return this.y(d.temperature)+20;
+        }
+      })
+      .y1((d: any) => this.y(d.temperature)+10);
 
     this.upperInnerArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature )+10)
+      .x((d: any) => this.x(d.date) )
+      .y0((d: any) => this.y(d.temperature )+20)
       .y1((d: any) => this.y(d.temperature )+0);
 
     this.lowerOuterArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature )+0)
-      .y1((d: any) => this.y(d.temperature )-Math.floor(Math.random() * (10 - 0 + 1)) + 0);
+      .x((d: any) => this.x(d.date) )
+      .y0((d: any) => this.y(d.temperature +10))
+      .y1((d: any) => this.y(d.temperature ));
 
 
     this.area2 = d3Shape.area()
@@ -299,6 +318,29 @@ export class TabletComponent implements OnInit, AfterViewInit {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
     console.log("zoom");
     var t = d3.event.transform;
+    let zoomDate1 = t.rescaleX(this.x2).domain()[0];
+    let zoomDate2 = t.rescaleX(this.x2).domain()[1];
+    this.focusIndexMin= TEMPERATURES[0].values.findIndex((d: any) => {
+
+      zoomDate1.setHours(2,0,0,0);
+      d.date.setHours(2,0,0,0);
+
+      if(d.date.getTime() === zoomDate1.getTime()){
+        //console.log("zoomDate: ", zoomDate1);
+      }
+      return d.date.getTime() === zoomDate1.getTime()
+    });
+
+    this.focusIndexMax = TEMPERATURES[0].values.findIndex((d: any) => {
+
+      zoomDate2.setHours(2,0,0,0);
+      d.date.setHours(2,0,0,0);
+
+      if(d.date.getTime() === zoomDate2.getTime()){
+        //console.log("zoomDate: ", zoomDate2);
+      }
+      return d.date.getTime() === zoomDate2.getTime()
+    });
     console.log("t.rescaleX(this.x2).domain(): ", t.rescaleX(this.x2).domain());
     this.x.domain(t.rescaleX(this.x2).domain());
     
@@ -417,7 +459,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
-    this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
+    this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[this.focusIndexMin].date, TEMPERATURES[0].values[this.focusIndexMax].date].map(this.x));
     
   }
 
