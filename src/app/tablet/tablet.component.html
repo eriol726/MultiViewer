@@ -11,7 +11,9 @@
             [cdkDropListConnectedTo]="[doneList]"
             class="example-list"
             (cdkDropListDropped)="dropTasks($event)">
-            <mat-expansion-panel *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
+            <mat-expansion-panel (opened)="panelOpenState = true"
+                                 (closed)="panelOpenState = false"
+                                 *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
               <mat-expansion-panel-header (click)="expandTaskPanel(i)">
                 <mat-panel-title >
                     <ng-container *ngIf="i < 1; else lightGreen" >

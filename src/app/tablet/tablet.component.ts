@@ -102,9 +102,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private focus: any;
 
   private upperOuterArea: any;
-  private upperInnerArea: any;
+  private innerArea: any;
   private lowerOuterArea: any;
+  private upperOuterArea2: any;
 
+  private focusIndexMin: any = 5000;
+  private focusIndexMax: any = -5000;
+
+  private zoomDate1: any;
+  private zoomDate2: any;
+
+  private panelOpenState = false;
     
   
  
@@ -117,9 +125,28 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   expandTaskPanel(index){
-    console.log("open");
+    console.log("open ", this.panelOpenState );
     //this.tabletComp.handleLeftPanel(0);
+    
+    this.focusIndexMin= TEMPERATURES[1].values.findIndex((d: any) => {
+      this.zoomDate1.setHours(2,0,0,0);
+      d.date.setHours(2,0,0,0);
+      return d.date.getTime() === this.zoomDate1.getTime()
+    });
+
+    this.focusIndexMax = TEMPERATURES[1].values.findIndex((d: any) => {
+      this.zoomDate2.setHours(2,0,0,0);
+      d.date.setHours(2,0,0,0);
+      return d.date.getTime() === this.zoomDate2.getTime()
+    });
+
+
+    this.focus.select('.areaOuterUpper2')
+    .attr("d", this.upperOuterArea.bind(this))
     this.socket.sendExpand("task",index);
+
+
+    
   }
 
   expandDonePanel(index){
@@ -228,7 +255,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .x((d: any, i: number) => {
        
         return this.x(d.date);
-        
 
       })
       .y0((d: any, i: number) => {
@@ -239,9 +265,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         }
       })
       .y1((d: any, i: number) => {
-        console.log("y_1", TEMPERATURES[1].values[i].temperature-2 , " < ", this.y(d.temperature));
        if (this.y(TEMPERATURES[1].values[i].temperature-2) < this.y(d.temperature)){
-        console.log(">40");
         return this.y(TEMPERATURES[1].values[i].temperature-2);
        }
        else{
@@ -249,24 +273,40 @@ export class TabletComponent implements OnInit, AfterViewInit {
        } 
       })
 
-
     this.upperOuterArea = d3.area()
-      .curve(d3.curveBasis)
-      .x((d: any, i :number) => this.x(TEMPERATURES[1].values[i].date))
-      .y0((d: any) => this.y(d.temperature )+20)
-      .y1((d: any) => this.y(d.temperature )+10);
+    .curve(d3.curveBasis)
+    .x((d: any) => this.x(d.date))
+    .y0((d: any, i: number) => {
+      if(i> this.focusIndexMin+5 && i < this.focusIndexMax-5 && this.panelOpenState){
+        return this.y(TEMPERATURES[1].values[i].temperature+1);
+      }else{
+        return this.y(d.temperature+10);
+      }
+    })
+    .y1((d: any, i: number) => {
+      return this.y(d.temperature)
+    })
 
-    this.upperInnerArea = d3.area()
+
+    // this.upperOuterArea = d3.area()
+    //   .curve(d3.curveBasis)
+    //   .x((d: any) => this.x(d.date))
+    //   .y0((d: any) => this.y(d.temperature +10))
+    //   .y1((d: any) => this.y(d.temperature ));
+
+    
+
+    this.innerArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any, i :any) => this.x(TEMPERATURES[1].values[i].date))
+      .x((d: any) => this.x(d.date) )
       .y0((d: any) => this.y(d.temperature ))
-      .y1((d: any) => this.y(d.temperature -2));
+      .y1((d: any) => this.y(d.temperature -10));
 
     this.lowerOuterArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature )+0)
-      .y1((d: any) => this.y(d.temperature )-Math.floor(Math.random() * (10 - 0 + 1)) + 0);
+      .x((d: any) => this.x(d.date) )
+      .y0((d: any) => this.y(d.temperature -10))
+      .y1((d: any) => this.y(d.temperature -20));
 
 
     this.area2 = d3Shape.area()
@@ -301,12 +341,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.x.domain(s.map(this.x2.invert, this.x2));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaIntersection').attr('d', this.intersectionColor.bind(this));
-    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
+    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
+    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+
 
     console.log("s: ", s);
     this.focus.select('.axis--x').call(this.xAxis);
@@ -321,16 +361,20 @@ export class TabletComponent implements OnInit, AfterViewInit {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
     var t = d3.event.transform;
 
+    this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
+    this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
+    
+    console.log("t.rescaleX(this.x2).domain(): ", t.rescaleX(this.x2).domain());
+
     this.x.domain(t.rescaleX(this.x2).domain());
     
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaIntersection').attr('d', this.intersectionColor.bind(this));
-    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
+    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
+    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
 
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
@@ -371,12 +415,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .attr('d',this.upperOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
       
-    console.log("this.upperInnerArea: ", this.upperInnerArea);
 
     this.focus.append('path')
       .datum(TEMPERATURES[0].values)
       .attr('class', 'areaInner')
-      .attr('d',this.upperInnerArea)
+      .attr('d',this.innerArea)
       .attr('clip-path', 'url(#rect-clip)');
     
       
@@ -399,7 +442,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.append('path')
       .datum(TEMPERATURES[1].values)
       .attr('class', 'areaInner2')
-      .attr('d',this.upperInnerArea)
+      .attr('d',this.innerArea)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
@@ -408,11 +451,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .attr('d',this.lowerOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
 
-    this.focus.append('path')
-    .datum(TEMPERATURES[0].values)
-    .attr('class', 'areaIntersection')
-    .attr('d',this.intersectionColor)
-    .attr('clip-path', 'url(#rect-clip)');
+    // this.focus.append('path')
+    // .datum(TEMPERATURES[0].values)
+    // .attr('class', 'areaIntersection')
+    // .attr('d',this.intersectionColor)
+    // .attr('clip-path', 'url(#rect-clip)');
     
 
     this.focus.append('g')
