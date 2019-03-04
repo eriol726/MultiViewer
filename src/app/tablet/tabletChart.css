@@ -33,6 +33,10 @@
   clip-path: url(#clip);
 }
 
+.areaIntersection{
+  fill: rgb(243, 0, 0);
+}
+
 .areaOuterLower{
 fill: rgba(230, 230, 255, 0.8);
 stroke: rgba(230, 230, 255, 0.8);

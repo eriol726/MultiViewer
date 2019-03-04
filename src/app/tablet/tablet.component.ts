@@ -109,6 +109,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   
  
   public thePanel;
+  intersectionColor: d3.Area<[number, number]>;
 
   constructor(private actionService : ActionService, private socket : WebsocketService, private http: HttpClient) { 
 
@@ -116,6 +117,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   expandTaskPanel(index){
+    console.log("open");
     //this.tabletComp.handleLeftPanel(0);
     this.socket.sendExpand("task",index);
   }
@@ -182,17 +184,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.done = doneData; 
     })
 
-    this.initMargins();
     this.initSvg();
     console.log("init");
     this.drawChart(TEMPERATURES);
 
   
-  }
-
-  private initMargins() {
-    this.margin = {top: 20, right: 20, bottom: 110, left: 40};
-    this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
   }
 
   private initSvg() {
@@ -227,18 +223,44 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .extent([[0, 0], [this.width, this.height]])
         .on('zoom', this.zoomed.bind(this));
 
+    this.intersectionColor = d3.area()
+      .curve(d3.curveBasis)
+      .x((d: any, i: number) => {
+       
+        return this.x(d.date);
+        
+
+      })
+      .y0((d: any, i: number) => {
+        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature-2)){
+          return this.y(d.temperature);
+        } else{
+          return this.y(TEMPERATURES[1].values[i].temperature-2);
+        }
+      })
+      .y1((d: any, i: number) => {
+        console.log("y_1", TEMPERATURES[1].values[i].temperature-2 , " < ", this.y(d.temperature));
+       if (this.y(TEMPERATURES[1].values[i].temperature-2) < this.y(d.temperature)){
+        console.log(">40");
+        return this.y(TEMPERATURES[1].values[i].temperature-2);
+       }
+       else{
+         return this.y(d.temperature);
+       } 
+      })
+
 
     this.upperOuterArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date))
+      .x((d: any, i :number) => this.x(TEMPERATURES[1].values[i].date))
       .y0((d: any) => this.y(d.temperature )+20)
       .y1((d: any) => this.y(d.temperature )+10);
 
     this.upperInnerArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature )+10)
-      .y1((d: any) => this.y(d.temperature )+0);
+      .x((d: any, i :any) => this.x(TEMPERATURES[1].values[i].date))
+      .y0((d: any) => this.y(d.temperature ))
+      .y1((d: any) => this.y(d.temperature -2));
 
     this.lowerOuterArea = d3.area()
       .curve(d3.curveBasis)
@@ -263,7 +285,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('class', 'focus')
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
         
-
     this.context = this.svg.append('g')
         .attr('class', 'context')
         .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
@@ -279,6 +300,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     this.x.domain(s.map(this.x2.invert, this.x2));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaIntersection').attr('d', this.intersectionColor.bind(this));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
     this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
@@ -297,12 +319,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
 
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
-    console.log("zoom");
     var t = d3.event.transform;
-    console.log("t.rescaleX(this.x2).domain(): ", t.rescaleX(this.x2).domain());
+
     this.x.domain(t.rescaleX(this.x2).domain());
     
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaIntersection').attr('d', this.intersectionColor.bind(this));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
     this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
@@ -312,7 +334,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
-    console.log("t: ", t);
+
     let brushT = {"k": t.k, "x": t.x, "y": t.y};
     
     this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);
@@ -341,19 +363,25 @@ export class TabletComponent implements OnInit, AfterViewInit {
     // .attr('d',this.upperOuterArea)
     // .attr('clip-path', 'url(#rect-clip)');
 
+    
 
     this.focus.append('path')
       .datum(TEMPERATURES[0].values)
       .attr('class', 'areaOuterUpper')
       .attr('d',this.upperOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
+      
+    console.log("this.upperInnerArea: ", this.upperInnerArea);
 
     this.focus.append('path')
       .datum(TEMPERATURES[0].values)
       .attr('class', 'areaInner')
       .attr('d',this.upperInnerArea)
       .attr('clip-path', 'url(#rect-clip)');
+    
+      
 
+      
     this.focus.append('path')
       .datum(TEMPERATURES[0].values)
       .attr('class', 'areaOuterLower')
@@ -379,12 +407,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .attr('class', 'areaOuterLower2')
       .attr('d',this.lowerOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
+
+    this.focus.append('path')
+    .datum(TEMPERATURES[0].values)
+    .attr('class', 'areaIntersection')
+    .attr('d',this.intersectionColor)
+    .attr('clip-path', 'url(#rect-clip)');
     
 
     this.focus.append('g')
     .attr('class', 'axis axis--x')
-    .attr('transform', 'translate(0,' + this.height + ')');
-    //.call(this.xAxis);
+    .attr('transform', 'translate(0,' + this.height + ')')
+    .call(this.xAxis);
 
     this.focus.append('g')
     .attr('class', 'axis axis--y')
@@ -394,6 +428,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .datum(TEMPERATURES[0].values)
         .attr('class', 'area')
         .attr('d', this.area2);
+
+        
     
     // this.context.append('path')
     //     .datum(TEMPERATURES[1].values)
