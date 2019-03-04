@@ -258,19 +258,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       })
       .y0((d: any, i: number) => {
-        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature-2)){
+        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature+10)){
           return this.y(d.temperature);
         } else{
-          return this.y(TEMPERATURES[1].values[i].temperature-2);
+          return this.y(TEMPERATURES[1].values[i].temperature-10);
         }
       })
       .y1((d: any, i: number) => {
-       if (this.y(TEMPERATURES[1].values[i].temperature-2) < this.y(d.temperature)){
-        return this.y(TEMPERATURES[1].values[i].temperature-2);
-       }
-       else{
-         return this.y(d.temperature);
-       } 
+        if (this.y(d.temperature)  < this.y(TEMPERATURES[1].values[i].temperature+10)){
+          return this.y(TEMPERATURES[1].values[i].temperature+0);
+        } else{
+          return this.y(TEMPERATURES[1].values[i].temperature-10);
+        }
       })
 
     this.upperOuterArea = d3.area()
@@ -363,8 +362,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
-    
-    console.log("t.rescaleX(this.x2).domain(): ", t.rescaleX(this.x2).domain());
 
     this.x.domain(t.rescaleX(this.x2).domain());
     
@@ -451,11 +448,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .attr('d',this.lowerOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
 
-    // this.focus.append('path')
-    // .datum(TEMPERATURES[0].values)
-    // .attr('class', 'areaIntersection')
-    // .attr('d',this.intersectionColor)
-    // .attr('clip-path', 'url(#rect-clip)');
+    this.focus.append('path')
+    .datum(TEMPERATURES[0].values)
+    .attr('class', 'areaIntersection')
+    .attr('d',this.intersectionColor)
+    .attr('clip-path', 'url(#rect-clip)');
     
 
     this.focus.append('g')
