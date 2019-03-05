@@ -16,6 +16,8 @@ import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
 import { HttpClient } from '@angular/common/http';
 import { TEMPERATURES } from '../../data/temperatures';
+import * as greinerHormann from 'greiner-hormann';
+import * as clipperLib from 'js-angusj-clipper/web';
 
 export interface Margin {
   top: number;
@@ -31,8 +33,6 @@ export interface Margin {
   styleUrls: ['./tablet.component.css']
 })
 export class TabletComponent implements OnInit, AfterViewInit {
-
-  
 
   title = 'multiViewer';
   graphDataOriginal = 0;
@@ -87,8 +87,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private x: any;
   private x2: any;
+  private x3: any;
+  private x4: any;
   private y: any;
   private y2: any;
+  private y3: any;
 
   private xAxis: any;
   private xAxis2: any;
@@ -99,6 +102,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private zoom: any;
   private area: any;
   private area2: any;
+  private area3: any;
   private focus: any;
 
   private upperOuterArea: any;
@@ -113,6 +117,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private zoomDate2: any;
 
   private panelOpenState = false;
+  private intersectionArea: any;
     
   
  
@@ -232,7 +237,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.x = d3.scaleTime().range([0, this.width]);
     this.x2 = d3.scaleTime().range([0, this.width]);
+    this.x4 = d3.scaleLinear().range([0, 1]);
+    this.x3 = d3.scaleLinear().range([0, 1]);
     this.y = d3.scaleLinear().range([this.height, 0]);
+    this.y3 = d3.scaleLinear().range([0, 1]);
     this.y2 = d3.scaleLinear().range([this.height2, 0]);
 
 
@@ -257,20 +265,20 @@ export class TabletComponent implements OnInit, AfterViewInit {
         return this.x(d.date);
 
       })
-      .y0((d: any, i: number) => {
-        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature+10)){
+      .y((d: any, i: number) => {
+        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature)){
           return this.y(d.temperature);
         } else{
-          return this.y(TEMPERATURES[1].values[i].temperature-10);
+          return this.y(TEMPERATURES[1].values[i].temperature );
         }
       })
-      .y1((d: any, i: number) => {
-        if (this.y(d.temperature)  < this.y(TEMPERATURES[1].values[i].temperature+10)){
-          return this.y(TEMPERATURES[1].values[i].temperature+0);
-        } else{
-          return this.y(TEMPERATURES[1].values[i].temperature-10);
-        }
-      })
+      // .y1((d: any, i: number) => {
+      //   if (this.y(d.temperature)  < this.y(TEMPERATURES[1].values[i].temperature-10)){
+      //     return this.y(30);
+      //   } else{
+      //     return this.y(30);
+      //   }
+      // })
 
     this.upperOuterArea = d3.area()
     .curve(d3.curveBasis)
@@ -293,12 +301,24 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //   .y0((d: any) => this.y(d.temperature +10))
     //   .y1((d: any) => this.y(d.temperature ));
 
+    // this.intersectionArea = d3.line()
+    //   .x(function(d:any){
+    //     return d.x;
+    //   })
+    //   .y(function(d:any){
+    //     return d.y;
+    //   });
     
 
     this.innerArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) )
-      .y0((d: any) => this.y(d.temperature ))
+      .x((d: any) => {
+        //console.log("this.x2: ",d.date);
+        return this.x(d.date)} )
+      .y0((d: any) => {
+        //console.log("scale y: ", this.y(d.temperature ), " \n " , (d.temperature));
+        return this.y(d.temperature )
+      })
       .y1((d: any) => this.y(d.temperature -10));
 
     this.lowerOuterArea = d3.area()
@@ -307,12 +327,22 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .y0((d: any) => this.y(d.temperature -10))
       .y1((d: any) => this.y(d.temperature -20));
 
-
-    this.area2 = d3Shape.area()
+    
+      this.area2 = d3Shape.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x2(d.date))
       .y0((d: any) => this.y2(d.temperature)+5)
       .y1((d: any) => this.y2(d.temperature));
+
+    this.area3 = d3Shape.area()
+      .curve(d3.curveBasis)
+      .x((d: any) => { 
+          return this.x3(d.x);
+      })
+      .y0((d: any) => this.y3(d.y-10))
+      .y1((d: any) => this.y3(d.y));
+
+      
 
     this.svg.append('defs').append('clipPath')
         .attr('id', 'clip')
@@ -336,10 +366,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
     console.log("brushed");
     let s = d3.event.selection || this.x2.range();
+    let s2 = d3.event.selection || this.x4.range();
     
     this.x.domain(s.map(this.x2.invert, this.x2));
+    this.x3.domain(s.map(this.x4.invert, this.x4));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaIntersection').attr('d', this.intersectionColor.bind(this));
+    this.focus.select('.areaIntersection').attr('d', this.area3.bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
@@ -364,15 +396,19 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
     this.x.domain(t.rescaleX(this.x2).domain());
-    
+    this.x3.domain([t.rescaleX(this.x4).domain()[0]*1,t.rescaleX(this.x4).domain()[1]*1]);
+    console.log("this.intersectionArea: ", [t.rescaleX(this.x4).domain()[0]*10,t.rescaleX(this.x4).domain()[1]*10]);
+    //this.intersectionArea.attr("transform", d3.event.transform);
+
+
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaIntersection').attr('d', this.intersectionColor.bind(this));
+    this.focus.select('.areaIntersection').attr('d',  this.area3.bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
-
+    
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
 
@@ -385,8 +421,29 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   }
 
+  paths2string(paths, scale) {
+    var i, p, path, svgpath, _j, _len2, _len3;
+    svgpath = '';
+    if (!(scale != null)) scale = 1;
+    for (_j = 0, _len2 = paths.length; _j < _len2; _j++) {
+      path = paths[_j];
+      for (i = 0, _len3 = path.length; i < _len3; i++) {
+        p = path[i];
+        if (i === 0) {
+          svgpath += 'M';
+        } else {
+          svgpath += 'L';
+        }
+        svgpath += p.X / scale + ", " + p.Y / scale;
+      }
+      svgpath += 'Z';
+    }
+    if (svgpath === '') svgpath = 'M0,0';
+    return svgpath;
+  };
 
-  private drawChart(data) {
+
+  private async drawChart(data) {
 
     this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
     this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
@@ -438,6 +495,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.focus.append('path')
       .datum(TEMPERATURES[1].values)
+      .attr("stroke-opacity", 0)
+      .attr("stroke-width", 10)
       .attr('class', 'areaInner2')
       .attr('d',this.innerArea)
       .attr('clip-path', 'url(#rect-clip)');
@@ -448,12 +507,48 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .attr('d',this.lowerOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
 
-    this.focus.append('path')
-    .datum(TEMPERATURES[0].values)
-    .attr('class', 'areaIntersection')
-    .attr('d',this.intersectionColor)
-    .attr('clip-path', 'url(#rect-clip)');
+    let xyArr = [];
+    let xyArr2 = [];
+
+    const poly1 = [{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 10 }, { x: 0, y: 10 }];
+
+    const poly2 = [{ x: 10, y: 0 }, { x: 20, y: 0 }, { x: 20, y: 10 }, { x: 10, y: 10 }];
+
+    TEMPERATURES[0].values.forEach(value => {
+      xyArr.push({"x":this.x(value.date),"y":this.y(value.temperature)});
+    })
+
+    TEMPERATURES[1].values.forEach(value => {
+      xyArr2.push({"x":this.x(value.date),"y":this.y(value.temperature-10)});
+    })
+    // create an instance of the library (usually only do this once in your app)
+    const clipper = await clipperLib.loadNativeClipperLibInstanceAsync(
+      // let it autodetect which one to use, but also available WasmOnly and AsmJsOnly
+      clipperLib.NativeClipperLibRequestedFormat.WasmWithAsmJsFallback
+    );
+
+    // get their union
+  const polyResult = clipper.clipToPaths({
+    clipType: clipperLib.ClipType.Intersection,
+
+    subjectInputs: [{ data: xyArr, closed: true }],
+
+    clipInputs: [{ data: xyArr2 }],
+
+    subjectFillType: clipperLib.PolyFillType.EvenOdd
     
+  });
+
+    //create and instruct Clipper to work with the provided paths ###
+
+    console.log("clipper: ", polyResult);
+
+    this.intersectionArea = this.focus.append('path')
+    .datum(polyResult[0])
+    .attr('class', 'areaIntersection')
+    .attr('d', this.area3)
+    .attr('clip-path', 'url(#rect-clip)');
+
 
     this.focus.append('g')
     .attr('class', 'axis axis--x')
@@ -493,7 +588,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
-    this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
+   // this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
     
   }
 

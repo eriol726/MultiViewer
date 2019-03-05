@@ -87,3 +87,7 @@ import 'zone.js/dist/zone';
  */
 
 (window as any).global = window;
+
+/********************* */
+import * as process from 'process';
+ window['process'] = process;

@@ -35,6 +35,7 @@
 
 .areaIntersection{
   fill: rgb(243, 0, 0);
+  stroke: #000;
 }
 
 .areaOuterLower{
