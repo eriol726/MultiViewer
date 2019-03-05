@@ -103,6 +103,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private area: any;
   private area2: any;
   private area3: any;
+  private area5: any;
   private focus: any;
 
   private upperOuterArea: any;
@@ -258,6 +259,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .extent([[0, 0], [this.width, this.height]])
         .on('zoom', this.zoomed.bind(this));
 
+      this.area5 = d3.area()
+        .curve(d3.curveBasis)
+        .x((d:any) => this.x(d.date))
+        .y1((d:any) => this.y(d.Science));
+
     this.intersectionColor = d3.area()
       .curve(d3.curveBasis)
       .x((d: any, i: number) => {
@@ -266,15 +272,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       })
       .y((d: any, i: number) => {
-        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature)){
+        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature -10)){
           return this.y(d.temperature);
         } else{
-          return this.y(TEMPERATURES[1].values[i].temperature );
+          return null;
         }
       })
       // .y1((d: any, i: number) => {
-      //   if (this.y(d.temperature)  < this.y(TEMPERATURES[1].values[i].temperature-10)){
-      //     return this.y(30);
+      //   if (this.y(d.temperature)  > 0){
+      //     return this.y(TEMPERATURES[1].values[i].temperature-10);
       //   } else{
       //     return this.y(30);
       //   }
@@ -334,13 +340,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .y0((d: any) => this.y2(d.temperature)+5)
       .y1((d: any) => this.y2(d.temperature));
 
-    this.area3 = d3Shape.area()
-      .curve(d3.curveBasis)
-      .x((d: any) => { 
-          return this.x3(d.x);
-      })
-      .y0((d: any) => this.y3(d.y-10))
-      .y1((d: any) => this.y3(d.y));
+    // this.area3 = d3Shape.area()
+    //   .curve(d3.curveBasis)
+    //   .x((d: any) => { 
+    //       return this.x3(d.x);
+    //   })
+    //   .y0((d: any) => this.y3(d.y-10))
+    //   .y1((d: any) => this.y3(d.y));
 
       
 
@@ -369,9 +375,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     let s2 = d3.event.selection || this.x4.range();
     
     this.x.domain(s.map(this.x2.invert, this.x2));
-    this.x3.domain(s.map(this.x4.invert, this.x4));
+    //this.x3.domain(s.map(this.x4.invert, this.x4));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaIntersection').attr('d', this.area3.bind(this));
+    this.focus.select('.above').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
+    this.focus.select('.below').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
+    this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
+    this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
@@ -396,13 +405,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
     this.x.domain(t.rescaleX(this.x2).domain());
-    this.x3.domain([t.rescaleX(this.x4).domain()[0]*1,t.rescaleX(this.x4).domain()[1]*1]);
-    console.log("this.intersectionArea: ", [t.rescaleX(this.x4).domain()[0]*10,t.rescaleX(this.x4).domain()[1]*10]);
+    //this.x3.domain([t.rescaleX(this.x4).domain()[0]*1,t.rescaleX(this.x4).domain()[1]*1]);
+    //console.log("this.intersectionArea: ", [t.rescaleX(this.x4).domain()[0]*10,t.rescaleX(this.x4).domain()[1]*10]);
     //this.intersectionArea.attr("transform", d3.event.transform);
 
 
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaIntersection').attr('d',  this.area3.bind(this));
+    this.focus.select('.above').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
+    this.focus.select('.below').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
+    this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
+    this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
     this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
@@ -450,6 +462,26 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
 
+    let data1 = TEMPERATURES[0].values;
+    let data2 = TEMPERATURES[1].values;
+
+    data1.forEach(function(d,i) {
+      d["Science"] = d.temperature;
+      d["Style"] = TEMPERATURES[1].values[i].temperature-10;
+    });
+
+    console.log("data1: ", data1);
+    //   for(let i=data1.length-1;i>0;i--) {
+    //     data1[i].Science   = data1[i].Science  -data1[(i-1)].Science ;
+    //     data1[i].Style     = data1[i].Style    -data1[(i-1)].Style ;
+    // }
+
+    for(let i=0; i> data1.length; i++) {
+      data1[i].Science   = TEMPERATURES[0].values[i].temperature ;
+      data1[i].Style     = TEMPERATURES[1].values[i].temperature-10;
+    }
+
+
     // this.x.domain(d3Array.extent(data[0].values, (d: any) => d.date));
     // this.y.domain([0, d3Array.max(data[0].values, (d: any) => d.temperature)]);
     // this.x2.domain(this.x.domain());
@@ -460,6 +492,20 @@ export class TabletComponent implements OnInit, AfterViewInit {
     // .attr('class', 'areaOuterUpper')
     // .attr('d',this.upperOuterArea)
     // .attr('clip-path', 'url(#rect-clip)');
+
+    this.focus.append("clipPath")
+      .datum(data1)
+      .attr("id", "clip-above")
+      .append("path")
+      .attr("class", "clip-above1")
+      .attr("d", this.area5.y0(0));
+
+    this.focus.append("clipPath")
+      .datum(data1)
+      .attr("id", "clip-below")
+      .append("path")
+      .attr("class", "clip-below1")
+      .attr("d", this.area5.y0(this.height));
 
     
 
@@ -543,11 +589,23 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     console.log("clipper: ", polyResult);
 
+    
+
+
     this.intersectionArea = this.focus.append('path')
-    .datum(polyResult[0])
-    .attr('class', 'areaIntersection')
-    .attr('d', this.area3)
-    .attr('clip-path', 'url(#rect-clip)');
+    .datum(data1)
+    .attr('class', 'above')
+    .attr("clip-path", "url(#clip-above)")
+    .attr("d", this.area5.y0((d:any) => this.y(d.Science)))
+
+
+    this.focus.append("path")
+        .datum(data1)
+        .attr('class', 'below')
+        .attr("clip-path", "url(#clip-below)")
+        .attr("d", this.area5.y0((d:any) => this.y(d.Science)));
+    
+
 
 
     this.focus.append('g')

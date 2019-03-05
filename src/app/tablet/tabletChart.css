@@ -13,6 +13,9 @@
   pointer-events: all;
 }
 
+.above { fill: rgb(252,141,89,0); }
+.below { fill: rgb(255, 7, 7); }
+
 .axis path,
 .axis line {
   fill: none;
