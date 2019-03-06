@@ -262,7 +262,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.area5 = d3.area()
         .curve(d3.curveBasis)
         .x((d:any) => this.x(d.date))
-        .y1((d:any) => this.y(d.Science));
+        .y1((d:any) => this.y(d.aboveData));
 
     this.intersectionColor = d3.area()
       .curve(d3.curveBasis)
@@ -354,7 +354,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('id', 'clip')
         .append('rect')
         .attr('width', this.width)
-        .attr('height', this.height);
+        .attr('height', this.height)
+        
 
     this.focus = this.svg.append('g')
         .attr('class', 'focus')
@@ -377,8 +378,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.x.domain(s.map(this.x2.invert, this.x2));
     //this.x3.domain(s.map(this.x4.invert, this.x4));
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.above').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
-    this.focus.select('.below').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
+    this.focus.select('.above').attr('d', this.area5.y0((d:any) => this.y(d.belowData)).bind(this));
+    this.focus.select('#hash4_5').attr('d', this.area5.y0((d:any) => this.y(d.belowData)).bind(this));
     this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
     this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
@@ -411,8 +412,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
     this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.above').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
-    this.focus.select('.below').attr('d', this.area5.y0((d:any) => this.y(d.Style)).bind(this));
+    this.focus.select('.above').attr('d', this.area5.y0((d:any) => this.y(d.belowData)).bind(this));
+    this.focus.select('#hash4_5').attr('d', this.area5.y0((d:any) => this.y(d.belowData)).bind(this));
     this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
     this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
@@ -463,24 +464,26 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.y2.domain(this.y.domain());
 
     let data1 = TEMPERATURES[0].values;
-    let data2 = TEMPERATURES[1].values;
-
+    //let data1: { aboveData: number, belowData: number }[]; 
+    let data2 = [];
+    //let data1 = [];
     data1.forEach(function(d,i) {
-      d["Science"] = d.temperature;
-      d["Style"] = TEMPERATURES[1].values[i].temperature-10;
+      d["aboveData"] = d.temperature;
+      d["belowData"] = TEMPERATURES[1].values[i].temperature-10;
     });
 
-    console.log("data1: ", data1);
+    console.log("TEMPERATURES[0].values.length: ", TEMPERATURES[0].values.length);
     //   for(let i=data1.length-1;i>0;i--) {
     //     data1[i].Science   = data1[i].Science  -data1[(i-1)].Science ;
     //     data1[i].Style     = data1[i].Style    -data1[(i-1)].Style ;
     // }
 
-    for(let i=0; i> data1.length; i++) {
-      data1[i].Science   = TEMPERATURES[0].values[i].temperature ;
-      data1[i].Style     = TEMPERATURES[1].values[i].temperature-10;
-    }
+    // for(let i=0; i< TEMPERATURES[0].values.length; i++) {
+    //  data1.push({"aboveData": TEMPERATURES[0].values[i].temperature,
+    //             "belowData": TEMPERATURES[1].values[i].temperature-10});
+    // }
 
+    //console.log("data1 ", data1[0].aboveData);
 
     // this.x.domain(d3Array.extent(data[0].values, (d: any) => d.date));
     // this.y.domain([0, d3Array.max(data[0].values, (d: any) => d.temperature)]);
@@ -499,6 +502,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .append("path")
       .attr("class", "clip-above1")
       .attr("d", this.area5.y0(0));
+
+      
 
     this.focus.append("clipPath")
       .datum(data1)
@@ -591,19 +596,50 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     
 
-
     this.intersectionArea = this.focus.append('path')
     .datum(data1)
     .attr('class', 'above')
     .attr("clip-path", "url(#clip-above)")
-    .attr("d", this.area5.y0((d:any) => this.y(d.Science)))
+    .attr("d", this.area5.y0((d:any) => this.y(d.aboveData)))
+    
+
+    // this.focus.append("pattern")
+    // .attr('id', "hash4_6")
+    // .attr('width', "8") 
+    // .attr('height',"8")
+    // .attr('patternUnits',"userSpaceOnUse") 
+    // .attr('patternTransform', "rotate(45)")
+    // .append("path")
+    // .attr("d", "M5,0 10,10 0,10 Z")
+    // .attr('fill', '#000000')
+
+    this.focus.append("pattern")
+    .attr('id', "hash4_6")
+    .attr('width', "4") 
+    .attr('height',"4")
+    .attr('patternUnits',"userSpaceOnUse") 
+    .attr('patternTransform', "rotate(45)")
+    .append("rect")
+    .attr("width","2")
+    .attr("height", "4")
+    .attr("transform", "translate(0,0)")
+    .attr("fill", "#000")
+
+
 
 
     this.focus.append("path")
         .datum(data1)
-        .attr('class', 'below')
+        // .attr('class', 'stripes deg45')
+        .attr('id', 'hash4_5')
+        .attr("x", 0)
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("fill", "url(#hash4_6)")
         .attr("clip-path", "url(#clip-below)")
-        .attr("d", this.area5.y0((d:any) => this.y(d.Science)));
+        .attr("d", this.area5.y0((d:any) => this.y(d.aboveData)));
+
+      
     
 
 
@@ -646,7 +682,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
-   // this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
+    this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[100].date, TEMPERATURES[0].values[120].date].map(this.x));
     
   }
 
