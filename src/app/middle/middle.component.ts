@@ -137,14 +137,14 @@ export class MiddleComponent implements OnInit {
     this.upperOuterArea = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature )+20)
+      .y0((d: any) => this.y(d.temperature ))
       .y1((d: any) => this.y(d.temperature )+10);
 
     this.upperInnerArea = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature )+10)
-      .y1((d: any) => this.y(d.temperature )+0);
+      .y0((d: any) => this.y(d.temperature ))
+      .y1((d: any, i: number) => this.y(TEMPERATURES[2].values[i].temperature));
 
     this.lowerOuterArea = d3.area()
       .curve(d3.curveBasis)

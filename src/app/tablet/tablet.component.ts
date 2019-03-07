@@ -119,6 +119,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private panelOpenState = false;
   private intersectionArea: any;
+  private lowerBound = [];
+
+  private innerArea2;
+
     
   
  
@@ -203,6 +207,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
     console.log("blue transfer prevData:")
   }
 
+  private getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
+
   ngOnInit(){
     this.generateData();
 
@@ -264,27 +272,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .x((d:any) => this.x(d.date))
         .y1((d:any) => this.y(d.aboveData));
 
-    this.intersectionColor = d3.area()
-      .curve(d3.curveBasis)
-      .x((d: any, i: number) => {
-       
-        return this.x(d.date);
-
-      })
-      .y((d: any, i: number) => {
-        if (this.y(d.temperature)  > this.y(TEMPERATURES[1].values[i].temperature -10)){
-          return this.y(d.temperature);
-        } else{
-          return null;
-        }
-      })
-      // .y1((d: any, i: number) => {
-      //   if (this.y(d.temperature)  > 0){
-      //     return this.y(TEMPERATURES[1].values[i].temperature-10);
-      //   } else{
-      //     return this.y(30);
-      //   }
-      // })
 
     this.upperOuterArea = d3.area()
     .curve(d3.curveBasis)
@@ -293,11 +280,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       if(i> this.focusIndexMin+5 && i < this.focusIndexMax-5 && this.panelOpenState){
         return this.y(TEMPERATURES[1].values[i].temperature+1);
       }else{
-        return this.y(d.temperature+10);
+        return this.y(d.temperature);
       }
     })
     .y1((d: any, i: number) => {
-      return this.y(d.temperature)
+      return this.y(TEMPERATURES[0].values[i].temperature)
     })
 
 
@@ -315,23 +302,35 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //     return d.y;
     //   });
     
+    for (let index = 0; index < TEMPERATURES[0].values.length; index++) {
+      this.lowerBound.push(this.getRndInteger(index*0.1,index*1.5*0.1));
+      
+    }
+    console.log("lowerBound: ",this.lowerBound);
 
     this.innerArea = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => {
-        //console.log("this.x2: ",d.date);
         return this.x(d.date)} )
       .y0((d: any) => {
-        //console.log("scale y: ", this.y(d.temperature ), " \n " , (d.temperature));
         return this.y(d.temperature )
       })
-      .y1((d: any) => this.y(d.temperature -10));
+      .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
+
+      this.innerArea2 = d3.area()
+      .curve(d3.curveBasis)
+      .x((d: any) => {
+        return this.x(d.date)} )
+      .y0((d: any) => {
+        return this.y(d.temperature )
+      })
+      .y1((d: any, i:number) => this.y(TEMPERATURES[5].values[i].temperature));
 
     this.lowerOuterArea = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) )
-      .y0((d: any) => this.y(d.temperature -10))
-      .y1((d: any) => this.y(d.temperature -20));
+      .y0((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature))
+      .y1((d: any, i:number) => this.y(d.temperature));
 
     
       this.area2 = d3Shape.area()
@@ -383,7 +382,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
     this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
@@ -417,7 +416,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
     this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
     this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.innerArea.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
@@ -469,32 +468,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //let data1 = [];
     data1.forEach(function(d,i) {
       d["aboveData"] = d.temperature;
-      d["belowData"] = TEMPERATURES[1].values[i].temperature-10;
-    });
+      d["belowData"] = TEMPERATURES[1].values[i].temperature-this.lowerBound[i];
+    }.bind(this));
 
-    console.log("TEMPERATURES[0].values.length: ", TEMPERATURES[0].values.length);
-    //   for(let i=data1.length-1;i>0;i--) {
-    //     data1[i].Science   = data1[i].Science  -data1[(i-1)].Science ;
-    //     data1[i].Style     = data1[i].Style    -data1[(i-1)].Style ;
-    // }
-
-    // for(let i=0; i< TEMPERATURES[0].values.length; i++) {
-    //  data1.push({"aboveData": TEMPERATURES[0].values[i].temperature,
-    //             "belowData": TEMPERATURES[1].values[i].temperature-10});
-    // }
-
-    //console.log("data1 ", data1[0].aboveData);
-
-    // this.x.domain(d3Array.extent(data[0].values, (d: any) => d.date));
-    // this.y.domain([0, d3Array.max(data[0].values, (d: any) => d.temperature)]);
-    // this.x2.domain(this.x.domain());
-    // this.y2.domain(this.y.domain());
-
-    // this.focus.append('path')
-    // .datum(TEMPERATURES[0].values)
-    // .attr('class', 'areaOuterUpper')
-    // .attr('d',this.upperOuterArea)
-    // .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append("clipPath")
       .datum(data1)
@@ -515,7 +491,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
 
     this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
+      .datum(TEMPERATURES[1].values)
       .attr('class', 'areaOuterUpper')
       .attr('d',this.upperOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
@@ -531,7 +507,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       
     this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
+      .datum(TEMPERATURES[3].values)
       .attr('class', 'areaOuterLower')
       .attr('d',this.lowerOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
@@ -539,105 +515,58 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //next line
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
-      .attr('class', 'areaOuterUpper2')
-      .attr('d',this.upperOuterArea)
-      .attr('clip-path', 'url(#rect-clip)');
-
-    this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
-      .attr("stroke-opacity", 0)
-      .attr("stroke-width", 10)
+      .datum(TEMPERATURES[4].values)
       .attr('class', 'areaInner2')
-      .attr('d',this.innerArea)
+      .attr('d',this.innerArea2)
       .attr('clip-path', 'url(#rect-clip)');
 
-    this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
-      .attr('class', 'areaOuterLower2')
-      .attr('d',this.lowerOuterArea)
-      .attr('clip-path', 'url(#rect-clip)');
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[1].values)
+    //   .attr("stroke-opacity", 0)
+    //   .attr("stroke-width", 10)
+    //   .attr('class', 'areaInner2')
+    //   .attr('d',this.innerArea)
+    //   .attr('clip-path', 'url(#rect-clip)');
 
-    let xyArr = [];
-    let xyArr2 = [];
-
-    const poly1 = [{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 10 }, { x: 0, y: 10 }];
-
-    const poly2 = [{ x: 10, y: 0 }, { x: 20, y: 0 }, { x: 20, y: 10 }, { x: 10, y: 10 }];
-
-    TEMPERATURES[0].values.forEach(value => {
-      xyArr.push({"x":this.x(value.date),"y":this.y(value.temperature)});
-    })
-
-    TEMPERATURES[1].values.forEach(value => {
-      xyArr2.push({"x":this.x(value.date),"y":this.y(value.temperature-10)});
-    })
-    // create an instance of the library (usually only do this once in your app)
-    const clipper = await clipperLib.loadNativeClipperLibInstanceAsync(
-      // let it autodetect which one to use, but also available WasmOnly and AsmJsOnly
-      clipperLib.NativeClipperLibRequestedFormat.WasmWithAsmJsFallback
-    );
-
-    // get their union
-  const polyResult = clipper.clipToPaths({
-    clipType: clipperLib.ClipType.Intersection,
-
-    subjectInputs: [{ data: xyArr, closed: true }],
-
-    clipInputs: [{ data: xyArr2 }],
-
-    subjectFillType: clipperLib.PolyFillType.EvenOdd
-    
-  });
-
-    //create and instruct Clipper to work with the provided paths ###
-
-    console.log("clipper: ", polyResult);
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[3].values)
+    //   .attr('class', 'areaOuterLower2')
+    //   .attr('d',this.lowerOuterArea)
+    //   .attr('clip-path', 'url(#rect-clip)');
 
     
 
-    this.intersectionArea = this.focus.append('path')
-    .datum(data1)
-    .attr('class', 'above')
-    .attr("clip-path", "url(#clip-above)")
-    .attr("d", this.area5.y0((d:any) => this.y(d.aboveData)))
-    
+    // this.intersectionArea = this.focus.append('path')
+    // .datum(data1)
+    // .attr('class', 'above')
+    // .attr("clip-path", "url(#clip-above)")
+    // .attr("d", this.area5.y0((d:any) => this.y(d.aboveData)))
 
     // this.focus.append("pattern")
     // .attr('id', "hash4_6")
-    // .attr('width', "8") 
-    // .attr('height',"8")
+    // .attr('width', "4") 
+    // .attr('height',"4")
     // .attr('patternUnits',"userSpaceOnUse") 
     // .attr('patternTransform', "rotate(45)")
-    // .append("path")
-    // .attr("d", "M5,0 10,10 0,10 Z")
-    // .attr('fill', '#000000')
-
-    this.focus.append("pattern")
-    .attr('id', "hash4_6")
-    .attr('width', "4") 
-    .attr('height',"4")
-    .attr('patternUnits',"userSpaceOnUse") 
-    .attr('patternTransform', "rotate(45)")
-    .append("rect")
-    .attr("width","2")
-    .attr("height", "4")
-    .attr("transform", "translate(0,0)")
-    .attr("fill", "#000")
+    // .append("rect")
+    // .attr("width","2")
+    // .attr("height", "4")
+    // .attr("transform", "translate(0,0)")
+    // .attr("fill", "#000")
 
 
 
 
-    this.focus.append("path")
-        .datum(data1)
-        // .attr('class', 'stripes deg45')
-        .attr('id', 'hash4_5')
-        .attr("x", 0)
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr("fill", "url(#hash4_6)")
-        .attr("clip-path", "url(#clip-below)")
-        .attr("d", this.area5.y0((d:any) => this.y(d.aboveData)));
+    // this.focus.append("path")
+    //     .datum(data1)
+    //     // .attr('class', 'stripes deg45')
+    //     .attr('id', 'hash4_5')
+    //     .attr("x", 0)
+    //     .attr("width", "100%")
+    //     .attr("height", "100%")
+    //     .attr("fill", "url(#hash4_6)")
+    //     .attr("clip-path", "url(#clip-below)")
+    //     .attr("d", this.area5.y0((d:any) => this.y(d.aboveData)));
 
       
     
