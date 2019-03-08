@@ -110,6 +110,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private innerArea: any;
   private lowerOuterArea: any;
   private upperOuterArea2: any;
+  private lowerOuterArea2: any;
 
   private focusIndexMin: any = 5000;
   private focusIndexMax: any = -5000;
@@ -284,7 +285,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       }
     })
     .y1((d: any, i: number) => {
-      return this.y(TEMPERATURES[0].values[i].temperature)
+      return this.y(TEMPERATURES[1].values[i].temperature)
     })
 
 
@@ -317,19 +318,32 @@ export class TabletComponent implements OnInit, AfterViewInit {
       })
       .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
 
-      this.innerArea2 = d3.area()
-      .curve(d3.curveBasis)
-      .x((d: any) => {
-        return this.x(d.date)} )
-      .y0((d: any) => {
-        return this.y(d.temperature )
-      })
-      .y1((d: any, i:number) => this.y(TEMPERATURES[5].values[i].temperature));
+      
 
     this.lowerOuterArea = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature))
+      .y1((d: any, i:number) => this.y(d.temperature));
+
+    //nextLine
+    
+    this.upperOuterArea2 = d3.area()
+      .curve(d3.curveBasis)
+      .x((d: any) => this.x(d.date) )
+      .y0((d: any, i:number) => this.y(d.temperature))
+      .y1((d: any, i:number) => this.y(TEMPERATURES[5].values[i].temperature));
+
+    this.innerArea2 = d3.area()
+      .curve(d3.curveBasis)
+      .x((d: any) => this.x(d.date))
+      .y0((d: any) => this.y(d.temperature ))
+      .y1((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature));
+    
+    this.lowerOuterArea2 = d3.area()
+      .curve(d3.curveBasis)
+      .x((d: any) => this.x(d.date) )
+      .y0((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature))
       .y1((d: any, i:number) => this.y(d.temperature));
 
     
@@ -381,11 +395,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('#hash4_5').attr('d', this.area5.y0((d:any) => this.y(d.belowData)).bind(this));
     this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
     this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
-    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea2.bind(this));
     this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
+    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea2.bind(this));
 
 
     console.log("s: ", s);
@@ -415,11 +429,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('#hash4_5').attr('d', this.area5.y0((d:any) => this.y(d.belowData)).bind(this));
     this.focus.select('.clip-above1').attr('d', this.area5.y0(0).bind(this));
     this.focus.select('.clip-below1').attr('d', this.area5.y0(this.height).bind(this));
-    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea2.bind(this));
     this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
     this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
+    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea2.bind(this));
     
     this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
@@ -491,19 +505,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
+      .datum(TEMPERATURES[0].values)
       .attr('class', 'areaOuterUpper')
       .attr('d',this.upperOuterArea)
       .attr('clip-path', 'url(#rect-clip)');
       
 
     this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
+      .datum(TEMPERATURES[1].values)
       .attr('class', 'areaInner')
       .attr('d',this.innerArea)
       .attr('clip-path', 'url(#rect-clip)');
     
-      
 
       
     this.focus.append('path')
@@ -516,6 +529,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.focus.append('path')
       .datum(TEMPERATURES[4].values)
+      .attr('class', 'areaOuterUpper2')
+      .attr('d',this.upperOuterArea2)
+      .attr('clip-path', 'url(#rect-clip)');
+
+    this.focus.append('path')
+      .datum(TEMPERATURES[5].values)
       .attr('class', 'areaInner2')
       .attr('d',this.innerArea2)
       .attr('clip-path', 'url(#rect-clip)');
@@ -528,11 +547,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //   .attr('d',this.innerArea)
     //   .attr('clip-path', 'url(#rect-clip)');
 
-    // this.focus.append('path')
-    //   .datum(TEMPERATURES[3].values)
-    //   .attr('class', 'areaOuterLower2')
-    //   .attr('d',this.lowerOuterArea)
-    //   .attr('clip-path', 'url(#rect-clip)');
+    this.focus.append('path')
+      .datum(TEMPERATURES[7].values)
+      .attr('class', 'areaOuterLower2')
+      .attr('d',this.lowerOuterArea2)
+      .attr('clip-path', 'url(#rect-clip)');
 
     
 
