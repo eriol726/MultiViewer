@@ -58,24 +58,32 @@ export class MiddleComponent implements OnInit {
   private brush: any;
   private brush2: any;
   private zoom: any;
-  private area: any;
+
   private area2: any;
+
+  private collisionArea: any;
   private focus: any;
 
-  private upperOuterArea: any;
-  private upperInnerArea: any;
-  private lowerOuterArea: any;
+  private outerUpperArea: any;
+  private innerArea: any;
+  private outerLowerArea: any;
+  private outerUpperArea2: any;
+  private outerLowerArea2: any;
+  private innerArea2: any;
 
-  private zoomFromTablet : boolean = false;
+  private focusIndexMin: any = 5000;
+  private focusIndexMax: any = -5000;
 
-  private initZoomMax: any = 0;
-  private initZoomMin: any = 50;
+  private panelOpenState = false;
+
 
 
     g: any;
 
     z;
     line;
+  initZoomMax: Date;
+  zoomFromTablet: boolean;
 
   constructor(private http: HttpClient, private display : WebsocketService) { }
 
@@ -134,30 +142,54 @@ export class MiddleComponent implements OnInit {
         }.bind(this));
 
 
-    this.upperOuterArea = d3.area()
+        this.collisionArea = d3.area()
+        .curve(d3.curveBasis)
+        .x((d:any) => this.x(d.date))
+        .y1((d:any) => this.y(d.aboveData));
+  
+      // first curve
+      this.outerUpperArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature ))
-      .y1((d: any) => this.y(d.temperature )+10);
-
-    this.upperInnerArea = d3.area()
-      .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature ))
-      .y1((d: any, i: number) => this.y(TEMPERATURES[2].values[i].temperature));
-
-    this.lowerOuterArea = d3.area()
-      .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date) || 1)
-      .y0((d: any) => this.y(d.temperature )+0)
-      .y1((d: any) => this.y(d.temperature )-10);
-
-
-    this.area2 = d3Shape.area()
-      .curve(d3Shape.curveMonotoneX)
-      .x((d: any) => this.x2(d.date))
-      .y0((d: any) => this.y2(d.temperature)+5)
-      .y1((d: any) => this.y2(d.temperature));
+      .x((d: any) => this.x(d.date))
+      .y0((d: any, i: number) => {
+        if(i> this.focusIndexMin+5 && i < this.focusIndexMax-5 && this.panelOpenState){
+          return this.y(TEMPERATURES[1].values[i].temperature+1);
+        }else{
+          return this.y(d.temperature);
+        }
+      })
+      .y1((d: any, i: number) => this.y(TEMPERATURES[1].values[i].temperature))
+  
+      this.innerArea = d3.area()
+        .curve(d3.curveBasis)
+        .x((d: any) => this.x(d.date))
+        .y0((d: any) => this.y(d.temperature ))
+        .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
+  
+      this.outerLowerArea = d3.area()
+        .curve(d3.curveBasis)
+        .x((d: any) => this.x(d.date) )
+        .y0((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature))
+        .y1((d: any, i:number) => this.y(d.temperature));
+  
+      //second curve
+      this.outerUpperArea2 = d3.area()
+        .curve(d3.curveBasis)
+        .x((d: any) => this.x(d.date) )
+        .y0((d: any, i:number) => this.y(d.temperature))
+        .y1((d: any, i:number) => this.y(TEMPERATURES[5].values[i].temperature));
+  
+      this.innerArea2 = d3.area()
+        .curve(d3.curveBasis)
+        .x((d: any) => this.x(d.date))
+        .y0((d: any) => this.y(d.temperature ))
+        .y1((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature));
+      
+      this.outerLowerArea2 = d3.area()
+        .curve(d3.curveBasis)
+        .x((d: any) => this.x(d.date) )
+        .y0((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature))
+        .y1((d: any, i:number) => this.y(d.temperature));
 
     this.svg.append('defs').append('clipPath')
         .attr('id', 'clip')
@@ -176,13 +208,18 @@ export class MiddleComponent implements OnInit {
 
   private brushed(dragFromTablet,xDomainMin,xDomainMax,brushTransform) {
     
-    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
-    this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
+    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
+    this.focus.select('.areaOuterLower').attr('d', this.outerLowerArea.bind(this));
+
+    this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
+    this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
+
+    this.focus.select('.above').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
+    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
+    this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(0).bind(this));
+    this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(this.height).bind(this));
     if(!dragFromTablet){
 
       if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
@@ -201,13 +238,18 @@ export class MiddleComponent implements OnInit {
   private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
     
 
-    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaOuterUpper').attr('d', this.upperOuterArea.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.upperInnerArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.upperInnerArea.bind(this));
-    this.focus.select('.areaOuterLower').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterLower2').attr('d', this.lowerOuterArea.bind(this));
-    this.focus.select('.areaOuterUpper2').attr('d', this.upperOuterArea.bind(this));
+    this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
+    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
+    this.focus.select('.areaOuterLower').attr('d', this.outerLowerArea.bind(this));
+
+    this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+    this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
+    this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
+
+    this.focus.select('.above').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
+    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
+    this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(0).bind(this));
+    this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
     if(!zoomFromTablet){
       if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
@@ -242,44 +284,92 @@ export class MiddleComponent implements OnInit {
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
 
+    let data1 = TEMPERATURES[0].values;
 
+    data1.forEach(function(d,i) {
+      d["aboveData"] = d.temperature;
+      d["belowData"] = TEMPERATURES[7].values[i].temperature;
+    }.bind(this));
+
+
+    // first curve
     this.focus.append('path')
       .datum(TEMPERATURES[0].values)
       .attr('class', 'areaOuterUpper')
-      .attr('d',this.upperOuterArea)
+      .attr('d',this.outerUpperArea)
       .attr('clip-path', 'url(#rect-clip)');
+      
 
     this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
+      .datum(TEMPERATURES[1].values)
       .attr('class', 'areaInner')
-      .attr('d',this.upperInnerArea)
+      .attr('d',this.innerArea)
       .attr('clip-path', 'url(#rect-clip)');
+    
 
+      
     this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
+      .datum(TEMPERATURES[3].values)
       .attr('class', 'areaOuterLower')
-      .attr('d',this.lowerOuterArea)
+      .attr('d',this.outerLowerArea)
       .attr('clip-path', 'url(#rect-clip)');
 
-    //next line
+    //next curve
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
+      .datum(TEMPERATURES[4].values)
       .attr('class', 'areaOuterUpper2')
-      .attr('d',this.upperOuterArea)
+      .attr('d',this.outerUpperArea2)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
+      .datum(TEMPERATURES[5].values)
       .attr('class', 'areaInner2')
-      .attr('d',this.upperInnerArea)
+      .attr('d',this.innerArea2)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
+      .datum(TEMPERATURES[7].values)
       .attr('class', 'areaOuterLower2')
-      .attr('d',this.lowerOuterArea)
+      .attr('d',this.outerLowerArea2)
       .attr('clip-path', 'url(#rect-clip)');
+
+    // line pattern
+    this.focus.append("clipPath")
+      .datum(data1)
+      .attr("id", "clip-above")
+      .append("path")
+      .attr("class", "clip-above1")
+      .attr("d", this.collisionArea.y0(0));
+
+    this.focus.append("clipPath")
+      .datum(data1)
+      .attr("id", "clip-below")
+      .append("path")
+      .attr("class", "clip-below1")
+      .attr("d", this.collisionArea.y0(this.height));
+
+    this.focus.append("pattern")
+      .attr('id', "hash4_6")
+      .attr('width', "4") 
+      .attr('height',"4")
+      .attr('patternUnits',"userSpaceOnUse") 
+      .attr('patternTransform', "rotate(45)")
+      .append("rect")
+      .attr("width","2")
+      .attr("height", "4")
+      .attr("transform", "translate(0,0)")
+      .attr("fill", "#000")
+
+    this.focus.append("path")
+      .datum(data1)
+      .attr('id', 'hash4_5')
+      .attr("x", 0)
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("fill", "url(#hash4_6)")
+      .attr("clip-path", "url(#clip-below)")
+      .attr("d", this.collisionArea.y0((d:any) => this.y(d.aboveData)));
     
 
     this.focus.append('g')
@@ -333,7 +423,7 @@ export class MiddleComponent implements OnInit {
         this.zoomFromTablet = true;
         console.log("x init1: ", [minDate, maxDate].map(this.x2));
         this.initZoomMax = data.xDomainMax;
-        this.initZoomMin = data.xDomainMin;
+        this.initZoomMax = data.xDomainMin;
         this.zoomed(true,minDate,maxDate,data.brushTransform);
         
     })

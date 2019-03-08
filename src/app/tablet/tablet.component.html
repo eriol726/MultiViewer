@@ -1,9 +1,11 @@
 
-{{messageState}}
-
     <div class="box">
-      <div class="row">
-        <div class="column">
+      <div class="grid">
+
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell">
           <div
             cdkDropList
             #todoList="cdkDropList"
@@ -11,8 +13,10 @@
             [cdkDropListConnectedTo]="[doneList]"
             class="example-list"
             (cdkDropListDropped)="dropTasks($event)">
-            <mat-expansion-panel (opened)="panelOpenState = true"
+            <mat-expansion-panel class="expansionPanel"
+                                 (opened)="panelOpenState = true"
                                  (closed)="panelOpenState = false"
+                                 hideToggle="true"
                                  *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
               <mat-expansion-panel-header (click)="expandTaskPanel(i)">
                 <mat-panel-title >
@@ -33,14 +37,10 @@
             </mat-expansion-panel>
           </div>
         </div>
-        <div class="column">
-
-            <svg width="700" height="500"></svg>
-            <!-- <div id="chartTablet" #chartTablet>
-              <div class="d3-chart" #chart></div>
-            </div> -->
+        <div class="cell">
+            <svg width="400" height="500"></svg>
         </div>
-        <div class="column" >
+        <div class="cell" >
           <div
             cdkDropList
             #doneList="cdkDropList"
@@ -58,20 +58,10 @@
             </mat-expansion-panel>
           </div>
         </div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
       </div>
     </div>
-    
-    <div class="box">
-      <!-- <app-left ></app-left> -->
-    </div>
 
-    <!-- <div class="box">
-      <app-middle [graphDataOriginal]="graphDataOriginal" [graphDataImproved]="graphDataImproved" ></app-middle>
-    </div> -->
-
-    <div class="box">
-      <!-- <app-right ></app-right> -->
-    </div>
-
- -->
 

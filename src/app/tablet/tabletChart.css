@@ -15,34 +15,6 @@
 
 .above { fill: rgb(252,141,89,0); }
 
-/* #hash4_5{ fill: rgb(255, 81, 0);} */
-
-.below { background: repeating-linear-gradient(
-  45deg,
-  #606dbc,
-  #606dbc 10px,
-  #465298 10px,
-  #465298 20px
-); } 
-
-/* .stripes {
-  height: 250px;
-  width: 375px;
-  -webkit-background-size: 50px 50px;
-  -moz-background-size: 50px 50px;
-  background-size: 5px 5px;
-}
-
-.deg45 {
-  background-color: white;
-  background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, gray), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, gray), color-stop(.75, gray), color-stop(.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(-45deg, gray 25%, transparent 25%, transparent 50%, gray 50%, gray 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(-45deg, gray 25%, transparent 25%, transparent 50%, gray 50%, gray 75%, transparent 75%, transparent);
-  background-image: -ms-linear-gradient(-45deg, gray 25%, transparent 25%, transparent 50%, gray 50%, gray 75%, transparent 75%, transparent);
-  background-image: -o-linear-gradient(-45deg, gray 25%, transparent 25%, transparent 50%, gray 50%, gray 75%, transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, gray 25%, transparent 25%, transparent 50%, gray 50%, gray 75%, transparent 75%, transparent);
-} */
-
 
 .axis path,
 .axis line {
@@ -60,82 +32,35 @@
 }
 
 .area {
-  fill: steelblue;
+  fill: #F2A120;
   clip-path: url(#clip);
 }
 
-.areaIntersection{
-  fill: rgb(243, 0, 0);
-  stroke: #000;
-}
-
 .areaOuterLower{
-fill: rgba(230, 230, 255, 0.8);
-stroke: rgba(230, 230, 255, 0.8);
+fill: rgba(242, 161, 32, 0.24);
 }
 
 .areaOuterUpper{
-  fill: rgba(230, 230, 255, 0.8);
-  stroke: rgba(230, 230, 255, 0.8);
+  fill: rgba(242, 161, 32, 0.24);
 }
 
 
 .areaOuterUpper2{
-  fill: rgba(167, 250, 159, 0.8);
-  stroke: rgba(167, 250, 159, 0.8);
+  fill: rgba(62, 115, 247, 0.24);
 }
 
 .areaOuterLower2{
-  fill: rgba(167, 250, 159, 0.8);
-  stroke: rgba(167, 250, 159, 0.8);
+  fill: rgba(62, 115, 247, 0.24);
   }
 
 
 .areaInner {
-fill: rgba(127, 127, 255, 0.8);
+fill: rgba(242, 161, 32, 0.8);
 }
 
 .areaInner2 {
-  fill: rgba(76, 182, 67, 0.8);
+  fill: rgba(62, 115, 247, 0.8);
   }
-
-.area.outer,
-.legend .outer {
-  fill: rgba(230, 230, 255, 0.8);
-  stroke: rgba(216, 216, 255, 0.8);
-}
-
-.area.inner,
-.legend .inner {
-  fill: rgba(127, 127, 255, 0.8);
-  stroke: rgba(96, 96, 255, 0.8);
-}
-
-.median-line,
-.legend .median-line {
-  fill: none;
-  stroke: #000;
-  stroke-width: 3;
-}
-
-.legend .legend-bg {
-  fill: rgba(0, 0, 0, 0.5);
-  stroke: rgba(0, 0, 0, 0.5);
-}
-
-.marker.client .marker-bg,
-.marker.client path {
-  fill: rgba(255, 127, 0, 0.8);
-  stroke: rgba(255, 127, 0, 0.8);
-  stroke-width: 3;
-}
-
-.marker.server .marker-bg,
-.marker.server path {
-  fill: rgba(0, 153, 51, 0.8);
-  stroke: rgba(0, 153, 51, 0.8);
-  stroke-width: 3;
-}
 
 .marker path {
   fill: none;
@@ -154,7 +79,10 @@ fill: rgba(127, 127, 255, 0.8);
 .row {
   float: left;
   padding: 10px;
-  width: calc(100% - 20px);
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0px;
   /*height: 300px;  Should be removed. Only for demonstration */
 }
 
