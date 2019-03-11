@@ -3,9 +3,10 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700);
 
 
-/* svg {
+svg {
+  width: 100%;
   font: 14px 'Open Sans';
-} */
+}
 
 .zoom {
   cursor: move;

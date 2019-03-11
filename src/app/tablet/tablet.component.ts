@@ -44,6 +44,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild(LeftComponent) leftPanel: LeftComponent;
   @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
   @ViewChildren('panel') panel: ElementRef;
+  @ViewChildren('cell') cell: ElementRef;
   @ViewChild('appCompButton') appCompButton;
 
   @ViewChild('chart') private chartContainer: ElementRef;
