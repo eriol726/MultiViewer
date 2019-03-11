@@ -43,7 +43,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild(RightComponent) rightPanel: RightComponent;
   @ViewChild(LeftComponent) leftPanel: LeftComponent;
   @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
-  @ViewChildren('panel') panel;
+  @ViewChildren('panel') panel: ElementRef;
   @ViewChild('appCompButton') appCompButton;
 
   @ViewChild('chart') private chartContainer: ElementRef;
@@ -577,7 +577,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
-
+    console.log(" this.panel ", this.panel);
+    console.log("panel2: ", (document.querySelector('.mat-expansion-panel') as HTMLElement))
+    //this.panel._results[2]._body.style.marginBottom = "1px";
+    
   }
 
 }

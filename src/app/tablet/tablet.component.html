@@ -13,18 +13,18 @@
             [cdkDropListConnectedTo]="[doneList]"
             class="example-list"
             (cdkDropListDropped)="dropTasks($event)">
-            <mat-expansion-panel class="expansionPanel"
+            <mat-expansion-panel class="mat-elevation-z0"
                                  (opened)="panelOpenState = true"
                                  (closed)="panelOpenState = false"
                                  hideToggle="true"
                                  *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
-              <mat-expansion-panel-header (click)="expandTaskPanel(i)">
+              <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
                 <mat-panel-title >
                     <ng-container *ngIf="i < 1; else lightGreen" >
                       <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
                     </ng-container>
                     <ng-template #lightGreen>
-                        <ng-container *ngIf="i > 0 && i < 2;else yellow">
+                        <ng-container *ngIf="i > 0 && i < tasks.content;else yellow">
                           <div id="circle" [ngStyle]="{background: item.color}"></div>{{item.text}}
                         </ng-container>
                     </ng-template>
