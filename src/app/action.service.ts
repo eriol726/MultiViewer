@@ -18,8 +18,6 @@ export class ActionService {
   };
 
   countermeasures = { "content" : [
-      {"text": "done 0", "color":"rgb(3, 37, 231)"},
-      {"text": "done 1", "color":"rgb(3, 37, 231)"}
     ]
   };
 

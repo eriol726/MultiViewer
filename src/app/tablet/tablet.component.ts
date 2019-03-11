@@ -3,7 +3,7 @@ import * as Plotly from 'plotly.js';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem } from '@angular/cdk/drag-drop';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
@@ -180,11 +180,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   dropTasks(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.socket.sendMove("change",event.previousIndex,event.currentIndex,event.container.data);
     } else {
       
-      transferArrayItem(event.previousContainer.data,
+      copyArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
@@ -200,7 +200,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.socket.sendMove("changeDone",event.previousIndex,event.currentIndex,event.container.data);
 
     } else {
-      transferArrayItem(event.previousContainer.data,
+      copyArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
