@@ -2,7 +2,11 @@
     <div class="box">
       <div class="grid">
 
-        <div class="cell"></div>
+        <div class="cell">
+            <!-- <drag-scroll style="width: 200px; height: 100px">
+                Big text goes here...ssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+            </drag-scroll > -->
+        </div>
         <div class="cell"></div>
         <div class="cell"></div>
         <div class="cell">
@@ -19,16 +23,37 @@
                                  hideToggle="true"
                                  *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
               <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
-                <mat-panel-title >
+                <mat-panel-title cdkDragHandle >
                   <div id="circle" ></div>
                   <div id="title">{{item.text}}</div>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <div id="card">
-                  <div class="diag" style="width: 100%; height: 100%; position: relative;">
-                    <div class="cardId">A</div>
+
+                <drag-scroll class="cardList"  >
+
+                  <div class="cardBorder">
+                    <div class="diag" style="width: 100%; height: 100%; position: relative;">
+                      <div class="cardLetter">A</div>
+                    </div>
                   </div>
-              </div>
+                  
+
+                  <div class="cardBorder">
+                    <div class="diag" style="width: 100%; height: 100%; position: relative;">
+                      <div class="cardLetter">B</div>
+                    </div>
+                  </div>
+                  
+
+                  <div class="cardBorder">
+                    <div class="diag" style="width: 100%; height: 100%; position: relative;">
+                      <div class="cardLetter">C</div>
+                    </div>
+                  </div>
+                  
+    
+                </drag-scroll >
+              
             </mat-expansion-panel>
           </div>
         </div>

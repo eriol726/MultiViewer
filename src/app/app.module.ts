@@ -10,6 +10,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 import { PlotlyModule } from 'angular-plotly.js';
 import { WebsocketService } from './websocket.service';
+import { DragScrollModule } from 'ngx-drag-scroll';
 
 
 import { LeftComponent } from "./left/left.component";
@@ -36,7 +37,8 @@ import { ActionService } from './action.service';
     HttpClientModule,
     MatNativeDateModule,
     ReactiveFormsModule,
-    PlotlyModule
+    PlotlyModule,
+    DragScrollModule
   ],
   providers: [
     AppComponent,
