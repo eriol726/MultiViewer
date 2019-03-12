@@ -47,6 +47,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
   @ViewChild('appCompButton') appCompButton;
+  @ViewChild('chart') mainChart: ElementRef;
 
   @ViewChild('chart') private chartContainer: ElementRef;
 
@@ -157,20 +158,33 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focusIndexMax = TEMPERATURES[6].values.findIndex((d: any) => {
       return d.date.getTime() === this.zoomDate2.getTime()
     });
-    console.log("this.zoomDate1.getTime(): ", this.zoomDate1.getTime());
-    console.log("this.zoomDate2.getTime(): ", this.zoomDate2.getTime());
-    console.log("this.focusIndexMax: ", this.focusIndexMax);
-    console.log("this.focusIndexMin: ", this.focusIndexMin);
 
-    this.focus.select('.areaOuterLower2')
-    .attr("d", this.outerLowerArea2.bind(this))
+    this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this))
 
     //this.focus.select('#hash4_5').attr('d', this.collisionArea);
     // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
-    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[6].values[i].temperature)).bind(this));
-    //this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+    //this.focus.select('#hash4_5').attr("d", this.collisionArea.bind(this));
+    if(this.panelOpenState){
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState){
+          return this.y(TEMPERATURES[6].values[i].temperature);
+        }
+        else{
+          return this.y(TEMPERATURES[7].values[i].temperature);
+        }
+      }));
+      
+      
+      
+      
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+    }else{
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+    }
+
     this.socket.sendExpand("task",index);
 
   }
@@ -252,8 +266,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.svg = d3.select('svg');
     this.margin = {top: 20, right: 20, bottom: 110, left: 40};
     this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
-    this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
-    this.height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
+
+    
+    this.width = this.mainChart.nativeElement.offsetWidth;
+    console.log("this.width: ", this.elRef.nativeElement.querySelector(".cell").offsetWidth);
+    this.height = +this.svg.attr("height");// - this.margin.top - this.margin.bottom;
     this.height2 = +this.svg.attr("height") -this.margin2.top - this.margin2.bottom;
 
     this.x = d3.scaleTime().range([0, this.width]);
@@ -279,25 +296,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .extent([[0, 0], [this.width, this.height]])
         .on('zoom', this.zoomed.bind(this));
 
-      this.collisionArea2 = d3.area()
-      .curve(d3.curveBasis)
-      .x((d:any) => this.x(d.date))
-      .y0((d:any, i:number) => this.y(TEMPERATURES[6].values[i].temperature))
-      .y1((d:any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState){
-          return this.y(TEMPERATURES[6].values[i].temperature+1);
-        }else{
-          return this.y(d.temperature);
-        }
-      });
 
     this.collisionArea = d3.area()
       .curve(d3.curveBasis)
       .x((d:any) => this.x(d.date))
-      .y0((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature))
+      .y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature))
       .y1((d:any, i:number) => {
         if(i> 249 && i < 331 && this.panelOpenState){
-          return this.y(TEMPERATURES[0].values[i].temperature+1);
+          
+          return this.y(TEMPERATURES[0].values[i].temperature);
+          
         }else{
           return this.y(TEMPERATURES[0].values[i].temperature);
         }
@@ -341,10 +349,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .y0((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature))
       .y1((d: any, i:number) => {
         if(i> 249 && i < 331 && this.panelOpenState){
-          console.log("change lower data");
           return this.y(TEMPERATURES[6].values[i].temperature+1);
         }else{
-          console.log("not change lower data");
           return this.y(d.temperature);
         }
       });
@@ -365,11 +371,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.focus = this.svg.append('g')
         .attr('class', 'focus')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+        .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')');
         
     this.context = this.svg.append('g')
         .attr('class', 'context')
-        .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
+        .attr('transform', 'translate(' + 0 + ',' + this.margin2.top + ')');
 
     
   }
@@ -391,9 +397,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
 
-    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
-    this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
-    this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
+    // this.focus.select('#hash4_5').attr('d', this.collisionArea.bind(this));
+    // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
+    // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
 
     console.log("s: ", s);
@@ -404,7 +410,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   private zoomed() {
-    
+    console.log("zoom");
 
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
     var t = d3.event.transform;
@@ -422,8 +428,24 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
 
+    //this.focus.select('#hash4_5').attr('d', this.collisionArea);
+    //this.focus.select('#hash4_5').attr('d', this.collisionArea.bind(this));
     
-    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+    if(this.panelOpenState){
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState){
+          return this.y(TEMPERATURES[6].values[i].temperature);
+        }
+        else{
+          return this.y(TEMPERATURES[7].values[i].temperature);
+        }
+      }));
+    //this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+    }else{
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+    }
+
+
     this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
     
@@ -552,6 +574,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .attr("height", "100%")
       .attr("fill", "url(#hash4_6)")
       .attr("clip-path", "url(#clip-above)")
+      .attr("d", this.collisionArea)
 
     // axis
     // this.focus.append('g')
