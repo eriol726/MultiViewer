@@ -15,10 +15,10 @@
             (cdkDropListDropped)="dropDones($event)">
             <mat-expansion-panel  class="mat-elevation-z0"
                                   hideToggle="true"
-                                  *ngFor="let item of done.content; let i = index"  #rightPanel cdkDrag>
+                                  *ngFor="let item of done.content; let i = index"  #rightLeft cdkDrag>
               <mat-expansion-panel-header (click)="expandDonePanel(i)">
                 <mat-panel-title >
-                  <div id="circle" ></div>
+                  <div id="circle" style="background-color: gold" ></div>
                   <div id="title">{{item.text}}</div>
                 </mat-panel-title>
                 
@@ -36,13 +36,13 @@
             #todoList="cdkDropList"
             [cdkDropListData]="tasks.content"
             [cdkDropListConnectedTo]="[doneList]"
-            class="example-list"
+            class="example-list-right"
             (cdkDropListDropped)="dropTasks($event)">
             <mat-expansion-panel class="mat-elevation-z0"
                                  (opened)="panelOpenState = true"
                                  (closed)="panelOpenState = false"
                                  hideToggle="true"
-                                 *ngFor="let item of tasks.content; let i = index" #panel cdkDrag>
+                                 *ngFor="let item of tasks.content; let i = index" #panelRight cdkDrag>
               <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
                 <mat-panel-title cdkDragHandle >
                   <div id="circle" ></div>
@@ -50,30 +50,30 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
         
-                <drag-scroll class="cardList"  >
+                <div class="cardList">
         
-                  <div class="cardBorder">
+                  <div class="cardBorder" (dblclick)="selectCard(i)">
                     <div class="diag" style="width: 100%; height: 100%; position: relative;">
                       <div class="cardLetter">A</div>
                     </div>
                   </div>
                   
         
-                  <div class="cardBorder">
+                  <div class="cardBorder" (dblclick)="selectCard(i)">
                     <div class="diag" style="width: 100%; height: 100%; position: relative;">
                       <div class="cardLetter">B</div>
                     </div>
                   </div>
                   
         
-                  <div class="cardBorder">
+                  <div class="cardBorder" (dblclick)="selectCard(i)">
                     <div class="diag" style="width: 100%; height: 100%; position: relative;">
                       <div class="cardLetter">C</div>
                     </div>
                   </div>
                   
         
-                </drag-scroll >
+                </div >
               
             </mat-expansion-panel>
           </div>

@@ -103,6 +103,7 @@ drag-scroll {
     width: 100%;
     border: 3px solid;
     margin-right: 10px;
+    background-color: #fff;
 }
 
 
@@ -240,6 +241,19 @@ drag-scroll {
 }
 
 .example-list {
+    /* border: solid 1px #ccc; */
+    min-height: 60px;
+    background: white;
+    overflow: hidden;
+    display: block;
+    height: 102%;
+}
+
+.example-list > mat-expansion-panel {
+    background-color: rgb(251, 255, 20);
+}
+
+.example-list-right {
     /* border: solid 1px #ccc; */
     min-height: 60px;
     background: white;
