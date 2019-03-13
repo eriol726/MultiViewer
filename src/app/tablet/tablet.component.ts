@@ -3,7 +3,7 @@ import * as Plotly from 'plotly.js';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem, CdkDragExit, CdkDragStart } from '@angular/cdk/drag-drop';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
@@ -126,12 +126,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private panelOpenState = false;
 
   private selectedCM = [false,false,false,false];
-
+  private lockedCM = [false, false, false, false];
     
   
  
   public thePanel;
   intersectionColor: d3.Area<[number, number]>;
+  tasks2: any[];
 
   constructor(private actionService : ActionService, private socket : WebsocketService, private http: HttpClient, private elRef:ElementRef) { 
 
@@ -159,31 +160,44 @@ export class TabletComponent implements OnInit, AfterViewInit {
       return d.date.getTime() === this.zoomDate2.getTime()
     });
 
-    this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this))
+    
 
     //this.focus.select('#hash4_5').attr('d', this.collisionArea);
     // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
     //this.focus.select('#hash4_5').attr("d", this.collisionArea.bind(this));
-    if(this.panelOpenState){
-      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState){
-          return this.y(TEMPERATURES[6].values[i].temperature);
+    switch(index){
+      case 0: {
+        if(!this.lockedCM[index]){
+          this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
         }
-        else{
-          return this.y(TEMPERATURES[7].values[i].temperature);
+        
+        if(this.panelOpenState || this.lockedCM[index]){
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i> 249 && i < 331  ){
+              return this.y(TEMPERATURES[6].values[i].temperature);
+            }
+            else{
+              return this.y(TEMPERATURES[7].values[i].temperature);
+            }
+          }));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        }else{
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          
         }
-      }));
-      
-      
-      
-      
-      this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-    }else{
-      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
-      this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        break;
+      }
+      case 1: {
+        break;
+      }
+      default: {
+        break;
+      }
     }
+    
 
     this.socket.sendExpand("task",index);
 
@@ -207,6 +221,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   
 
   dropTasks(event: CdkDragDrop<string[]>) {
+    console.log("removed cm");
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.socket.sendMove("change",event.previousIndex,event.currentIndex,event.container.data);
@@ -220,8 +235,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("green transfer prevData: ", event.container.data[event.previousIndex], " \n currentData" , event.container.data[event.currentIndex]);
     }
   }
-
   dropDones(event: CdkDragDrop<string[]>) {
+    console.log("inside selected cm");
+
+    
+
+
+
     if (event.previousContainer === event.container) {
       console.log("move done");
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -229,9 +249,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     } else {
       transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
       this.socket.sendMove("remove",event.previousIndex,event.currentIndex,event.container.data);
     }
     console.log("blue transfer prevData:")
@@ -348,7 +368,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature))
       .y1((d: any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState){
+        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
           return this.y(TEMPERATURES[6].values[i].temperature+1);
         }else{
           return this.y(d.temperature);
@@ -428,12 +448,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
 
+    // if(!this.lockedCM[0]){
+    //   this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+    // }
+
     //this.focus.select('#hash4_5').attr('d', this.collisionArea);
     //this.focus.select('#hash4_5').attr('d', this.collisionArea.bind(this));
     
-    if(this.panelOpenState){
+    if(this.panelOpenState || this.lockedCM[0]){
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState){
+        if(i> 249 && i < 331 ){
           return this.y(TEMPERATURES[6].values[i].temperature);
         }
         else{
@@ -628,6 +652,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   selectCard(index){
     this.selectedCM[index] = true;
+    this.lockedCM[index] = true;
     console.log("index: ", index);
     this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
     //this.elRef.nativeElement.querySelector('.mat-expansion-panel').style.backgroundColor = "#65a5ef";
@@ -635,7 +660,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.elRef.nativeElement.querySelector('.mat-expanded').style.backgroundColor = "#65a5ef";
   }
   
-
+  status(event: CdkDragStart){
+    console.log("exit: ", event);
+    // setTimeout(() => { this.tasks= { "content" : [
+    //   {"text": "task 0", "color":"rgb(38, 143, 85)"},
+    //   {"text": "task 1", "color":"rgb(38, 143, 85)"},
+    //   {"text": "task 2", "color":"rgb(38, 143, 85)"},
+    // ] } }, 2000); 
+  }
 
 
   ngAfterViewInit() {

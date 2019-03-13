@@ -11,13 +11,14 @@ import {MaterialModule} from './material/material.module';
 import { PlotlyModule } from 'angular-plotly.js';
 import { WebsocketService } from './websocket.service';
 import { DragScrollModule } from 'ngx-drag-scroll';
-
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 import { LeftComponent } from "./left/left.component";
 import { RightComponent } from './right/right.component';
 import { MiddleComponent } from './middle/middle.component';
 import { TabletComponent } from './tablet/tablet.component';
 import { ActionService } from './action.service';
+
 
 @NgModule({
   declarations: [

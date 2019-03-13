@@ -10,7 +10,6 @@
             cdkDropList
             #doneList="cdkDropList"
             [cdkDropListData]="done.content"
-            [cdkDropListConnectedTo]="[todoList]"
             class="example-list"
             (cdkDropListDropped)="dropDones($event)">
             <mat-expansion-panel  class="mat-elevation-z0"
@@ -36,13 +35,17 @@
             #todoList="cdkDropList"
             [cdkDropListData]="tasks.content"
             [cdkDropListConnectedTo]="[doneList]"
+            (cdkDropListExited)="status($event)"
             class="example-list-right"
-            (cdkDropListDropped)="dropTasks($event)">
+            (cdkDropListDropped)="dropTasks($event)"> 
             <mat-expansion-panel class="mat-elevation-z0"
                                  (opened)="panelOpenState = true"
                                  (closed)="panelOpenState = false"
                                  hideToggle="true"
-                                 *ngFor="let item of tasks.content; let i = index" #panelRight cdkDrag>
+                                 *ngFor="let item of tasks.content; let i = index" 
+                                 #panelRight 
+                                 (cdkDragStarted)="status()"
+                                 cdkDrag>
               <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
                 <mat-panel-title cdkDragHandle >
                   <div id="circle" ></div>

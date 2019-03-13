@@ -260,10 +260,11 @@ drag-scroll {
     overflow: hidden;
     display: block;
     height: 102%;
+    /* https://stackblitz.com/edit/mat-drag-drop-xfdfuh?file=src%2Fapp%2Fapp.component.html */
 }
 
-.example-list:nth-child(n+2) {
-
+.example-list-right:first-child {
+    background-color: aqua;
 } 
 
 .example-box {
