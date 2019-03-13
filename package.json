@@ -36,6 +36,7 @@
     "js-angusj-clipper": "^1.0.1",
     "js-clipper": "^1.0.1",
     "material-design-icons": "^3.0.1",
+    "ng2-dragula": "^2.1.1",
     "ngx-drag-scroll": "^7.1.4",
     "plotly": "^1.0.6",
     "plotly.js": "^1.44.2",

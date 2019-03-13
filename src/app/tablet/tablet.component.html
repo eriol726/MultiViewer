@@ -7,14 +7,12 @@
         <div class="cell"></div>
         <div class="cell">
           <div
-            cdkDropList
-            #doneList="cdkDropList"
-            [cdkDropListData]="done.content"
+             dragula="COPYABLE" id="left"
             class="example-list"
-            (cdkDropListDropped)="dropDones($event)">
+            >
             <mat-expansion-panel  class="mat-elevation-z0"
-                                  hideToggle="true"
-                                  *ngFor="let item of done.content; let i = index"  #rightLeft cdkDrag>
+                                  hideToggle="false"
+                                  *ngFor="let item of done.content; let i = index"  #panelLeft >
               <mat-expansion-panel-header (click)="expandDonePanel(i)">
                 <mat-panel-title >
                   <div id="circle" style="background-color: gold" ></div>
@@ -31,23 +29,17 @@
         </div>
         <div class="cell" >
           <div
-            cdkDropList
-            #todoList="cdkDropList"
-            [cdkDropListData]="tasks.content"
-            [cdkDropListConnectedTo]="[doneList]"
-            (cdkDropListExited)="status($event)"
+            dragula="COPYABLE" id="right"
             class="example-list-right"
-            (cdkDropListDropped)="dropTasks($event)"> 
+            > 
             <mat-expansion-panel class="mat-elevation-z0"
                                  (opened)="panelOpenState = true"
                                  (closed)="panelOpenState = false"
-                                 hideToggle="true"
+                                 hideToggle="false"
                                  *ngFor="let item of tasks.content; let i = index" 
-                                 #panelRight 
-                                 (cdkDragStarted)="status()"
-                                 cdkDrag>
+                                 #panelRight >
               <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
-                <mat-panel-title cdkDragHandle >
+                <mat-panel-title  >
                   <div id="circle" ></div>
                   <div id="title">{{item.text}}</div>
                 </mat-panel-title>

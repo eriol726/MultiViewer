@@ -12,6 +12,7 @@ import { PlotlyModule } from 'angular-plotly.js';
 import { WebsocketService } from './websocket.service';
 import { DragScrollModule } from 'ngx-drag-scroll';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { DragulaModule } from 'ng2-dragula';
 
 import { LeftComponent } from "./left/left.component";
 import { RightComponent } from './right/right.component';
@@ -39,7 +40,8 @@ import { ActionService } from './action.service';
     MatNativeDateModule,
     ReactiveFormsModule,
     PlotlyModule,
-    DragScrollModule
+    DragScrollModule,
+    DragulaModule.forRoot()
   ],
   providers: [
     AppComponent,

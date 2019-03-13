@@ -18,6 +18,7 @@ import { HttpClient } from '@angular/common/http';
 import { TEMPERATURES } from '../../data/temperatures';
 import * as greinerHormann from 'greiner-hormann';
 import * as clipperLib from 'js-angusj-clipper/web';
+import { DragulaService } from 'ng2-dragula';
 
 export interface Margin {
   top: number;
@@ -134,7 +135,22 @@ export class TabletComponent implements OnInit, AfterViewInit {
   intersectionColor: d3.Area<[number, number]>;
   tasks2: any[];
 
-  constructor(private actionService : ActionService, private socket : WebsocketService, private http: HttpClient, private elRef:ElementRef) { 
+  constructor(private actionService : ActionService, 
+              private socket : WebsocketService, 
+              private http: HttpClient, 
+              private elRef:ElementRef,
+              private dragulaService: DragulaService) { 
+
+      dragulaService.createGroup('COPYABLE', {
+        copy: (el, source) => {
+          return source.id === 'left';
+        },
+        accepts: (el, target, source, sibling) => {
+          // To avoid dragging from left to right container
+          return target.id !== 'right';
+        }
+
+      });
 
     
   }
@@ -207,6 +223,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.tabletComp.handleLeftPanel(0);
     this.socket.sendExpand("done",index);
   }
+
+  
 
   generateData() {
   //   this.data = [];
