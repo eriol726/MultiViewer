@@ -145,7 +145,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       let drake = dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
-
+          console.log("source.id: ", source.id);
           return source.id === 'right';
         },
         accepts: (el, target, source, sibling) => {
@@ -169,13 +169,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
           let prevent = false;
           if(Number.isInteger(parseInt(el.id))){
             //el.className += " mat-expanded";
-            
+            //this.elRef.nativeElement.querySelector('.example-list').children[el.id].children[1];
+      
             //prevent = true;
-            console.log("this.isExpanded: ", this.isExpanded);
+            //console.log("this.isExpanded: ", this.elRef.nativeElement.querySelector('.example-list').children[el.id].children);
           }
           
           return false; // don't prevent any drags from initiating by default
-        },
+        }.bind(this),
         
 
       }).drake.on("drop", function(el,target, source){
@@ -184,10 +185,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
         if(target){
           if (!this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
             this.done.content.push(this.tasks.content[el.id]);
-            console.log("el ", el.style.backgroundColor = "yellow" );
+            console.log("el.id ", el);
+            console.log("chldren ", this.elRef.nativeElement.querySelector('.example-list-right').children[el.id]);
             //el.style.backgroundColor = "gray";
             //this.isExpanded = false; 
-            this.isExpanded = parseInt(el.id);
+            this.isExpanded = -1;//parseInt(el.id);
             //this.isExpanded = parseInt(el.id) == this.isExpanded ? -1 : parseInt(el.id);
    
             el.style.backgroundColor = "yellow";
@@ -203,11 +205,21 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
   }
 
+  closeLeftPanel(){
+    for (let index = 0; index < this.done.content.length; index++) {
+      this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.height = "0px";
+      this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.visibility = "hidden";
+      
+    }
+    console.log("length: ", this.elRef.nativeElement.querySelector('.example-list'));
+    
+  }
+
   expandTaskPanel(index){
     console.log("open ", this.panelOpenState );
     //this.tabletComp.handleLeftPanel(0);
-    if(!this.panelOpenState){
-
+    if(this.panelOpenState){
+      this.isExpanded = index;
     }
     
     // rescale the minutes to be comparable with the database 
