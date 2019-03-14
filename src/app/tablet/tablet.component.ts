@@ -128,6 +128,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private selectedCM = [false,false,false,false];
   private lockedCM = [false, false, false, false];
+
+  public isExpanded: number  = -1;
     
   
  
@@ -141,23 +143,72 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private elRef:ElementRef,
               private dragulaService: DragulaService) { 
 
-      dragulaService.createGroup('COPYABLE', {
-        copy: (el, source) => {
-          return source.id === 'left';
+      let drake = dragulaService.createGroup('COPYABLE', {
+        copy: (el, source) => { 
+
+          return source.id === 'right';
         },
         accepts: (el, target, source, sibling) => {
           // To avoid dragging from left to right container
-          return target.id !== 'right';
+          //console.log("hej ", drake.drake.dragging);
+
+          let isCopyAble = (target.id !== 'right');
+          if (this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+            isCopyAble = false;
+          }else{
+            
+            //console.log("added: ", this.elRef.nativeElement.querySelector("[id='1']"));
+            console.log("added: ", this.elRef.nativeElement.querySelector(`#${CSS.escape(el.id)}`).style.backgroundColor);
+            
+            //el.children[0].style.backgroundColor = "blue";
+          }
+
+          return isCopyAble;
+        },
+        invalid: function (el, handle) {
+          let prevent = false;
+          if(Number.isInteger(parseInt(el.id))){
+            //el.className += " mat-expanded";
+            
+            //prevent = true;
+            console.log("this.isExpanded: ", this.isExpanded);
+          }
+          
+          return false; // don't prevent any drags from initiating by default
+        },
+        
+
+      }).drake.on("drop", function(el,target, source){
+        console.log("target: ", target);
+        console.log("source: ", source);
+        if(target){
+          if (!this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+            this.done.content.push(this.tasks.content[el.id]);
+            console.log("el ", el.style.backgroundColor = "yellow" );
+            //el.style.backgroundColor = "gray";
+            //this.isExpanded = false; 
+            this.isExpanded = parseInt(el.id);
+            //this.isExpanded = parseInt(el.id) == this.isExpanded ? -1 : parseInt(el.id);
+   
+            el.style.backgroundColor = "yellow";
+            this.elRef.nativeElement.querySelector('.example-list-right').children[el.id].style.backgroundColor = "gray";
+
+          }
         }
-
-      });
-
+          
+      }.bind(this));
+      
+      
+ 
     
   }
 
   expandTaskPanel(index){
     console.log("open ", this.panelOpenState );
     //this.tabletComp.handleLeftPanel(0);
+    if(!this.panelOpenState){
+
+    }
     
     // rescale the minutes to be comparable with the database 
     for (let index = 0; index < 56; index++) {
@@ -670,9 +721,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   selectCard(index){
     this.selectedCM[index] = true;
-    this.lockedCM[index] = true;
+    
     console.log("index: ", index);
-    this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
+    if(this.lockedCM[index]){
+      this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
+      this.lockedCM[index] = false;
+    }
+    else{
+      this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
+      this.lockedCM[index] = true;
+    }
+    
     //this.elRef.nativeElement.querySelector('.mat-expansion-panel').style.backgroundColor = "#65a5ef";
     //this.panelRight._results[index]._body.nativeElement.style.backgroundColor = "#65a5ef"
     //this.elRef.nativeElement.querySelector('.mat-expanded').style.backgroundColor = "#65a5ef";

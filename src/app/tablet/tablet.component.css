@@ -263,10 +263,6 @@ drag-scroll {
     /* https://stackblitz.com/edit/mat-drag-drop-xfdfuh?file=src%2Fapp%2Fapp.component.html */
 }
 
-.example-list-right:first-child {
-    background-color: aqua;
-} 
-
 .example-box {
     padding: 20px 10px;
     border-bottom: solid 1px #ccc;
