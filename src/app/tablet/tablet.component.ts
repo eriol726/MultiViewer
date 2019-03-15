@@ -250,6 +250,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       case 0: {
         if(!this.lockedCM[index]){
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+          this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         }
         
         if(this.panelOpenState || this.lockedCM[index]){
@@ -442,7 +443,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date))
       .y0((d: any) => this.y(d.temperature ))
-      .y1((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature));
+      .y1((d: any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+          return this.y(TEMPERATURES[6].values[i].temperature+1);
+        }else{
+          return this.y(TEMPERATURES[6].values[i].temperature);
+        }
+      });
     
     this.outerLowerArea2 = d3.area()
       .curve(d3.curveBasis)
