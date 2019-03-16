@@ -125,6 +125,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private zoomDate2: any;
 
   private panelOpenState = false;
+  private curveFactor = 0;
 
   private selectedCM = [false,false,false,false];
   private lockedCM = [false, false, false, false];
@@ -249,6 +250,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     switch(index){
       case 0: {
         if(!this.lockedCM[index]){
+          this.curveFactor = 1;
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         }
@@ -256,7 +259,31 @@ export class TabletComponent implements OnInit, AfterViewInit {
         if(this.panelOpenState || this.lockedCM[index]){
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
             if(i> 249 && i < 331  ){
-              return this.y(TEMPERATURES[6].values[i].temperature);
+              return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+            }
+            else{
+              return this.y(TEMPERATURES[7].values[i].temperature);
+            }
+          }));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        }else{
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        }
+        break;
+      }
+      case 1: {
+        if(!this.lockedCM[index]){
+          this.curveFactor = 20;
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+          this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+        }
+        
+        if(this.panelOpenState || this.lockedCM[index]){
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i> 249 && i < 331  ){
+              return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }
             else{
               return this.y(TEMPERATURES[7].values[i].temperature);
@@ -270,7 +297,54 @@ export class TabletComponent implements OnInit, AfterViewInit {
         }
         break;
       }
-      case 1: {
+      case 2:{
+        if(!this.lockedCM[index]){
+          this.curveFactor = 10;
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+          this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+        }
+        
+        if(this.panelOpenState || this.lockedCM[index]){
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i> 249 && i < 331  ){
+              return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+            }
+            else{
+              return this.y(TEMPERATURES[7].values[i].temperature);
+            }
+          }));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        }else{
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          
+        }
+        break;
+      }
+      case 3:{
+        if(!this.lockedCM[index]){
+          this.curveFactor = 15;
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+          this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+        }
+        
+        if(this.panelOpenState || this.lockedCM[index]){
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i> 249 && i < 331  ){
+              return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+            }
+            else{
+              return this.y(TEMPERATURES[7].values[i].temperature);
+            }
+          }));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        }else{
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          
+        }
         break;
       }
       default: {
@@ -402,7 +476,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.collisionArea = d3.area()
       .curve(d3.curveBasis)
       .x((d:any) => this.x(d.date))
-      .y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature))
+      .y0((d:any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState){
+          
+          return this.y(TEMPERATURES[7].values[i].temperature);
+          
+        }else{
+          return this.y(TEMPERATURES[7].values[i].temperature);
+        }
+      })
       .y1((d:any, i:number) => {
         if(i> 249 && i < 331 && this.panelOpenState){
           
@@ -436,16 +518,35 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.outerUpperArea2 = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) )
-      .y0((d: any, i:number) => this.y(d.temperature))
-      .y1((d: any, i:number) => this.y(TEMPERATURES[5].values[i].temperature));
+      .y0((d: any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+          return this.y(d.temperature+this.curveFactor);
+        }else{
+          return this.y(d.temperature);
+        }
+      })
+      .y1((d: any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+          return this.y(TEMPERATURES[5].values[i].temperature+this.curveFactor);
+        }else{
+          return this.y(TEMPERATURES[5].values[i].temperature);
+        }
+      });
 
     this.innerArea2 = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date))
-      .y0((d: any) => this.y(d.temperature ))
+      .y0((d: any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+          console.log("interval innerarea2");
+          return this.y(d.temperature+this.curveFactor);
+        }else{
+          return this.y(d.temperature);
+        }
+      })
       .y1((d: any, i:number) => {
         if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
-          return this.y(TEMPERATURES[6].values[i].temperature+1);
+          return this.y(TEMPERATURES[6].values[i].temperature+this.curveFactor);
         }else{
           return this.y(TEMPERATURES[6].values[i].temperature);
         }
@@ -454,10 +555,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.outerLowerArea2 = d3.area()
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) )
-      .y0((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature))
+      .y0((d: any, i:number) => {
+        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+          return this.y(TEMPERATURES[6].values[i].temperature+this.curveFactor);
+        }else{
+          return this.y(TEMPERATURES[6].values[i].temperature);
+        }
+      })
       .y1((d: any, i:number) => {
         if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
-          return this.y(TEMPERATURES[6].values[i].temperature+1);
+          return this.y(d.temperature+this.curveFactor);
         }else{
           return this.y(d.temperature);
         }
@@ -476,10 +583,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('width', this.width)
         .attr('height', this.height)
         
-
+    // translating down the graph to let the data stay in the foucs area when a extrem CM is selected
     this.focus = this.svg.append('g')
         .attr('class', 'focus')
-        .attr('transform', 'translate(' + 0 + ',' + this.margin.top + ')');
+        .attr('transform', 'translate(' + 0 + ',' + 100 + ')');
         
     this.context = this.svg.append('g')
         .attr('class', 'context')
@@ -546,7 +653,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     if(this.panelOpenState || this.lockedCM[0]){
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
         if(i> 249 && i < 331 ){
-          return this.y(TEMPERATURES[6].values[i].temperature);
+          return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
         }
         else{
           return this.y(TEMPERATURES[7].values[i].temperature);
