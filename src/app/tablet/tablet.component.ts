@@ -262,15 +262,24 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.focus.select('#hash4_5').attr("d", this.collisionArea.bind(this));
     if(this.panelOpenState){
       for (let i = 0; i < this.lockedCM.length; i++) {
+        
         if(this.lockedCM[i].locked && i != index  ){
+          console.log("unlock");
           this.curveFactor =  this.lockedCM[index].graphFactor + this.curveFactorLocked;
           break;
         }
+        else{
+          console.log("locked");
+        }
       }
+      
+    }
+    if(this.lockedCM[index].locked ){
+      this.curveFactor =   this.curveFactorLocked;
     }
     
-
-    console.log("open", this.curveFactor);
+    
+    //console.log("open", this.curveFactor);
     
 
     switch(index){
