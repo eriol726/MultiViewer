@@ -128,7 +128,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private curveFactor = 0;
 
   private selectedCM = [false,false,false,false];
-  private lockedCM = [false, false, false, false];
+  private lockedCM = [{"locked": false, "graphFactor": 5},
+                      {"locked": false, "graphFactor": 20},
+                      {"locked": false, "graphFactor": 10},
+                      {"locked": false, "graphFactor": 15}];
 
   public isExpanded: number  = -1;
     
@@ -137,6 +140,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public thePanel;
   intersectionColor: d3.Area<[number, number]>;
   tasks2: any[];
+  curveFactorLocked: number = 0;
 
   constructor(private actionService : ActionService, 
               private socket : WebsocketService, 
@@ -217,7 +221,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   expandTaskPanel(index){
-    console.log("open ", this.panelOpenState );
     //this.tabletComp.handleLeftPanel(0);
     if(this.panelOpenState){
       this.isExpanded = index;
@@ -246,17 +249,38 @@ export class TabletComponent implements OnInit, AfterViewInit {
     // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
+    
+      
+    // }
+    if(!this.panelOpenState ){
+      
+      this.curveFactor = this.curveFactorLocked;
+    }else{
+      this.curveFactor = this.lockedCM[index].graphFactor;
+    }
+
     //this.focus.select('#hash4_5').attr("d", this.collisionArea.bind(this));
+    if(this.panelOpenState){
+      for (let i = 0; i < this.lockedCM.length; i++) {
+        if(this.lockedCM[i].locked && i != index  ){
+          this.curveFactor =  this.lockedCM[index].graphFactor + this.curveFactorLocked;
+          break;
+        }
+      }
+    }
+    
+
+    console.log("open", this.curveFactor);
+    
+
     switch(index){
       case 0: {
-        if(!this.lockedCM[index]){
-          this.curveFactor = 1;
+        
           this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
-        }
         
-        if(this.panelOpenState || this.lockedCM[index]){
+
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
             if(i> 249 && i < 331  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
@@ -266,21 +290,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
             }
           }));
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-        }else{
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-        }
+
+        
         break;
       }
       case 1: {
-        if(!this.lockedCM[index]){
-          this.curveFactor = 20;
-          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+
+  
+        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
-        }
         
-        if(this.panelOpenState || this.lockedCM[index]){
+
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
             if(i> 249 && i < 331  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
@@ -290,22 +311,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
             }
           }));
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-        }else{
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-          
-        }
+
         break;
       }
       case 2:{
-        if(!this.lockedCM[index]){
-          this.curveFactor = 10;
-          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
-        }
         
-        if(this.panelOpenState || this.lockedCM[index]){
+
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
             if(i> 249 && i < 331  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
@@ -315,22 +329,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
             }
           }));
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-        }else{
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-          
-        }
         break;
       }
       case 3:{
-        if(!this.lockedCM[index]){
-          this.curveFactor = 15;
-          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
-        }
         
-        if(this.panelOpenState || this.lockedCM[index]){
+
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
             if(i> 249 && i < 331  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
@@ -340,11 +346,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
             }
           }));
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-        }else{
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-          
-        }
         break;
       }
       default: {
@@ -519,14 +520,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+        if(i> 249 && i < 331  ){
           return this.y(d.temperature+this.curveFactor);
         }else{
           return this.y(d.temperature);
         }
       })
       .y1((d: any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+        if(i> 249 && i < 331  ){
           return this.y(TEMPERATURES[5].values[i].temperature+this.curveFactor);
         }else{
           return this.y(TEMPERATURES[5].values[i].temperature);
@@ -537,7 +538,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date))
       .y0((d: any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+        if(i> 249 && i < 331  ){
           console.log("interval innerarea2");
           return this.y(d.temperature+this.curveFactor);
         }else{
@@ -545,7 +546,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         }
       })
       .y1((d: any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+        if(i> 249 && i < 331  ){
           return this.y(TEMPERATURES[6].values[i].temperature+this.curveFactor);
         }else{
           return this.y(TEMPERATURES[6].values[i].temperature);
@@ -556,14 +557,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+        if(i> 249 && i < 331  ){
           return this.y(TEMPERATURES[6].values[i].temperature+this.curveFactor);
         }else{
           return this.y(TEMPERATURES[6].values[i].temperature);
         }
       })
       .y1((d: any, i:number) => {
-        if(i> 249 && i < 331 && this.panelOpenState || this.lockedCM[0]){
+        if(i> 249 && i < 331  ){
           return this.y(d.temperature+this.curveFactor);
         }else{
           return this.y(d.temperature);
@@ -849,14 +850,28 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.selectedCM[index] = true;
     
     console.log("index: ", index);
-    if(this.lockedCM[index]){
+    if(this.lockedCM[index].locked){
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
-      this.lockedCM[index] = false;
+      this.lockedCM[index].locked = false;
+      //this.curveFactorLocked = 0;
+      this.curveFactorLocked -= this.lockedCM[index].graphFactor;
     }
     else{
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
-      this.lockedCM[index] = true;
+      this.lockedCM[index].locked = true;
+      this.curveFactorLocked += this.lockedCM[index].graphFactor;
+      
+      
     }
+
+
+    
+          // for (let index = 0; index < this.lockedCM.length; index++) {
+          //   if(this.lockedCM[index].locked){
+          //     this.curveFactor += this.lockedCM[index].graphFactor;
+          //   }
+            
+          // }
     
     //this.elRef.nativeElement.querySelector('.mat-expansion-panel').style.backgroundColor = "#65a5ef";
     //this.panelRight._results[index]._body.nativeElement.style.backgroundColor = "#65a5ef"
