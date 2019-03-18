@@ -95,14 +95,16 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
     this.update(this.data2);
 
+    
+
     // add the x Axis
     this.svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(this.x));
 
   // add the y Axis
-    this.svg.append("g")
-    .call(d3.axisLeft(this.y));
+    // this.svg.append("g")
+    // .call(d3.axisLeft(this.y));
 
 
 
@@ -163,6 +165,24 @@ export class LeftComponent implements OnInit, AfterViewInit {
 							return 20;
             }.bind(this));
       
+      //Create labels
+      this.svg.selectAll("text")
+      .data(this.data2)
+      .enter()
+      .append("text")
+      .text(function(d) {
+          return d.salesperson;
+      })
+      .attr("text-anchor", "middle")
+      .attr("x", function(d, i) {
+          return 20;
+      }.bind(this))
+      .attr("y", function(d,i) {
+          return 20*i +20;
+      }.bind(this))
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "11px")
+      .attr("fill", "white");
       
     
   }
