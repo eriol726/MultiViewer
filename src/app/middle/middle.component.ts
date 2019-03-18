@@ -413,6 +413,8 @@ export class MiddleComponent implements OnInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
+        this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
+
   }
 
   ngAfterViewInit(){

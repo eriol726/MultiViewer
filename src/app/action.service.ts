@@ -10,10 +10,10 @@ export class ActionService {
   private events = new BehaviorSubject<boolean>(false);
 
   actions = { "content" : [
-      {"text": "task 0", "color":"rgb(38, 143, 85)"},
-      {"text": "task 1", "color":"rgb(59, 253, 91)"},
-      {"text": "task 2", "color":"rgb(59, 253, 91)"},
-      {"text": "task 3", "color":"rgb(237, 253, 6)"}
+      {"text": "task 0", "color":"rgb(38, 143, 85)","time": 2},
+      {"text": "task 1", "color":"rgb(59, 253, 91)","time": 2},
+      {"text": "task 2", "color":"rgb(59, 253, 91)","time": 2},
+      {"text": "task 3", "color":"rgb(237, 253, 6)","time": 2}
     ]
   };
 

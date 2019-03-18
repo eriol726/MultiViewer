@@ -11,3 +11,11 @@
     padding: 10px;
     /*height: 300px;  Should be removed. Only for demonstration */
   }
+
+  .cell {
+    width: calc(100% - 20px);
+  }
+
+  .bar {
+    fill: #5f89ad;
+}

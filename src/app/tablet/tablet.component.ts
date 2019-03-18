@@ -57,12 +57,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @Input() url: string = "app/right.display.component.html";
 
   tasks = { "content" : [
-      {"text": "task 0", "color":"rgb(38, 143, 85)"},
+      {"text": "task 0", "color":"rgb(38, 143, 85)", "time":2},
     ]
   };
 
   done = { "content" : [
-      {"text": "task 0", "color":"rgb(38, 143, 85)"},
+      {"text": "task 0", "color":"rgb(38, 143, 85)", "time":2},
     ]
   };
 
@@ -185,16 +185,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
         
 
       }).drake.on("drop", function(el,target, source){
-        console.log("target: ", target);
-        console.log("source: ", source);
         if(target){
           if (!this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
             this.done.content.push(this.tasks.content[el.id]);
-            console.log("el.id ", el);
-            console.log("chldren ", this.elRef.nativeElement.querySelector('.example-list-right').children[el.id]);
-            //el.style.backgroundColor = "gray";
-            //this.isExpanded = false; 
             this.isExpanded = -1;//parseInt(el.id);
+            this.socket.sendMove("change",0,0,this.tasks.content[el.id]);
             //this.isExpanded = parseInt(el.id) == this.isExpanded ? -1 : parseInt(el.id);
    
             el.style.backgroundColor = "yellow";
@@ -682,7 +677,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
 
     let brushT = {"k": t.k, "x": t.x, "y": t.y};
-    
+    console.log("brushT: ", brushT);
     this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);
   }
 
@@ -841,6 +836,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
 
+    //let brushT = {"k": 4.365853658536583, "x": -1405.939024390243, "y": 0};
     //this.socket.sendZoom(true, TEMPERATURES[0].values[249],TEMPERATURES[0].values[331].date,brushT);
   }
 
