@@ -27,7 +27,7 @@
                                  (closed)="panelOpenState = false"
                                  [expanded]="isExpanded===i"
                                  hideToggle="true"
-                                 *ngFor="let item of tasks.content; let i = index" 
+                                 *ngFor="let item of tasks; let i = index" 
                                  [attr.id]="i"
                                  #panelRight >
               <mat-expansion-panel-header (click)="expandTaskPanel(i)" >

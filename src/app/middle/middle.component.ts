@@ -121,7 +121,7 @@ export class MiddleComponent implements OnInit {
     this.y = d3.scaleLinear().range([this.height, 0]);
     this.y2 = d3.scaleLinear().range([this.height2, 0]);
 
-    this.xAxis = d3.axisBottom(this.x);
+    this.xAxis = d3.axisBottom(this.x).tickFormat(d3.timeFormat('%H:%M'));
     this.xAxis2 = d3.axisBottom(this.x2);
     this.yAxis = d3.axisLeft(this.y);
 

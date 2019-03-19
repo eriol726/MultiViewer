@@ -6,11 +6,20 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import * as d3 from 'd3';
 import { TEMPERATURES } from '../../data/temperatures';
 
+type MyType = {
+  text: string;
+  color: string;
+  startDate: Date;
+  endDate: Date;
+}
+
 @Component({
   selector: 'app-left',
   templateUrl: './left.component.html',
   styleUrls: ['./left.component.css']
 })
+
+
 export class LeftComponent implements OnInit, AfterViewInit {
  // @Input() tasks;
   @Input() expand;
@@ -28,8 +37,10 @@ export class LeftComponent implements OnInit, AfterViewInit {
   x;
   y;
 
-  data2 = [{"salesperson":"Bob","sales":33},{"salesperson":"Robin","sales":12}];
+  data2: MyType[] = [{"text": "task 0", "color":"rgb(38, 143, 85)","startDate": new Date(2018,1,1,0,10,0), "endDate": new Date(2018,1,1,0,55,0)}];
   barHeigt: number;
+  xLinear: d3.ScaleLinear<number, number>;
+  xTime: d3.ScaleTime<number, number>;
 
 
   constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
@@ -67,101 +78,133 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log("ngInit");
-    const tasksObservable = this.actionService.getActions();
-    tasksObservable.subscribe(tasksData => {
-      this.tasks3 = tasksData;
-      console.log("tasks: ", tasksData);
-    })
+
+    this.draw();
+
+    this.update(this.data2);
+
+     
+
+
+
+    // add the y Axis
+    // this.svg.append("g")
+    // .call(d3.axisLeft(this.y));
+
+    //this.width = this.mainChart.nativeElement.offsetWidth;
+    this.innerWidth = window.innerWidth;
+
+  }
+
+  draw(){
     // set the ranges
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    this.width = this.mainChart.nativeElement.offsetWidth;
+    var margin = {top: 20, right: 20, bottom: 30, left: 40};
+    this.width = this.mainChart.nativeElement.offsetWidth - margin.left - margin.right;
+    //width = 1500 - margin.left - margin.right;
+    //let height = 600 - margin.top - margin.bottom;
     this.barHeigt = 50;
 
-    this.svg = d3.select("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    this.svg = d3.select("svg");
+    var bounds = this.svg.node().getBoundingClientRect();
+
+    let width = bounds.width - margin.left - margin.right,
+    height = bounds.height - margin.top - margin.bottom;
+    this.svg
     .append("g")
     .attr("transform", 
           "translate(" + margin.left + "," + margin.top + ")");
 
-    this.x = d3.scaleLinear()
+    this.xLinear = d3.scaleLinear()
              .range([0, width]);
 
+    this.xTime = d3.scaleTime().range([0, width]);
 
     this.y = d3.scaleBand()
           .range([this.barHeigt, 0])
           .padding(0.1);
 
-    this.update(this.data2);
+
 
     // add the x Axis
     this.svg.append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(this.x));
-
-  // add the y Axis
-    this.svg.append("g")
-    .call(d3.axisLeft(this.y));
-
-
-
-    this.width = this.mainChart.nativeElement.offsetWidth;
-    this.innerWidth = window.innerWidth;
-
-    
-    
-
+    .call(d3.axisBottom(this.xTime)
+    .tickFormat(d3.timeFormat('%H:%M')));
   }
+
+
 
   update(data){
     // set the dimensions and margins of the graph
-    
 
-    
-
-    
-          
     // append the svg object to the body of the page
     // append a 'group' element to 'svg'
     // moves the 'group' element to the top left margin
     
 
     // format the data
-    data.forEach(function(d) {
-    d.sales = +d.sales;
-    });
-
+    // data.forEach(function(d) {
+    // d.sales = +d.sales;
+    // });
+    console.log("data: ", data);
     // Scale the range of the data in the domains
-    this.x.domain([0, d3.max(data, (d:any) => d.sales )]);
-    this.y.domain(data.map((d) => d.salesperson));
+    this.xTime.domain([TEMPERATURES[0].values[90].date,TEMPERATURES[0].values[148].date]);
+    this.y.domain([0,5]);
     //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
 
     // append the rectangles for the bar chart
     let bars = this.svg.selectAll(".bar")
       .data(data)
+
+    
     
     bars
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    //.attr("x", function(d) { return x(d.sales); })
+    .attr("y", function(d:any) { return this.y(d.text); }.bind(this))
+    .attr("height", this.y.bandwidth())
+    .merge(bars)
+    .transition()							//Initiate a transition on all elements in the update selection (all rects)
+          .duration(500)
+          .attr("x", function(d, i) {				//Set new x position, based on the updated xScale
+            return 0;
+          }.bind(this))
+          .attr("y", function(d, i) {				//Set new y position, based on the updated yScale
+            return 25*i;
+          }.bind(this))
+          .attr("width",  function(d) {
+            console.log("d: ", d);
+            let startDate = new Date(d.startDate);
+            let endDate = new Date(d.endDate);
+            console.log("endDate: ", endDate);
+            let timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+            console.log("timeDiff: ", timeDiff*0.0000001);
+            return this.xLinear(timeDiff*0.0000002); 
+          }.bind(this))		//Set new width value, based on the updated xScale
+          .attr("height", function(d) {			//Set new height value, based on the updated yScale
+            return 20;
+          }.bind(this));
+    
+    //Create labels
+    bars
       .enter()
-      .append("rect")
-      .attr("class", "bar")
-      //.attr("x", function(d) { return x(d.sales); })
-      .attr("width", function(d:any) {return this.x(d.sales); }.bind(this) )
-      .attr("y", function(d:any) { return this.y(d.salesperson); }.bind(this))
-      .attr("height", this.y.bandwidth())
-      .merge(bars)
-      .transition()							//Initiate a transition on all elements in the update selection (all rects)
-						.duration(500)
-						.attr("x", function(d, i) {				//Set new x position, based on the updated xScale
-							return 0;
-						}.bind(this))
-						.attr("y", function(d, i) {				//Set new y position, based on the updated yScale
-							return 25*i;
-						}.bind(this))
-						.attr("width",  function(d) {return this.x(d.sales); }.bind(this))		//Set new width value, based on the updated xScale
-						.attr("height", function(d) {			//Set new height value, based on the updated yScale
-							return 20;
-            }.bind(this));
+      .append("text")
+      .text(function(d) {
+          return d.text;
+      }.bind(this))
+      .attr("text-anchor", "middle")
+      .attr("x", function(d, i) {
+          return 20;
+      })
+      .attr("y", function(d, i) {
+          return 25*i+15;
+      })
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "11px")
+      .attr("fill", "white");
       
       
     
@@ -170,21 +213,18 @@ export class LeftComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
     this.display.expandItem().subscribe(data=>{
       if(data.type === "task"){
-        if(this.panel._results[data.state].expanded == false){
-          this.panel._results[data.state].expanded = true;
-        }
-        else{
-          this.panel._results[data.state].expanded = false;
-        }
       }
     });
 
     this.display.moveItem().subscribe(data=>{
       if(data.type === "change"){
         
-        this.data2.push({"salesperson":"Klas","sales":15});
-        console.log("this.data: ", this.data2);
+        console.log("data.containerData: ", data.containerData);
+        this.data2.push(data.containerData);
         this.update(this.data2);
+        
+        
+        
       }else if(data.type === "remove"){
         transferArrayItem(this.tasks3.content,
           [],
@@ -192,7 +232,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
           data.currentIndex);
       }
       
-      console.log("this.tasks: ", this.tasks3, " \n currentData: ", data.containerData);
     })
 
     
@@ -221,7 +260,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   onResize(event) {
     console.log(" this.svg: ",  window.innerWidth);
 
-
+    //this.draw();
     this.innerWidth = window.innerWidth;
     
   }

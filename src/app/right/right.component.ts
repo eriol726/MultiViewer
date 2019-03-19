@@ -59,7 +59,7 @@ export class RightComponent implements OnInit, AfterViewInit {
           data.currentIndex);
 
       } else if(data.type === "remove"){
-        this.done1.content = data.containerData;
+        //this.done1.content = data.containerData;
       }
     });
       

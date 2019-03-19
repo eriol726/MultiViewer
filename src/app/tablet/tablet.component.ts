@@ -27,6 +27,13 @@ export interface Margin {
   left: number;
 }
 
+type MyType = {
+  text: string;
+  color: string;
+  startDate: Date;
+  endDate: Date;
+}
+
 @Component({
   selector: 'app-tablet',
   encapsulation: ViewEncapsulation.None,
@@ -56,15 +63,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private myTemplate: any = "";
   @Input() url: string = "app/right.display.component.html";
 
-  tasks = { "content" : [
-      {"text": "task 0", "color":"rgb(38, 143, 85)", "time":2},
-    ]
-  };
+  tasks: MyType[];
 
-  done = { "content" : [
-      {"text": "task 0", "color":"rgb(38, 143, 85)", "time":2},
-    ]
-  };
+  done: MyType[];
 
   
 
@@ -158,7 +159,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
           //console.log("hej ", drake.drake.dragging);
 
           let isCopyAble = (target.id !== 'right');
-          if (this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+          console.log("this.done: ", this.done)
+          if (this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
             isCopyAble = false;
           }else{
             
@@ -186,10 +188,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       }).drake.on("drop", function(el,target, source){
         if(target){
-          if (!this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
-            this.done.content.push(this.tasks.content[el.id]);
+          if (!this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+            this.done.push(this.tasks[el.id]);
             this.isExpanded = -1;//parseInt(el.id);
-            this.socket.sendMove("change",0,0,this.tasks.content[el.id]);
+            console.log("this.tasks: ", this.tasks);
+            this.socket.sendMove("change",0,0,this.tasks[el.id]);
             //this.isExpanded = parseInt(el.id) == this.isExpanded ? -1 : parseInt(el.id);
    
             el.style.backgroundColor = "yellow";
@@ -206,7 +209,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   closeLeftPanel(){
-    for (let index = 0; index < this.done.content.length; index++) {
+    for (let index = 0; index < this.done.length; index++) {
       this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.height = "0px";
       this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.visibility = "hidden";
       
@@ -429,6 +432,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
     tasksObservable.subscribe(tasksData => {
+      console.log("tasksData: ", tasksData);
       this.tasks = tasksData;
     })
     const doneObservable = this.actionService.getCountermeasures();
