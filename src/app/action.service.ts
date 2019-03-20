@@ -10,10 +10,10 @@ export class ActionService {
   private events = new BehaviorSubject<boolean>(false);
 
   actions = [
-      {"text": "task 0", "color":"rgb(38, 143, 85)","startDate": new Date(2018,1,1,0,32,0), "endDate": new Date(2018,1,1,1,35,0)},
-      {"text": "task 1", "color":"rgb(59, 253, 91)","startDate": new Date(2018,1,1,2,0,0), "endDate": new Date(2018,1,1,2,35,0)},
-      {"text": "task 2", "color":"rgb(59, 253, 91)","startDate": new Date(2018,1,1,3,0,0), "endDate": new Date(2018,1,1,4,0,0)},
-      {"text": "task 3", "color":"rgb(237, 253, 6)","startDate": new Date(2018,1,1,4,32,0), "endDate": new Date(2018,1,1,5,35,0)}
+      {"text": "task 0", "color":"rgb(38, 143, 85)","startDate": new Date(2018,1,1,6,0,0), "endDate": new Date(2018,1,1,7,35,0)},
+      {"text": "task 1", "color":"rgb(59, 253, 91)","startDate": new Date(2018,1,1,6,35,0), "endDate": new Date(2018,1,1,7,20,0)},
+      {"text": "task 2", "color":"rgb(59, 253, 91)","startDate": new Date(2018,1,1,8,0,0), "endDate": new Date(2018,1,1,9,0,0)},
+      {"text": "task 3", "color":"rgb(237, 253, 6)","startDate": new Date(2018,1,1,7,0,0), "endDate": new Date(2018,1,1,7,35,0)}
     ]
 
 
