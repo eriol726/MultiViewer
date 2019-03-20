@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener  } from '@angular/core';
 import * as Plotly from 'plotly.js';
 import * as d3 from 'd3';
 import * as d3Array from 'd3-array';
@@ -115,6 +115,11 @@ export class MiddleComponent implements OnInit {
     this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
     this.height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
     this.height2 = +this.svg.attr("height") -this.margin2.top - this.margin2.bottom;
+
+    let bounds = this.svg.node().getBoundingClientRect();
+    
+    this.width = bounds.width - this.margin.left - this.margin.right,
+    this.height = bounds.height - this.margin.top - this.margin.bottom;
 
     this.x = d3.scaleTime().range([0, this.width]);
     this.x2 = d3.scaleTime().range([0, this.width]);
@@ -371,11 +376,21 @@ export class MiddleComponent implements OnInit {
       .attr("clip-path", "url(#clip-below)")
       .attr("d", this.collisionArea.y0((d:any) => this.y(d.aboveData)));
     
-
+    // append history line
     this.focus.append('g')
     .attr('class', 'axis axis--x')
     .attr('transform', 'translate(0,' + this.height + ')')
-    .call(this.xAxis);
+    .call(this.xAxis)
+    .append("rect")
+    .attr("x", (d) => {
+      let date = new Date(2018,1,1,6,0,0);
+      console.log("date: ", this.x(date));
+      return this.x(date);
+    })
+    .attr("y", -500)
+    .attr("width", 2)
+    .attr("height", 600 )
+    .attr("fill", "black")
 
     this.focus.append('g')
     .attr('class', 'axis axis--y')
@@ -386,20 +401,20 @@ export class MiddleComponent implements OnInit {
         .call(this.brush2)
         .call(this.brush2.move, this.x2.range());
 
-    this.context.append('path')
-        .datum(TEMPERATURES[0].values)
-        .attr('class', 'area')
-        .attr('d', this.area2);
+    // this.context.append('path')
+    //     .datum(TEMPERATURES[0].values)
+    //     .attr('class', 'area')
+    //     .attr('d', this.area2);
     
     // this.context.append('path')
     //     .datum(TEMPERATURES[1].values)
     //     .attr('class', 'area')
     //     .attr('d', this.area2);
 
-    this.context.append('g')
-        .attr('class', 'axis axis--x')
-        .attr('transform', 'translate(0,' + this.height2 + ')')
-        .call(this.xAxis2);
+    // this.context.append('g')
+    //     .attr('class', 'axis axis--x')
+    //     .attr('transform', 'translate(0,' + this.height2 + ')')
+    //     .call(this.xAxis2);
 
     // this.context.append('g')
     //     .attr('class', 'brush') 
@@ -429,7 +444,12 @@ export class MiddleComponent implements OnInit {
         this.zoomed(true,minDate,maxDate,data.brushTransform);
         
     })
-  
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    
+    
   }
   
  

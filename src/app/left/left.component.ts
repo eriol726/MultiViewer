@@ -5,6 +5,7 @@ import { WebsocketService } from '../websocket.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
 import { TEMPERATURES } from '../../data/temperatures';
+import { deflateRaw } from 'zlib';
 
 type MyType = {
   text: string;
@@ -97,6 +98,13 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.g.append("g").
     attr("class", "axis axis--x");
 
+    // append history line
+    this.g.select(".axis--x").append("rect")
+    .attr("class", "historyLine")
+    .attr("width", 2)
+    .attr("height", 600 )
+    .attr("fill", "black")
+
     this.draw();
 
     this.update(this.data2);
@@ -106,7 +114,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   draw(){
     
     let bounds = this.svg.node().getBoundingClientRect();
-    console.log("bounds: ", bounds);
+    
     this.width = bounds.width - this.margin.left - this.margin.right,
     this.height = bounds.height - this.margin.top - this.margin.bottom;
 
@@ -121,6 +129,15 @@ export class LeftComponent implements OnInit, AfterViewInit {
     .call(d3.axisBottom(this.xTime)
     .tickFormat(d3.timeFormat('%H:%M')));
     
+    let date = new Date(2018,1,1,6,0,0);
+    let x = this.xTime(date);
+
+    this.g.select(".historyLine")
+    .attr("transform", "translate(" + x +"," + -this.height + ")");
+
+    console.log("bar: ", this.g.select(".bar"));
+    
+    
     
   }
 
@@ -131,6 +148,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
     // Scale the range of the data in the domains
     //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
+    
 
     // append the rectangles for the bar chart
     let bars = this.g.selectAll(".bar")
@@ -182,6 +200,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
       .attr("font-size", "11px")
       .attr("fill", "white");
       
+
       
     
   }

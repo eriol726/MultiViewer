@@ -19,6 +19,7 @@ import { TEMPERATURES } from '../../data/temperatures';
 import * as greinerHormann from 'greiner-hormann';
 import * as clipperLib from 'js-angusj-clipper/web';
 import { DragulaService } from 'ng2-dragula';
+import { MapType } from '@angular/compiler';
 
 export interface Margin {
   top: number;
@@ -84,7 +85,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private margin: Margin;
   private margin2: Margin;
 
-  private width: number;
+  private width: number = 0;
   private height: number;
   private height2: number;
 
@@ -435,13 +436,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("tasksData: ", tasksData);
       this.tasks = tasksData;
     })
-    const doneObservable = this.actionService.getCountermeasures();
-    doneObservable.subscribe(doneData => {
-      this.done = doneData; 
-    })
-
+    console.log("width: ", this.width);
+    let h: MyType;
+    this.done = [{"text": "", "color":"","startDate": new Date(0,0,0,0,0,0), "endDate": new Date(0,0,0,0,0,0)}];
     this.initSvg();
-    console.log("init");
+    console.log("init", this.done);
     this.drawChart(TEMPERATURES);
 
   
