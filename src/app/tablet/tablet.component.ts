@@ -19,12 +19,20 @@ import { TEMPERATURES } from '../../data/temperatures';
 import * as greinerHormann from 'greiner-hormann';
 import * as clipperLib from 'js-angusj-clipper/web';
 import { DragulaService } from 'ng2-dragula';
+import { MapType } from '@angular/compiler';
 
 export interface Margin {
   top: number;
   right: number;
   bottom: number;
   left: number;
+}
+
+type MyType = {
+  text: string;
+  color: string;
+  startDate: Date;
+  endDate: Date;
 }
 
 @Component({
@@ -56,15 +64,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private myTemplate: any = "";
   @Input() url: string = "app/right.display.component.html";
 
-  tasks = { "content" : [
-      {"text": "task 0", "color":"rgb(38, 143, 85)", "time":2},
-    ]
-  };
+  tasks: MyType[];
 
-  done = { "content" : [
-      {"text": "task 0", "color":"rgb(38, 143, 85)", "time":2},
-    ]
-  };
+  done: MyType[];
 
   
 
@@ -83,7 +85,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private margin: Margin;
   private margin2: Margin;
 
-  private width: number;
+  private width: number = 0;
   private height: number;
   private height2: number;
 
@@ -158,12 +160,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
           //console.log("hej ", drake.drake.dragging);
 
           let isCopyAble = (target.id !== 'right');
-          if (this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+
+          if (this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
             isCopyAble = false;
           }else{
             
             //console.log("added: ", this.elRef.nativeElement.querySelector("[id='1']"));
-            console.log("added: ", this.elRef.nativeElement.querySelector(`#${CSS.escape(el.id)}`).style.backgroundColor);
+           
             
             //el.children[0].style.backgroundColor = "blue";
           }
@@ -186,10 +189,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       }).drake.on("drop", function(el,target, source){
         if(target){
-          if (!this.done.content.some((x) => x.text == el.querySelector("#title").innerHTML) ){
-            this.done.content.push(this.tasks.content[el.id]);
+          if (!this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+            this.done.push(this.tasks[el.id]);
             this.isExpanded = -1;//parseInt(el.id);
-            this.socket.sendMove("change",0,0,this.tasks.content[el.id]);
+            console.log("this.tasks: ", this.tasks);
+            this.socket.sendMove("change",0,0,this.tasks[el.id]);
             //this.isExpanded = parseInt(el.id) == this.isExpanded ? -1 : parseInt(el.id);
    
             el.style.backgroundColor = "yellow";
@@ -206,12 +210,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   closeLeftPanel(){
-    for (let index = 0; index < this.done.content.length; index++) {
+    console.log("length: ", this.elRef.nativeElement.querySelector('.example-list'));
+    console.log("this.done.length: ", this.done.length);
+    for (let index = 0; index < this.done.length; index++) {
       this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.height = "0px";
       this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.visibility = "hidden";
       
     }
-    console.log("length: ", this.elRef.nativeElement.querySelector('.example-list'));
+    
     
   }
 
@@ -219,6 +225,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.tabletComp.handleLeftPanel(0);
     if(this.panelOpenState){
       this.isExpanded = index;
+      this.socket.sendExpand("task",index);
+    }
+    else{
+      this.socket.sendExpand("task",-1);
     }
     
     // rescale the minutes to be comparable with the database 
@@ -301,7 +311,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       case 1: {
 
   
-        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         
@@ -319,7 +329,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         break;
       }
       case 2:{
-        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         
@@ -356,9 +366,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
         break;
       }
     }
-    
-
-    this.socket.sendExpand("task",index);
 
   }
 
@@ -429,15 +436,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
     tasksObservable.subscribe(tasksData => {
+
       this.tasks = tasksData;
     })
-    const doneObservable = this.actionService.getCountermeasures();
-    doneObservable.subscribe(doneData => {
-      this.done = doneData; 
-    })
 
+    this.done = [];
     this.initSvg();
-    console.log("init");
     this.drawChart(TEMPERATURES);
 
   

@@ -5,12 +5,22 @@ import { WebsocketService } from '../websocket.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
 import { TEMPERATURES } from '../../data/temperatures';
+import { deflateRaw } from 'zlib';
+
+type MyType = {
+  text: string;
+  color: string;
+  startDate: Date;
+  endDate: Date;
+}
 
 @Component({
   selector: 'app-left',
   templateUrl: './left.component.html',
   styleUrls: ['./left.component.css']
 })
+
+
 export class LeftComponent implements OnInit, AfterViewInit {
  // @Input() tasks;
   @Input() expand;
@@ -28,8 +38,13 @@ export class LeftComponent implements OnInit, AfterViewInit {
   x;
   y;
 
-  data2 = [{"salesperson":"Bob","sales":33},{"salesperson":"Robin","sales":12}];
+  data2: MyType[] = [{"text": "task 0", "color":"rgb(38, 143, 85)","startDate": new Date(2018,1,1,6,30,0), "endDate": new Date(2018,1,1,7,30,0)}];
   barHeigt: number;
+  xLinear: d3.ScaleLinear<number, number>;
+  xTime: d3.ScaleTime<number, number>;
+  margin: { top: number; right: number; bottom: number; left: number; };
+  height: number;
+  g: any;
 
 
   constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
@@ -67,122 +82,126 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log("ngInit");
-    const tasksObservable = this.actionService.getActions();
-    tasksObservable.subscribe(tasksData => {
-      this.tasks3 = tasksData;
-      console.log("tasks: ", tasksData);
-    })
-    // set the ranges
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
-    this.barHeigt = 50;
 
-    this.svg = d3.select("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", 
-          "translate(" + margin.left + "," + margin.top + ")");
+    this.svg = d3.select("svg");
+    this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
-    this.x = d3.scaleLinear()
-             .range([0, width]);
+    this.xLinear = d3.scaleLinear();
+    this.xTime = d3.scaleTime();
+    this.y = d3.scaleBand().padding(0.1);
 
-
-    this.y = d3.scaleBand()
-          .range([this.barHeigt, 0])
-          .padding(0.1);
-
-    this.update(this.data2);
+    this.g = this.svg.append("g")
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+  
 
     
 
     // add the x Axis
-    this.svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(this.x));
+    this.g.append("g").
+    attr("class", "axis axis--x");
 
-  // add the y Axis
-    // this.svg.append("g")
-    // .call(d3.axisLeft(this.y));
+    // append history line
+    this.g.select(".axis--x").append("rect")
+    .attr("class", "historyLine")
+    .attr("width", 2)
+    .attr("height", 600 )
+    .attr("fill", "black")
 
+    this.draw();
 
-
-    this.width = this.mainChart.nativeElement.offsetWidth;
-    this.innerWidth = window.innerWidth;
-
-    
-    
+    this.update(this.data2);
 
   }
 
+  draw(){
+    
+    let bounds = this.svg.node().getBoundingClientRect();
+    
+    this.width = bounds.width - this.margin.left - this.margin.right,
+    this.height = bounds.height - this.margin.top - this.margin.bottom;
+
+    this.xLinear.rangeRound([0, this.width]);
+    this.xTime.rangeRound([0, this.width]);
+
+    this.xTime.domain([TEMPERATURES[0].values[70].date,TEMPERATURES[0].values[148].date]);
+    this.y.domain([0,5]);
+    
+    this.g.select(".axis--x")
+    .attr("transform", "translate(0," + this.height + ")")
+    .call(d3.axisBottom(this.xTime)
+    .tickFormat(d3.timeFormat('%H:%M')));
+    
+    let date = new Date(2018,1,1,6,0,0);
+    let x = this.xTime(date);
+
+    this.g.select(".historyLine")
+    .attr("transform", "translate(" + x +"," + -this.height + ")");
+
+    console.log("bar: ", this.g.select(".bar"));
+    
+    
+    
+  }
+
+
+
   update(data){
     // set the dimensions and margins of the graph
-    
-
-    
-
-    
-          
-    // append the svg object to the body of the page
-    // append a 'group' element to 'svg'
-    // moves the 'group' element to the top left margin
-    
-
-    // format the data
-    data.forEach(function(d) {
-    d.sales = +d.sales;
-    });
 
     // Scale the range of the data in the domains
-    this.x.domain([0, d3.max(data, (d:any) => d.sales )]);
-    this.y.domain(data.map((d) => d.salesperson));
     //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
+    
 
     // append the rectangles for the bar chart
-    let bars = this.svg.selectAll(".bar")
+    let bars = this.g.selectAll(".bar")
       .data(data)
-    
+     
     bars
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      //.attr("x", function(d) { return x(d.sales); })
-      .attr("width", function(d:any) {return this.x(d.sales); }.bind(this) )
-      .attr("y", function(d:any) { return this.y(d.salesperson); }.bind(this))
-      .attr("height", this.y.bandwidth())
-      .merge(bars)
-      .transition()							//Initiate a transition on all elements in the update selection (all rects)
-						.duration(500)
-						.attr("x", function(d, i) {				//Set new x position, based on the updated xScale
-							return 0;
-						}.bind(this))
-						.attr("y", function(d, i) {				//Set new y position, based on the updated yScale
-							return 25*i;
-						}.bind(this))
-						.attr("width",  function(d) {return this.x(d.sales); }.bind(this))		//Set new width value, based on the updated xScale
-						.attr("height", function(d) {			//Set new height value, based on the updated yScale
-							return 20;
-            }.bind(this));
-      
-      //Create labels
-      this.svg.selectAll("text")
-      .data(this.data2)
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .merge(bars)
+    .transition()							//Initiate a transition on all elements in the update selection (all rects)
+          .duration(500)
+          .attr("x", function(d, i) {				//Set new x position, based on the updated xScale
+            let startDate = new Date(d.startDate);
+            console.log("startDate: ", startDate);
+            return this.xTime(startDate);
+          }.bind(this))
+          .attr("y", function(d, i) {				//Set new y position, based on the updated yScale
+            return 25*i;
+          }.bind(this))
+          .attr("width",  function(d) {
+            console.log("this.xTime(d.endDate): ", this.xTime(d.endDate));
+            let startDate = new Date(d.startDate);
+            let endDate = new Date(d.endDate);
+            
+            this.xTime(d.startDate)
+            return this.xTime(endDate)-this.xTime(startDate); 
+          }.bind(this))		//Set new width value, based on the updated xScale
+          .attr("height", function(d) {			//Set new height value, based on the updated yScale
+            return 20;
+          }.bind(this));
+    
+    //Create labels
+    bars
       .enter()
       .append("text")
       .text(function(d) {
-          return d.salesperson;
-      })
+          return d.text;
+      }.bind(this))
       .attr("text-anchor", "middle")
       .attr("x", function(d, i) {
-          return 20;
+        let startDate = new Date(d.startDate);
+        return this.xTime(startDate)+this.margin.right;
       }.bind(this))
-      .attr("y", function(d,i) {
-          return 20*i +20;
-      }.bind(this))
+      .attr("y", function(d, i) {
+          return 25*i+15;
+      })
       .attr("font-family", "sans-serif")
       .attr("font-size", "11px")
       .attr("fill", "white");
+      
       
     
   }
@@ -190,21 +209,18 @@ export class LeftComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
     this.display.expandItem().subscribe(data=>{
       if(data.type === "task"){
-        if(this.panel._results[data.state].expanded == false){
-          this.panel._results[data.state].expanded = true;
-        }
-        else{
-          this.panel._results[data.state].expanded = false;
-        }
       }
     });
 
     this.display.moveItem().subscribe(data=>{
       if(data.type === "change"){
         
-        this.data2.push({"salesperson":"Klas","sales":15});
-        console.log("this.data: ", this.data2);
+        console.log("data.containerData: ", data.containerData);
+        this.data2.push(data.containerData);
         this.update(this.data2);
+        
+        
+        
       }else if(data.type === "remove"){
         transferArrayItem(this.tasks3.content,
           [],
@@ -212,37 +228,18 @@ export class LeftComponent implements OnInit, AfterViewInit {
           data.currentIndex);
       }
       
-      console.log("this.tasks: ", this.tasks3, " \n currentData: ", data.containerData);
     })
 
     
   }
 
-  appendBar(data){
-    var bars = this.svg.selectAll(".bar")
-            .data(data)
-            .enter()
-            .append("g")
-
-        //append rects
-        bars.append("rect")
-            .attr("class", "bar")
-            .attr("y", function (d) {
-                return this.y(d.name);
-            })
-            .attr("height", this.y.rangeBand())
-            .attr("x", 0)
-            .attr("width", function (d) {
-                return this.x(d.value);
-            });
-  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    console.log(" this.svg: ",  window.innerWidth);
 
 
-    this.innerWidth = window.innerWidth;
+    this.draw();
+    
     
   }
 

@@ -39,7 +39,7 @@ export class WebsocketService {
   }
 
   moveItem() {
-    let observable = new Observable<{type:String, previousIndex:number, currentIndex: number, containerData: Array<{"text": string, "color":string, "time": number}>}>(observer => {
+    let observable = new Observable<{type:String, previousIndex:number, currentIndex: number, containerData: {"text": string, "color":string, "startDate": Date, "endDate": Date}}>(observer => {
         this.socket.on('moveItem', (data) => {
           console.log("Received message from Websocket Server: ", data );
 

@@ -17,9 +17,11 @@ export class RightComponent implements OnInit, AfterViewInit {
   @ViewChildren('panel') panel;
   open: any = [];
 
-  done1 = { "content" : [
-    {"text": "task 0", "color":"rgb(38, 143, 85)"},
-  ]};
+  done1 = [];
+
+  private panelOpenState = false;
+  public isExpanded: number  = -1;
+
   constructor(private actionService : ActionService, private display : WebsocketService) {
   }
 
@@ -36,12 +38,19 @@ export class RightComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(){
     this.display.expandItem().subscribe(data=>{
-      if(data.type === "done"){
-        if(this.panel._results[data.state].expanded == false){
-          this.panel._results[data.state].expanded = true;
+
+      console.log("data: ", data);
+      
+      this.isExpanded = data.state;
+      
+      
+      if(data.type === "task"){
+        if(this.panelOpenState == false){
+          this.panelOpenState = true;
+          
         }
         else{
-          this.panel._results[data.state].expanded = false;
+          this.panelOpenState = false;
         }  
       }
         
@@ -50,19 +59,23 @@ export class RightComponent implements OnInit, AfterViewInit {
     this.display.moveItem().subscribe(data=>{
       if(data.type === "changeDone"){
         console.log("data.previousIndex: ", data.previousIndex, " \n data.currentIndex: ", data.currentIndex);
-        moveItemInArray(this.done1.content, data.previousIndex, data.currentIndex);
+        moveItemInArray(this.done1, data.previousIndex, data.currentIndex);
       }
       else if(data.type === "add"){
-        transferArrayItem(this.done1.content,
+        transferArrayItem(this.done1,
           [],
           data.previousIndex,
           data.currentIndex);
 
       } else if(data.type === "remove"){
-        this.done1.content = data.containerData;
+        //this.done1.content = data.containerData;
       }
     });
       
+    
+  }
+
+  expandTaskPanel(index){
     
   }
 
@@ -72,7 +85,7 @@ export class RightComponent implements OnInit, AfterViewInit {
     CMmeasures.subscribe(doneData => {
       this.done1 = doneData;
     })
-    console.log("this.done: ", this.panel);
+    console.log("this.done: ", this.done1);
     
   }
 
