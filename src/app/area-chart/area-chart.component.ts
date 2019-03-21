@@ -141,7 +141,7 @@ export class AreaChartComponent implements OnInit {
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
 
-    
+    console.log("open: ", index);
     // rescale the minutes to be comparable with the database 
     for (let index = 0; index < 56; index++) {
       if(this.zoomDate2.getMinutes() > index*4 && this.zoomDate2.getMinutes() < index*4+4){
@@ -196,7 +196,7 @@ export class AreaChartComponent implements OnInit {
     
     
     //console.log("open", this.curveFactor);
-    
+    console.log("curveFactor: ", this.curveFactor);
 
     switch(index){
       case 0: {
@@ -257,6 +257,7 @@ export class AreaChartComponent implements OnInit {
         break;
       }
       case 3:{
+        console.log("open 3");
         this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
         this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
         this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
@@ -765,5 +766,26 @@ export class AreaChartComponent implements OnInit {
 
   }
 
+  ngAfterViewInit(){
+    this.socket.expandItem().subscribe(data=>{
+
+      console.log("data: ", data);
+      this.expandTaskPanel(data.state);
+      this.isExpanded = data.state;
+      
+      
+      if(data.type === "task"){
+        if(this.panelOpenState == false){
+          
+          this.panelOpenState = true;
+          
+        }
+        else{
+          this.panelOpenState = false;
+        }  
+      }
+        
+    });
+  }
 
 }
