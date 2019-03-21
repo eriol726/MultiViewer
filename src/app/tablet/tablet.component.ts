@@ -225,10 +225,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.tabletComp.handleLeftPanel(0);
     if(this.panelOpenState){
       this.isExpanded = index;
-      this.socket.sendExpand("task",index);
+      this.socket.sendExpand("task",index,index);
     }
     else{
-      this.socket.sendExpand("task",-1);
+      this.socket.sendExpand("task",-1,index);
     }
     
     // rescale the minutes to be comparable with the database 
@@ -359,7 +359,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   expandDonePanel(index){
     //this.tabletComp.handleLeftPanel(0);
-    this.socket.sendExpand("done",index);
+    this.socket.sendExpand("done",index,index);
   }
 
   
@@ -861,7 +861,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       
     }
 
-
+    this.socket.sendClose("done",index);
     
           // for (let index = 0; index < this.lockedCM.length; index++) {
           //   if(this.lockedCM[index].locked){

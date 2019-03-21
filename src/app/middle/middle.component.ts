@@ -84,6 +84,8 @@ export class MiddleComponent implements OnInit {
     line;
   initZoomMax: Date;
   zoomFromTablet: boolean;
+  zoomDate1: any;
+  zoomDate2: any;
 
   constructor(private http: HttpClient, private display : WebsocketService) { }
 
@@ -236,7 +238,12 @@ export class MiddleComponent implements OnInit {
   }
 
   private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
-    
+    //var t = d3.event.transform;
+    console.log("zoom middle");
+    // this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
+    // this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
+
+    // this.x.domain(t.rescaleX(this.x2).domain());
 
     this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
     this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
@@ -284,92 +291,92 @@ export class MiddleComponent implements OnInit {
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
 
-    let data1 = TEMPERATURES[0].values;
+    // let data1 = TEMPERATURES[0].values;
 
-    data1.forEach(function(d,i) {
-      d["aboveData"] = d.temperature;
-      d["belowData"] = TEMPERATURES[7].values[i].temperature;
-    }.bind(this));
+    // data1.forEach(function(d,i) {
+    //   d["aboveData"] = d.temperature;
+    //   d["belowData"] = TEMPERATURES[7].values[i].temperature;
+    // }.bind(this));
 
 
-    // first curve
-    this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
-      .attr('class', 'areaOuterUpper')
-      .attr('d',this.outerUpperArea)
-      .attr('clip-path', 'url(#rect-clip)');
+    // // first curve
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[0].values)
+    //   .attr('class', 'areaOuterUpper')
+    //   .attr('d',this.outerUpperArea)
+    //   .attr('clip-path', 'url(#rect-clip)');
       
 
-    this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
-      .attr('class', 'areaInner')
-      .attr('d',this.innerArea)
-      .attr('clip-path', 'url(#rect-clip)');
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[1].values)
+    //   .attr('class', 'areaInner')
+    //   .attr('d',this.innerArea)
+    //   .attr('clip-path', 'url(#rect-clip)');
     
 
       
-    this.focus.append('path')
-      .datum(TEMPERATURES[3].values)
-      .attr('class', 'areaOuterLower')
-      .attr('d',this.outerLowerArea)
-      .attr('clip-path', 'url(#rect-clip)');
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[3].values)
+    //   .attr('class', 'areaOuterLower')
+    //   .attr('d',this.outerLowerArea)
+    //   .attr('clip-path', 'url(#rect-clip)');
 
-    //next curve
+    // //next curve
 
-    this.focus.append('path')
-      .datum(TEMPERATURES[4].values)
-      .attr('class', 'areaOuterUpper2')
-      .attr('d',this.outerUpperArea2)
-      .attr('clip-path', 'url(#rect-clip)');
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[4].values)
+    //   .attr('class', 'areaOuterUpper2')
+    //   .attr('d',this.outerUpperArea2)
+    //   .attr('clip-path', 'url(#rect-clip)');
 
-    this.focus.append('path')
-      .datum(TEMPERATURES[5].values)
-      .attr('class', 'areaInner2')
-      .attr('d',this.innerArea2)
-      .attr('clip-path', 'url(#rect-clip)');
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[5].values)
+    //   .attr('class', 'areaInner2')
+    //   .attr('d',this.innerArea2)
+    //   .attr('clip-path', 'url(#rect-clip)');
 
-    this.focus.append('path')
-      .datum(TEMPERATURES[7].values)
-      .attr('class', 'areaOuterLower2')
-      .attr('d',this.outerLowerArea2)
-      .attr('clip-path', 'url(#rect-clip)');
+    // this.focus.append('path')
+    //   .datum(TEMPERATURES[7].values)
+    //   .attr('class', 'areaOuterLower2')
+    //   .attr('d',this.outerLowerArea2)
+    //   .attr('clip-path', 'url(#rect-clip)');
 
-    // line pattern
-    this.focus.append("clipPath")
-      .datum(data1)
-      .attr("id", "clip-above")
-      .append("path")
-      .attr("class", "clip-above1")
-      .attr("d", this.collisionArea.y0(0));
+    // // line pattern
+    // this.focus.append("clipPath")
+    //   .datum(data1)
+    //   .attr("id", "clip-above")
+    //   .append("path")
+    //   .attr("class", "clip-above1")
+    //   .attr("d", this.collisionArea.y0(0));
 
-    this.focus.append("clipPath")
-      .datum(data1)
-      .attr("id", "clip-below")
-      .append("path")
-      .attr("class", "clip-below1")
-      .attr("d", this.collisionArea.y0(this.height));
+    // this.focus.append("clipPath")
+    //   .datum(data1)
+    //   .attr("id", "clip-below")
+    //   .append("path")
+    //   .attr("class", "clip-below1")
+    //   .attr("d", this.collisionArea.y0(this.height));
 
-    this.focus.append("pattern")
-      .attr('id', "hash4_6")
-      .attr('width', "4") 
-      .attr('height',"4")
-      .attr('patternUnits',"userSpaceOnUse") 
-      .attr('patternTransform', "rotate(45)")
-      .append("rect")
-      .attr("width","2")
-      .attr("height", "4")
-      .attr("transform", "translate(0,0)")
-      .attr("fill", "#000")
+    // this.focus.append("pattern")
+    //   .attr('id', "hash4_6")
+    //   .attr('width', "4") 
+    //   .attr('height',"4")
+    //   .attr('patternUnits',"userSpaceOnUse") 
+    //   .attr('patternTransform', "rotate(45)")
+    //   .append("rect")
+    //   .attr("width","2")
+    //   .attr("height", "4")
+    //   .attr("transform", "translate(0,0)")
+    //   .attr("fill", "#000")
 
-    this.focus.append("path")
-      .datum(data1)
-      .attr('id', 'hash4_5')
-      .attr("x", 0)
-      .attr("width", "100%")
-      .attr("height", "100%")
-      .attr("fill", "url(#hash4_6)")
-      .attr("clip-path", "url(#clip-below)")
-      .attr("d", this.collisionArea.y0((d:any) => this.y(d.aboveData)));
+    // this.focus.append("path")
+    //   .datum(data1)
+    //   .attr('id', 'hash4_5')
+    //   .attr("x", 0)
+    //   .attr("width", "100%")
+    //   .attr("height", "100%")
+    //   .attr("fill", "url(#hash4_6)")
+    //   .attr("clip-path", "url(#clip-below)")
+    //   .attr("d", this.collisionArea.y0((d:any) => this.y(d.aboveData)));
     
     // append history line
     this.focus.append('g')
@@ -433,12 +440,13 @@ export class MiddleComponent implements OnInit {
         let minDate = new Date(data.xDomainMin);
         let maxDate = new Date(data.xDomainMax);
         this.zoomFromTablet = true;
-        console.log("x init1: ", [minDate, maxDate].map(this.x2));
+        //console.log("x init1: ", [minDate, maxDate].map(this.x2));
         this.initZoomMax = data.xDomainMax;
         this.initZoomMax = data.xDomainMin;
         this.zoomed(true,minDate,maxDate,data.brushTransform);
         
     })
+    
   }
 
   @HostListener('window:resize', ['$event'])

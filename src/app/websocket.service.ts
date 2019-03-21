@@ -25,8 +25,22 @@ export class WebsocketService {
   
 
   expandItem() {
-    let observable = new Observable<{type:String, state:number}>(observer => {
+    let observable = new Observable<{type:String, state:number, closedIndex:number}>(observer => {
         this.socket.on('expandItem', (data) => {
+          console.log("Received message from Websocket Server: ", data );
+
+          observer.next(data);
+        });
+        return () => {
+          this.socket.disconnect();
+        }
+    });
+    return observable;
+  }
+
+  closeItem() {
+    let observable = new Observable<{type:String, state:number}>(observer => {
+        this.socket.on('closeItem', (data) => {
           console.log("Received message from Websocket Server: ", data );
 
           observer.next(data);
@@ -66,8 +80,13 @@ export class WebsocketService {
     return observable;
   }
 
-  sendExpand(data, data1){
-    this.socket.emit('expandItem', data, data1 );
+  sendExpand(data, data1, data2){
+    this.socket.emit('expandItem', data, data1, data2 );
+    //this.socket.emit('state', data2);
+  }
+
+  sendClose(data, data1){
+    this.socket.emit('closeItem', data, data1 );
     //this.socket.emit('state', data2);
   }
 

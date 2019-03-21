@@ -141,7 +141,8 @@ export class AreaChartComponent implements OnInit {
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
 
-    console.log("open: ", index);
+    console.log("this.panelOpenState: ", this.panelOpenState);
+
     // rescale the minutes to be comparable with the database 
     for (let index = 0; index < 56; index++) {
       if(this.zoomDate2.getMinutes() > index*4 && this.zoomDate2.getMinutes() < index*4+4){
@@ -749,15 +750,14 @@ export class AreaChartComponent implements OnInit {
   selectCard(index){
     this.selectedCM[index] = true;
     
-    console.log("index: ", index);
     if(this.lockedCM[index].locked){
-      this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
+      //this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
       this.lockedCM[index].locked = false;
       //this.curveFactorLocked = 0;
       this.curveFactorLocked -= this.lockedCM[index].graphFactor;
     }
     else{
-      this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
+      //this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
       this.lockedCM[index].locked = true;
       this.curveFactorLocked += this.lockedCM[index].graphFactor;
       
@@ -770,22 +770,20 @@ export class AreaChartComponent implements OnInit {
     this.socket.expandItem().subscribe(data=>{
 
       console.log("data: ", data);
-      this.expandTaskPanel(data.state);
-      this.isExpanded = data.state;
-      
-      
-      if(data.type === "task"){
-        if(this.panelOpenState == false){
-          
-          this.panelOpenState = true;
-          
-        }
-        else{
-          this.panelOpenState = false;
-        }  
+      if(data.state != -1){
+        this.panelOpenState = true;
+        this.expandTaskPanel(data.state);
+      }else{
+        this.panelOpenState = false;
+        this.expandTaskPanel(data.closedIndex);
       }
         
     });
+
+    this.socket.closeItem().subscribe(data=>{
+      console.log("lock");
+      this.selectCard(data.state);
+    })
   }
 
 }
