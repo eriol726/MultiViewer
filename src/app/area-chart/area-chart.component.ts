@@ -1,25 +1,10 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation } from '@angular/core';
-import * as Plotly from 'plotly.js';
-import { RightComponent } from '../right/right.component';
-import { LeftComponent } from '../left/left.component';
-import { MiddleComponent } from '../middle/middle.component';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem, CdkDragExit, CdkDragStart } from '@angular/cdk/drag-drop';
-import { WebsocketService } from '../websocket.service';
-import { ActionService } from '../action.service';
+import { Component, OnInit, ElementRef, ViewChildren, ViewChild, Input, Renderer2 } from '@angular/core';
+import { TEMPERATURES } from 'src/data/temperatures';
 import * as d3 from 'd3';
-import * as d3Scale from 'd3-scale';
-import * as d3ScaleChromatic from 'd3-scale-chromatic';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import * as d3Shape from 'd3-shape';
-import * as d3Array from 'd3-array';
-import * as d3Axis from 'd3-axis';
-import * as d3Zoom from 'd3-zoom';
-import * as d3Brush from 'd3-brush';
-import { HttpClient } from '@angular/common/http';
-import { TEMPERATURES } from '../../data/temperatures';
-import * as greinerHormann from 'greiner-hormann';
-import * as clipperLib from 'js-angusj-clipper/web';
-import { DragulaService } from 'ng2-dragula';
-import { MapType } from '@angular/compiler';
+import { ActionService } from '../action.service';
+import { WebsocketService } from '../websocket.service';
 
 export interface Margin {
   top: number;
@@ -36,27 +21,18 @@ type MyType = {
 }
 
 @Component({
-  selector: 'app-tablet',
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: './tablet.component.html',
-  styleUrls: ['./tablet.component.css']
+  selector: 'app-area-chart',
+  templateUrl: './area-chart.component.html',
+  styleUrls: ['./area-chart.component.css']
 })
-export class TabletComponent implements OnInit, AfterViewInit {
+export class AreaChartComponent implements OnInit {
 
   title = 'multiViewer';
   graphDataOriginal = 0;
   graphDataImproved  = 0;
   
-  @ViewChildren('chartTablet') chartTablet;
-  @ViewChildren('panelRight') panelRight;
-  @ViewChildren('panelLeft') panelLeft;
-  @ViewChild(RightComponent) rightPanel: RightComponent;
-  @ViewChild(LeftComponent) leftPanel: LeftComponent;
-  @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
-  @ViewChildren('panel') panel: ElementRef;
-  @ViewChildren('cell') cell: ElementRef;
-  @ViewChild('appCompButton') appCompButton;
-  @ViewChild('chart') mainChart: ElementRef;
+
+  @ViewChild('chart') private mainChart: ElementRef;
 
   @ViewChild('chart') private chartContainer: ElementRef;
 
@@ -143,71 +119,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
   intersectionColor: d3.Area<[number, number]>;
   tasks2: any[];
   curveFactorLocked: number = 0;
+  svgMain: any;
 
   constructor(private actionService : ActionService, 
-              private socket : WebsocketService, 
-              private http: HttpClient, 
               private elRef:ElementRef,
-              private dragulaService: DragulaService) { 
-
-      let drake = dragulaService.createGroup('COPYABLE', {
-        copy: (el, source) => { 
-          console.log("source.id: ", source.id);
-          return source.id === 'right';
-        },
-        accepts: (el, target, source, sibling) => {
-          // To avoid dragging from left to right container
-          //console.log("hej ", drake.drake.dragging);
-
-          let isCopyAble = (target.id !== 'right');
-
-          if (this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
-            isCopyAble = false;
-          }else{
-            
-            //console.log("added: ", this.elRef.nativeElement.querySelector("[id='1']"));
-           
-            
-            //el.children[0].style.backgroundColor = "blue";
-          }
-
-          return isCopyAble;
-        },
-        invalid: function (el, handle) {
-          let prevent = false;
-          if(Number.isInteger(parseInt(el.id))){
-            //el.className += " mat-expanded";
-            //this.elRef.nativeElement.querySelector('.example-list').children[el.id].children[1];
-      
-            //prevent = true;
-            //console.log("this.isExpanded: ", this.elRef.nativeElement.querySelector('.example-list').children[el.id].children);
-          }
-          
-          return false; // don't prevent any drags from initiating by default
-        }.bind(this),
-        
-
-      }).drake.on("drop", function(el,target, source){
-        if(target){
-          if (!this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
-            this.done.push(this.tasks[el.id]);
-            this.isExpanded = -1;//parseInt(el.id);
-            console.log("this.tasks: ", this.tasks);
-            this.socket.sendMove("change",0,0,this.tasks[el.id]);
-            //this.isExpanded = parseInt(el.id) == this.isExpanded ? -1 : parseInt(el.id);
-   
-            el.style.backgroundColor = "yellow";
-            this.elRef.nativeElement.querySelector('.example-list-right').children[el.id].style.backgroundColor = "gray";
-
-          }
-        }
-          
-      }.bind(this));
-      
-      
- 
-    
-  }
+              private renderer:Renderer2,
+              private socket:WebsocketService ) { }
 
   closeLeftPanel(){
     console.log("length: ", this.elRef.nativeElement.querySelector('.example-list'));
@@ -223,144 +140,147 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
-    if(this.panelOpenState){
-      this.isExpanded = index;
-      this.socket.sendExpand("task",index);
-    }
-    else{
-      this.socket.sendExpand("task",-1);
-    }
+
     
     // rescale the minutes to be comparable with the database 
-    // for (let index = 0; index < 56; index++) {
-    //   if(this.zoomDate2.getMinutes() > index*4 && this.zoomDate2.getMinutes() < index*4+4){
-    //     this.zoomDate2.setHours(this.zoomDate2.getHours(),index*4+4,0,0);
-    //     this.zoomDate1.setHours(this.zoomDate1.getHours(),index*4+4,0,0);
-    //   }
-    // }
+    for (let index = 0; index < 56; index++) {
+      if(this.zoomDate2.getMinutes() > index*4 && this.zoomDate2.getMinutes() < index*4+4){
+        this.zoomDate2.setHours(this.zoomDate2.getHours(),index*4+4,0,0);
+        this.zoomDate1.setHours(this.zoomDate1.getHours(),index*4+4,0,0);
+      }
+    }
 
     
-    // this.focusIndexMin = TEMPERATURES[6].values.findIndex((d: any) => {
-    //   return d.date.getTime() === this.zoomDate1.getTime()
-    // });
+    this.focusIndexMin = TEMPERATURES[6].values.findIndex((d: any) => {
+      return d.date.getTime() === this.zoomDate1.getTime()
+    });
 
-    // this.focusIndexMax = TEMPERATURES[6].values.findIndex((d: any) => {
-    //   return d.date.getTime() === this.zoomDate2.getTime()
-    // });
+    this.focusIndexMax = TEMPERATURES[6].values.findIndex((d: any) => {
+      return d.date.getTime() === this.zoomDate2.getTime()
+    });
 
     
-    // if(!this.panelOpenState ){
-      
-    //   this.curveFactor = this.curveFactorLocked;
-    // }else{
-    //   this.curveFactor = this.lockedCM[index].graphFactor;
-    // }
 
-    // if(this.panelOpenState){
-    //   for (let i = 0; i < this.lockedCM.length; i++) {
-        
-    //     if(this.lockedCM[i].locked && i != index  ){
-    //       console.log("unlock");
-    //       this.curveFactor =  this.lockedCM[index].graphFactor + this.curveFactorLocked;
-    //       break;
-    //     }
-    //     else{
-    //       console.log("locked");
-    //     }
-    //   }
+    //this.focus.select('#hash4_5').attr('d', this.collisionArea);
+    // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
+    // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
+
+    
       
     // }
-    // if(this.lockedCM[index].locked ){
-    //   this.curveFactor =   this.curveFactorLocked;
-    // }
+    if(!this.panelOpenState ){
+      
+      this.curveFactor = this.curveFactorLocked;
+    }else{
+      this.curveFactor = this.lockedCM[index].graphFactor;
+    }
+
+    //this.focus.select('#hash4_5').attr("d", this.collisionArea.bind(this));
+    if(this.panelOpenState){
+      for (let i = 0; i < this.lockedCM.length; i++) {
+        
+        if(this.lockedCM[i].locked && i != index  ){
+          console.log("unlock");
+          this.curveFactor =  this.lockedCM[index].graphFactor + this.curveFactorLocked;
+          break;
+        }
+        else{
+          console.log("locked");
+        }
+      }
+      
+    }
+    if(this.lockedCM[index].locked ){
+      this.curveFactor =   this.curveFactorLocked;
+    }
     
     
-    // switch(index){
-    //   case 0: {
+    //console.log("open", this.curveFactor);
+    
+
+    switch(index){
+      case 0: {
         
-    //       this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    //       this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
-    //       this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+          this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         
 
-    //       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-    //         if(i> 249 && i < 331  ){
-    //           return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
-    //         }
-    //         else{
-    //           return this.y(TEMPERATURES[7].values[i].temperature);
-    //         }
-    //       }));
-    //       this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i> 249 && i < 331  ){
+              return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+            }
+            else{
+              return this.y(TEMPERATURES[7].values[i].temperature);
+            }
+          }));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
 
         
-    //     break;
-    //   }
-    //   case 1: {
+        break;
+      }
+      case 1: {
 
   
-    //       this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    //       this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
-    //       this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+          this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         
 
-    //       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-    //         if(i> 249 && i < 331  ){
-    //           return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
-    //         }
-    //         else{
-    //           return this.y(TEMPERATURES[7].values[i].temperature);
-    //         }
-    //       }));
-    //       this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i> 249 && i < 331  ){
+              return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+            }
+            else{
+              return this.y(TEMPERATURES[7].values[i].temperature);
+            }
+          }));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
 
-    //     break;
-    //   }
-    //   case 2:{
-    //       this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    //       this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
-    //       this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+        break;
+      }
+      case 2:{
+          this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+          this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+          this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         
 
-    //       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-    //         if(i> 249 && i < 331  ){
-    //           return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
-    //         }
-    //         else{
-    //           return this.y(TEMPERATURES[7].values[i].temperature);
-    //         }
-    //       }));
-    //       this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-    //     break;
-    //   }
-    //   case 3:{
-    //     this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    //     this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
-    //     this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i> 249 && i < 331  ){
+              return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+            }
+            else{
+              return this.y(TEMPERATURES[7].values[i].temperature);
+            }
+          }));
+          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        break;
+      }
+      case 3:{
+        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+        this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+        this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         
 
-    //     this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-    //       if(i> 249 && i < 331  ){
-    //         return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
-    //       }
-    //       else{
-    //         return this.y(TEMPERATURES[7].values[i].temperature);
-    //       }
-    //     }));
-    //     this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
-    //     break;
-    //   }
-    //   default: {
-    //     break;
-    //   }
-    // }
+        this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+          if(i> 249 && i < 331  ){
+            return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+          }
+          else{
+            return this.y(TEMPERATURES[7].values[i].temperature);
+          }
+        }));
+        this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        break;
+      }
+      default: {
+        break;
+      }
+    }
 
   }
 
-  expandDonePanel(index){
-    //this.tabletComp.handleLeftPanel(0);
-    this.socket.sendExpand("done",index);
-  }
+
 
   
 
@@ -372,45 +292,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
   //   Math.floor(Math.random() * 100)
   //   ]);
   //  }
-  }
-
-  
-
-  dropTasks(event: CdkDragDrop<string[]>) {
-    console.log("removed cm");
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.socket.sendMove("change",event.previousIndex,event.currentIndex,event.container.data);
-    } else {
-      
-      transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
-      this.socket.sendMove("add",event.previousIndex,event.currentIndex,event.container.data);
-      console.log("green transfer prevData: ", event.container.data[event.previousIndex], " \n currentData" , event.container.data[event.currentIndex]);
-    }
-  }
-  dropDones(event: CdkDragDrop<string[]>) {
-    console.log("inside selected cm");
-
-    
-
-
-
-    if (event.previousContainer === event.container) {
-      console.log("move done");
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.socket.sendMove("changeDone",event.previousIndex,event.currentIndex,event.container.data);
-
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
-      this.socket.sendMove("remove",event.previousIndex,event.currentIndex,event.container.data);
-    }
-    console.log("blue transfer prevData:")
   }
 
   private getRndInteger(min, max) {
@@ -429,22 +310,39 @@ export class TabletComponent implements OnInit, AfterViewInit {
     })
 
     this.done = [];
-    //this.initSvg();
-    //this.drawChart(TEMPERATURES);
+    //d3.select('svg').append("g").attr("class", "test");
+    //create the DOM element 
+    
+    this.svgMain = this.renderer.createElement('svg', 'svg');
+    console.log("li: ",this.svg );
+    this.svgMain .style.height = "500px";
+    this.svgMain .style.width = "100%";
+    //create text for the element
+    const text = this.renderer.createText("tja");
+
+    //append text to li element
+    // this.renderer.appendChild(this.svgMain , text);
+    
+    //Now append the li tag to divMessages div
+    //this.renderer.
+    //this.renderer.appendChild(this.mainChart.nativeElement,this.svgMain );
+    console.log("d3.select('svg'): ", this.svgMain);
+    this.initSvg();
+    this.drawChart(TEMPERATURES);
 
   
   }
 
   private initSvg() {
-    this.svg = document.createElement("svg");   //d3.select('svg');
+    this.svg = d3.select("svg");
     this.margin = {top: 20, right: 20, bottom: 110, left: 40};
     this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
 
     
     this.width = this.mainChart.nativeElement.offsetWidth;
-    console.log("this.width: ", this.elRef.nativeElement.querySelector(".cell").offsetWidth);
-    this.height = +this.svg.attr("height");// - this.margin.top - this.margin.bottom;
-    this.height2 = +this.svg.attr("height") -this.margin2.top - this.margin2.bottom;
+    console.log("this.width: ", this.width);
+    this.height = +500;// - this.margin.top - this.margin.bottom;
+    this.height2 = +500 -this.margin2.top - this.margin2.bottom;
 
     this.x = d3.scaleTime().range([0, this.width]);
     this.x2 = d3.scaleTime().range([0, this.width]);
@@ -573,18 +471,22 @@ export class TabletComponent implements OnInit, AfterViewInit {
       .x((d: any) => this.x2(d.date))
       .y0((d: any) => this.y2(d.temperature)+5)
       .y1((d: any) => this.y2(d.temperature));
-      
+    
+    
+    let svg1 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    
     this.svg.append('defs').append('clipPath')
         .attr('id', 'clip')
         .append('rect')
         .attr('width', this.width)
         .attr('height', this.height)
-        
+
+
     // translating down the graph to let the data stay in the foucs area when a extrem CM is selected
     this.focus = this.svg.append('g')
         .attr('class', 'focus')
         .attr('transform', 'translate(' + 0 + ',' + 100 + ')');
-    console.log("svg: ", d3.select('svg'));
+        
     this.context = this.svg.append('g')
         .attr('class', 'context')
         .attr('transform', 'translate(' + 0 + ',' + this.margin2.top + ')');
@@ -671,6 +573,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     let brushT = {"k": t.k, "x": t.x, "y": t.y};
     console.log("brushT: ", brushT);
     this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);
+
+
   }
 
   ngOnChanges() {
@@ -826,22 +730,20 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
+    let svg = document.createElement('svg'); 
+
+    this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
+
+
+
     this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
+
+
 
     //let brushT = {"k": 4.365853658536583, "x": -1405.939024390243, "y": 0};
     //this.socket.sendZoom(true, TEMPERATURES[0].values[249],TEMPERATURES[0].values[331].date,brushT);
   }
 
-
-
-
-  handleRightPanel(index){
-    console.log("this.chartTablet: ", this.chartTablet);
-
-    
-    this.rightPanel.show(index);
-    //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
-  }
 
   selectCard(index){
     this.selectedCM[index] = true;
@@ -861,36 +763,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       
     }
 
-
-    
-          // for (let index = 0; index < this.lockedCM.length; index++) {
-          //   if(this.lockedCM[index].locked){
-          //     this.curveFactor += this.lockedCM[index].graphFactor;
-          //   }
-            
-          // }
-    
-    //this.elRef.nativeElement.querySelector('.mat-expansion-panel').style.backgroundColor = "#65a5ef";
-    //this.panelRight._results[index]._body.nativeElement.style.backgroundColor = "#65a5ef"
-    //this.elRef.nativeElement.querySelector('.mat-expanded').style.backgroundColor = "#65a5ef";
-  }
-  
-  status(event: CdkDragStart){
-    console.log("exit: ", event);
-    // setTimeout(() => { this.tasks= { "content" : [
-    //   {"text": "task 0", "color":"rgb(38, 143, 85)"},
-    //   {"text": "task 1", "color":"rgb(38, 143, 85)"},
-    //   {"text": "task 2", "color":"rgb(38, 143, 85)"},
-    // ] } }, 2000); 
   }
 
-
-  ngAfterViewInit() {
-    console.log(" this.panel ", this.panel.nativeElement);
-    console.log("panel2: ", (document.querySelector('.mat-expansion-panel') as HTMLElement))
-    //this.panel._results[2]._body.style.marginBottom = "1px";
-    
-    
-  }
 
 }

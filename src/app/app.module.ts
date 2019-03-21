@@ -19,6 +19,7 @@ import { RightComponent } from './right/right.component';
 import { MiddleComponent } from './middle/middle.component';
 import { TabletComponent } from './tablet/tablet.component';
 import { ActionService } from './action.service';
+import { AreaChartComponent } from './area-chart/area-chart.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { ActionService } from './action.service';
     LeftComponent,
     RightComponent,
     MiddleComponent,
-    TabletComponent
+    TabletComponent,
+    AreaChartComponent
     
   ],
   imports: [

@@ -96,16 +96,11 @@ export class MiddleComponent implements OnInit {
       //var tt = rawData[0].map((v) => {v.line.line1} );
 
     });
-    this.initMargins();
+
     this.initSvg();
 
     this.drawChart(TEMPERATURES);
       
-  }
-
-  private initMargins() {
-    this.margin = {top: 20, right: 20, bottom: 110, left: 40};
-    this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
   }
 
   private initSvg() {
