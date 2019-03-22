@@ -146,13 +146,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
 
   update(data){
-    // set the dimensions and margins of the graph
 
-    // Scale the range of the data in the domains
-    //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
-    
-
-    // append the rectangles for the bar chart
     let bars = this.g.selectAll(".bar")
       .data(data)
      
@@ -201,9 +195,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
       .attr("font-family", "sans-serif")
       .attr("font-size", "11px")
       .attr("fill", "white");
-      
-      
-    
   }
 
   ngAfterViewInit(){
@@ -227,19 +218,15 @@ export class LeftComponent implements OnInit, AfterViewInit {
           data.previousIndex,
           data.currentIndex);
       }
-      
     })
 
-    
   }
 
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-
-
-    this.draw();
     
+    this.draw();
     
   }
 

@@ -31,10 +31,6 @@ export class MiddleComponent implements OnInit {
   @ViewChild('chart') private chartContainer: ElementRef;
   @ViewChild('row') private rowContainer: ElementRef;
   @Input() private data: Array<any>;
- // private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
-  private chart: any;
- // private width: number;
-//  private height: number;
 
   private margin: Margin;
   private margin2: Margin;
@@ -59,29 +55,8 @@ export class MiddleComponent implements OnInit {
   private brush2: any;
   private zoom: any;
 
-  private area2: any;
-
-  private collisionArea: any;
   private focus: any;
 
-  private outerUpperArea: any;
-  private innerArea: any;
-  private outerLowerArea: any;
-  private outerUpperArea2: any;
-  private outerLowerArea2: any;
-  private innerArea2: any;
-
-  private focusIndexMin: any = 5000;
-  private focusIndexMax: any = -5000;
-
-  private panelOpenState = false;
-
-
-
-    g: any;
-
-    z;
-    line;
   initZoomMax: Date;
   zoomFromTablet: boolean;
   zoomDate1: any;
@@ -90,14 +65,6 @@ export class MiddleComponent implements OnInit {
   constructor(private http: HttpClient, private display : WebsocketService) { }
 
   ngOnInit() {
-    //this.createChart();
-    var parseDate  = d3.timeParse('%Y-%m-%d');
-    var jsonPromise = d3.json('assets/data.json');
-    jsonPromise.then((rawData : any) =>{
-      //console.log("jsonPromise: ", parseDate(rawData.lines.line1[0].date));
-      //var tt = rawData[0].map((v) => {v.line.line1} );
-
-    });
 
     this.initSvg();
 
@@ -143,56 +110,6 @@ export class MiddleComponent implements OnInit {
           this.zoomed(false);
         }.bind(this));
 
-
-        this.collisionArea = d3.area()
-        .curve(d3.curveBasis)
-        .x((d:any) => this.x(d.date))
-        .y1((d:any) => this.y(d.aboveData));
-  
-      // first curve
-      this.outerUpperArea = d3.area()
-      .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date))
-      .y0((d: any, i: number) => {
-        if(i> this.focusIndexMin+5 && i < this.focusIndexMax-5 && this.panelOpenState){
-          return this.y(TEMPERATURES[1].values[i].temperature+1);
-        }else{
-          return this.y(d.temperature);
-        }
-      })
-      .y1((d: any, i: number) => this.y(TEMPERATURES[1].values[i].temperature))
-  
-      this.innerArea = d3.area()
-        .curve(d3.curveBasis)
-        .x((d: any) => this.x(d.date))
-        .y0((d: any) => this.y(d.temperature ))
-        .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
-  
-      this.outerLowerArea = d3.area()
-        .curve(d3.curveBasis)
-        .x((d: any) => this.x(d.date) )
-        .y0((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature))
-        .y1((d: any, i:number) => this.y(d.temperature));
-  
-      //second curve
-      this.outerUpperArea2 = d3.area()
-        .curve(d3.curveBasis)
-        .x((d: any) => this.x(d.date) )
-        .y0((d: any, i:number) => this.y(d.temperature))
-        .y1((d: any, i:number) => this.y(TEMPERATURES[5].values[i].temperature));
-  
-      this.innerArea2 = d3.area()
-        .curve(d3.curveBasis)
-        .x((d: any) => this.x(d.date))
-        .y0((d: any) => this.y(d.temperature ))
-        .y1((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature));
-      
-      this.outerLowerArea2 = d3.area()
-        .curve(d3.curveBasis)
-        .x((d: any) => this.x(d.date) )
-        .y0((d: any, i:number) => this.y(TEMPERATURES[6].values[i].temperature))
-        .y1((d: any, i:number) => this.y(d.temperature));
-
     this.svg.append('defs').append('clipPath')
         .attr('id', 'clip')
         .append('rect')
@@ -210,77 +127,40 @@ export class MiddleComponent implements OnInit {
 
   private brushed(dragFromTablet,xDomainMin,xDomainMax,brushTransform) {
     
-    this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
-    this.focus.select('.areaOuterLower').attr('d', this.outerLowerArea.bind(this));
-
-    this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
-    this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
-
-    this.focus.select('.above').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
-    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
-    this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(0).bind(this));
-    this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(this.height).bind(this));
     if(!dragFromTablet){
 
       if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
 
       let s = d3.event.selection || this.x2.range();
-
     }
 
-    if(dragFromTablet){
-
-    }
     this.focus.select('.axis--x').call(this.xAxis);
 
   }
 
   private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
     //var t = d3.event.transform;
-    console.log("zoom middle");
+    console.log("zoomFromTablet: ", zoomFromTablet);
     // this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     // this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
-    // this.x.domain(t.rescaleX(this.x2).domain());
+    //this.x.domain(t.rescaleX(this.x2).domain());
+    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
 
-    this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
-    this.focus.select('.areaOuterLower').attr('d', this.outerLowerArea.bind(this));
-
-    this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
-    this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
-
-    this.focus.select('.above').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
-    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any) => this.y(d.belowData)).bind(this));
-    this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(0).bind(this));
-    this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
     if(!zoomFromTablet){
       if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
       var t = d3.event.transform;
-      
     }
     
     
     if(zoomFromTablet){
-
       this.focus.select(".brush").call(this.brush2.move, [xDomainMin, xDomainMax].map(this.x2));
-      
     }
-
-    
-
-    
   }
 
 
   ngOnChanges() {
-    // if (this.chart) {
-    //   this.updateChart();
-    // }
   }
 
 
@@ -290,93 +170,6 @@ export class MiddleComponent implements OnInit {
     this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
-
-    // let data1 = TEMPERATURES[0].values;
-
-    // data1.forEach(function(d,i) {
-    //   d["aboveData"] = d.temperature;
-    //   d["belowData"] = TEMPERATURES[7].values[i].temperature;
-    // }.bind(this));
-
-
-    // // first curve
-    // this.focus.append('path')
-    //   .datum(TEMPERATURES[0].values)
-    //   .attr('class', 'areaOuterUpper')
-    //   .attr('d',this.outerUpperArea)
-    //   .attr('clip-path', 'url(#rect-clip)');
-      
-
-    // this.focus.append('path')
-    //   .datum(TEMPERATURES[1].values)
-    //   .attr('class', 'areaInner')
-    //   .attr('d',this.innerArea)
-    //   .attr('clip-path', 'url(#rect-clip)');
-    
-
-      
-    // this.focus.append('path')
-    //   .datum(TEMPERATURES[3].values)
-    //   .attr('class', 'areaOuterLower')
-    //   .attr('d',this.outerLowerArea)
-    //   .attr('clip-path', 'url(#rect-clip)');
-
-    // //next curve
-
-    // this.focus.append('path')
-    //   .datum(TEMPERATURES[4].values)
-    //   .attr('class', 'areaOuterUpper2')
-    //   .attr('d',this.outerUpperArea2)
-    //   .attr('clip-path', 'url(#rect-clip)');
-
-    // this.focus.append('path')
-    //   .datum(TEMPERATURES[5].values)
-    //   .attr('class', 'areaInner2')
-    //   .attr('d',this.innerArea2)
-    //   .attr('clip-path', 'url(#rect-clip)');
-
-    // this.focus.append('path')
-    //   .datum(TEMPERATURES[7].values)
-    //   .attr('class', 'areaOuterLower2')
-    //   .attr('d',this.outerLowerArea2)
-    //   .attr('clip-path', 'url(#rect-clip)');
-
-    // // line pattern
-    // this.focus.append("clipPath")
-    //   .datum(data1)
-    //   .attr("id", "clip-above")
-    //   .append("path")
-    //   .attr("class", "clip-above1")
-    //   .attr("d", this.collisionArea.y0(0));
-
-    // this.focus.append("clipPath")
-    //   .datum(data1)
-    //   .attr("id", "clip-below")
-    //   .append("path")
-    //   .attr("class", "clip-below1")
-    //   .attr("d", this.collisionArea.y0(this.height));
-
-    // this.focus.append("pattern")
-    //   .attr('id', "hash4_6")
-    //   .attr('width', "4") 
-    //   .attr('height',"4")
-    //   .attr('patternUnits',"userSpaceOnUse") 
-    //   .attr('patternTransform', "rotate(45)")
-    //   .append("rect")
-    //   .attr("width","2")
-    //   .attr("height", "4")
-    //   .attr("transform", "translate(0,0)")
-    //   .attr("fill", "#000")
-
-    // this.focus.append("path")
-    //   .datum(data1)
-    //   .attr('id', 'hash4_5')
-    //   .attr("x", 0)
-    //   .attr("width", "100%")
-    //   .attr("height", "100%")
-    //   .attr("fill", "url(#hash4_6)")
-    //   .attr("clip-path", "url(#clip-below)")
-    //   .attr("d", this.collisionArea.y0((d:any) => this.y(d.aboveData)));
     
     // append history line
     this.focus.append('g')
@@ -402,26 +195,6 @@ export class MiddleComponent implements OnInit {
         .attr('class', 'brush') 
         .call(this.brush2)
         .call(this.brush2.move, this.x2.range());
-
-    // this.context.append('path')
-    //     .datum(TEMPERATURES[0].values)
-    //     .attr('class', 'area')
-    //     .attr('d', this.area2);
-    
-    // this.context.append('path')
-    //     .datum(TEMPERATURES[1].values)
-    //     .attr('class', 'area')
-    //     .attr('d', this.area2);
-
-    // this.context.append('g')
-    //     .attr('class', 'axis axis--x')
-    //     .attr('transform', 'translate(0,' + this.height2 + ')')
-    //     .call(this.xAxis2);
-
-    // this.context.append('g')
-    //     .attr('class', 'brush') 
-    //     .call(this.brush)
-    //     .call(this.brush.move, this.x.range());
 
     this.svg.append('rect')
         .attr('class', 'zoom')
