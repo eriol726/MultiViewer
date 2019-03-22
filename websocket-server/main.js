@@ -25,9 +25,9 @@ io.on('connection', (socket) => {
         io.emit('expandItem', {type:panel, state: itemIndex, closedIndex:close});    
     });
 
-    socket.on('closeItem', (panel, itemIndex) => {
+    socket.on('lockItem', (panel, itemIndex) => {
         console.log("Message Received, state: " + itemIndex);
-        io.emit('closeItem', {type:panel, state: itemIndex});    
+        io.emit('lockItem', {type:panel, state: itemIndex});    
     });
 
     socket.on('moveItem', (action, prevIndex, currIndex, indexData) => {
@@ -38,6 +38,11 @@ io.on('connection', (socket) => {
     socket.on('zoomChart', (zoom, min, max, xyk) => {
         console.log("Message Received, zoom: " + zoom);
         io.emit('zoomChart', {state: zoom, xDomainMin: min, xDomainMax: max, brushTransform: xyk});    
+    });
+
+    socket.on('maximizeChart', (maximized) => {
+        console.log("Message Received, zoom: " + maximized);
+        io.emit('maximizeChart', {state: maximized});    
     });
 
 

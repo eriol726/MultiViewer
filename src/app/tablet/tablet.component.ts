@@ -217,11 +217,23 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.curveFactorLocked += this.lockedCM[index].graphFactor;
     }
 
-    this.socket.sendClose("done",index);
+    this.socket.sendLock("done",index);
+
+    
 
   }
   resize(){
     console.log("resize");
+    console.log("maximize", this.elRef.nativeElement.querySelectorAll('.cell'));
+    let cellClass = this.elRef.nativeElement.querySelectorAll('.cell');
+    for (let index = 0; index < cellClass.length; index++) {
+      cellClass[index].style.flex= "0 0 0%";
+      cellClass[index].style.height= "0px";
+      
+    }
+    this.elRef.nativeElement.querySelector('.example-list-right').style.minHeight = "0px";
+    this.mainChart.nativeElement.style.flex= "0 0 100%";
+    this.socket.sendMaximized(true);
   }
 
   ngAfterViewInit() {

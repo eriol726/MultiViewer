@@ -1,4 +1,5 @@
 .cell {
+    width: 100%;
     flex: 0 0 32%;                   
     height: 78vh;
 }

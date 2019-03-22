@@ -38,9 +38,9 @@ export class WebsocketService {
     return observable;
   }
 
-  closeItem() {
+  lockItem() {
     let observable = new Observable<{type:String, state:number}>(observer => {
-        this.socket.on('closeItem', (data) => {
+        this.socket.on('lockItem', (data) => {
           console.log("Received message from Websocket Server: ", data );
 
           observer.next(data);
@@ -67,8 +67,22 @@ export class WebsocketService {
   }
 
   zoomChart() {
-    let observable = new Observable<{state:boolean, xDomainMin: Date, xDomainMax: Date, brushTransform: {x:number,y:number,k:number},}>(observer => {
+    let observable = new Observable<{state:boolean, xDomainMin: Date, xDomainMax: Date, brushTransform: {x:number,y:number,k:number}}>(observer => {
         this.socket.on('zoomChart', (data) => {
+          console.log("Received message from Websocket Server Zoom: ", data );
+
+          observer.next(data);
+        });
+        return () => {
+          this.socket.disconnect();
+        }
+    });
+    return observable;
+  }
+
+  maximizeChart() {
+    let observable = new Observable<{state:boolean}>(observer => {
+        this.socket.on('maximizeChart', (data) => {
           console.log("Received message from Websocket Server Zoom: ", data );
 
           observer.next(data);
@@ -82,20 +96,21 @@ export class WebsocketService {
 
   sendExpand(data, data1, data2){
     this.socket.emit('expandItem', data, data1, data2 );
-    //this.socket.emit('state', data2);
   }
 
-  sendClose(data, data1){
-    this.socket.emit('closeItem', data, data1 );
-    //this.socket.emit('state', data2);
+  sendLock(data, data1){
+    this.socket.emit('lockItem', data, data1 );
   }
 
   sendMove(data, data1, data2, data3){
     this.socket.emit('moveItem',data, data1 ,data2, data3);
-    //this.socket.emit('state', data2);
   }
 
   sendZoom(data, data1, data2,data3){
     this.socket.emit('zoomChart',data, data1, data2, data3);
+  }
+
+  sendMaximized(data){
+    this.socket.emit('maximizeChart',data);
   }
 }

@@ -160,8 +160,6 @@ export class AreaChartComponent implements OnInit {
       return d.date.getTime() === this.zoomDate2.getTime()
     });
 
-    
-
     //this.focus.select('#hash4_5').attr('d', this.collisionArea);
     // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
@@ -569,8 +567,8 @@ export class AreaChartComponent implements OnInit {
     this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
     
-    this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
-    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
+    //this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
+    //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
 
     let brushT = {"k": t.k, "x": t.x, "y": t.y};
     console.log("brushT: ", brushT);
@@ -582,28 +580,6 @@ export class AreaChartComponent implements OnInit {
   ngOnChanges() {
 
   }
-
-  paths2string(paths, scale) {
-    var i, p, path, svgpath, _j, _len2, _len3;
-    svgpath = '';
-    if (!(scale != null)) scale = 1;
-    for (_j = 0, _len2 = paths.length; _j < _len2; _j++) {
-      path = paths[_j];
-      for (i = 0, _len3 = path.length; i < _len3; i++) {
-        p = path[i];
-        if (i === 0) {
-          svgpath += 'M';
-        } else {
-          svgpath += 'L';
-        }
-        svgpath += p.X / scale + ", " + p.Y / scale;
-      }
-      svgpath += 'Z';
-    }
-    if (svgpath === '') svgpath = 'M0,0';
-    return svgpath;
-  };
-
 
   private async drawChart(data) {
 
@@ -780,9 +756,15 @@ export class AreaChartComponent implements OnInit {
         
     });
 
-    this.socket.closeItem().subscribe(data=>{
+    this.socket.lockItem().subscribe(data=>{
       console.log("lock");
       this.selectCard(data.state);
+    })
+
+    this.socket.maximizeChart().subscribe(data=>{
+    
+      //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+      //this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
     })
   }
 
