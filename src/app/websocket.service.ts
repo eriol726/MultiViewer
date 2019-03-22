@@ -27,8 +27,6 @@ export class WebsocketService {
   expandItem() {
     let observable = new Observable<{type:String, state:number, closedIndex:number}>(observer => {
         this.socket.on('expandItem', (data) => {
-          console.log("Received message from Websocket Server: ", data );
-
           observer.next(data);
         });
         return () => {
@@ -41,8 +39,6 @@ export class WebsocketService {
   lockItem() {
     let observable = new Observable<{type:String, state:number}>(observer => {
         this.socket.on('lockItem', (data) => {
-          console.log("Received message from Websocket Server: ", data );
-
           observer.next(data);
         });
         return () => {
@@ -55,8 +51,6 @@ export class WebsocketService {
   moveItem() {
     let observable = new Observable<{type:String, previousIndex:number, currentIndex: number, containerData: {"text": string, "color":string, "startDate": Date, "endDate": Date}}>(observer => {
         this.socket.on('moveItem', (data) => {
-          console.log("Received message from Websocket Server: ", data );
-
           observer.next(data);
         });
         return () => {
@@ -69,8 +63,6 @@ export class WebsocketService {
   zoomChart() {
     let observable = new Observable<{state:boolean, xDomainMin: Date, xDomainMax: Date, brushTransform: {x:number,y:number,k:number}}>(observer => {
         this.socket.on('zoomChart', (data) => {
-          console.log("Received message from Websocket Server Zoom: ", data );
-
           observer.next(data);
         });
         return () => {
@@ -83,8 +75,6 @@ export class WebsocketService {
   maximizeChart() {
     let observable = new Observable<{state:boolean}>(observer => {
         this.socket.on('maximizeChart', (data) => {
-          console.log("Received message from Websocket Server Zoom: ", data );
-
           observer.next(data);
         });
         return () => {

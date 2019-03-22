@@ -145,18 +145,17 @@ export class MiddleComponent implements OnInit {
     // this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
     //this.x.domain(t.rescaleX(this.x2).domain());
-    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+    //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
 
 
-    if(!zoomFromTablet){
-      if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
-      var t = d3.event.transform;
-    }
+    // if(!zoomFromTablet){
+    //   if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
+    //   var t = d3.event.transform;
+    // }
     
-    
-    if(zoomFromTablet){
-      this.focus.select(".brush").call(this.brush2.move, [xDomainMin, xDomainMax].map(this.x2));
-    }
+    // this moves the brush in the middleDisplay via the tablet
+    this.focus.select(".brush").call(this.brush2.move, [xDomainMin, xDomainMax].map(this.x2));
+
   }
 
 
@@ -216,10 +215,15 @@ export class MiddleComponent implements OnInit {
         //console.log("x init1: ", [minDate, maxDate].map(this.x2));
         this.initZoomMax = data.xDomainMax;
         this.initZoomMax = data.xDomainMin;
+
+        console.log("data.brushTransform: ",data.brushTransform );
         this.zoomed(true,minDate,maxDate,data.brushTransform);
         
     })
-    
+
+    let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
+    console.log("initDates: ", initDates);
+    this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
   }
 
   @HostListener('window:resize', ['$event'])

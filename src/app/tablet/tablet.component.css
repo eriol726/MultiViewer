@@ -1,4 +1,4 @@
-@import './tabletChart.css';
+@import '../area-chart/tabletChart.css'; 
 
 *, *:after, *:before {
     -webkit-box-sizing: border-box;

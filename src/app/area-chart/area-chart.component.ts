@@ -69,11 +69,9 @@ export class AreaChartComponent implements OnInit {
 
   private x: any;
   private x2: any;
-  private x3: any;
   private x4: any;
   private y: any;
   private y2: any;
-  private y3: any;
 
   private xAxis: any;
   private xAxis2: any;
@@ -151,7 +149,6 @@ export class AreaChartComponent implements OnInit {
       }
     }
 
-    
     this.focusIndexMin = TEMPERATURES[6].values.findIndex((d: any) => {
       return d.date.getTime() === this.zoomDate1.getTime()
     });
@@ -160,13 +157,6 @@ export class AreaChartComponent implements OnInit {
       return d.date.getTime() === this.zoomDate2.getTime()
     });
 
-    //this.focus.select('#hash4_5').attr('d', this.collisionArea);
-    // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
-    // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
-
-    
-      
-    // }
     if(!this.panelOpenState ){
       
       this.curveFactor = this.curveFactorLocked;
@@ -280,26 +270,7 @@ export class AreaChartComponent implements OnInit {
 
   }
 
-
-
-  
-
-  generateData() {
-  //   this.data = [];
-  //   for (let i = 0; i < (8 + Math.floor(Math.random() * 10)); i++) {
-  //   this.data.push([
-  //   `Index ${i}`,
-  //   Math.floor(Math.random() * 100)
-  //   ]);
-  //  }
-  }
-
-  private getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) ) + min;
-  }
-
   ngOnInit(){
-    this.generateData();
 
     this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
     //this.basicChart('#ab63fa');
@@ -315,8 +286,8 @@ export class AreaChartComponent implements OnInit {
     
     this.svgMain = this.renderer.createElement('svg', 'svg');
     console.log("li: ",this.svg );
-    this.svgMain .style.height = "500px";
-    this.svgMain .style.width = "100%";
+    this.svgMain.style.height = "500px";
+    this.svgMain.style.width = "100%";
     //create text for the element
     const text = this.renderer.createText("tja");
 
@@ -347,9 +318,7 @@ export class AreaChartComponent implements OnInit {
     this.x = d3.scaleTime().range([0, this.width]);
     this.x2 = d3.scaleTime().range([0, this.width]);
     this.x4 = d3.scaleLinear().range([0, 1]);
-    this.x3 = d3.scaleLinear().range([0, 1]);
     this.y = d3.scaleLinear().range([this.height, 0]);
-    this.y3 = d3.scaleLinear().range([0, 1]);
     this.y2 = d3.scaleLinear().range([this.height2, 0]);
 
 
@@ -485,6 +454,7 @@ export class AreaChartComponent implements OnInit {
     // translating down the graph to let the data stay in the foucs area when a extrem CM is selected
     this.focus = this.svg.append('g')
         .attr('class', 'focus')
+
         .attr('transform', 'translate(' + 0 + ',' + 100 + ')');
         
     this.context = this.svg.append('g')
@@ -703,8 +673,8 @@ export class AreaChartComponent implements OnInit {
 
     this.svg.append('rect')
         .attr('class', 'zoom')
-        .attr('width', this.width)
-        .attr('height', this.height)
+        .attr('width', "100%")
+        .attr('height', "100%")
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
@@ -714,7 +684,7 @@ export class AreaChartComponent implements OnInit {
 
 
 
-    this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
+    this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
 
 
 
@@ -762,7 +732,7 @@ export class AreaChartComponent implements OnInit {
     })
 
     this.socket.maximizeChart().subscribe(data=>{
-    
+      
       //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
       //this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
     })
