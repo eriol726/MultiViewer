@@ -456,7 +456,8 @@ export class AreaChartComponent implements OnInit {
         .attr('class', 'focus')
 
         .attr('transform', 'translate(' + 0 + ',' + 100 + ')');
-        
+    
+    console.log("this.focus area comp: ", this.focus);
     this.context = this.svg.append('g')
         .attr('class', 'context')
         .attr('transform', 'translate(' + 0 + ',' + this.margin2.top + ')');
@@ -502,6 +503,8 @@ export class AreaChartComponent implements OnInit {
     this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
+    // actual zoom function
+    console.log(t.rescaleX(this.x2).domain());
     this.x.domain(t.rescaleX(this.x2).domain());
 
     this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
@@ -629,6 +632,7 @@ export class AreaChartComponent implements OnInit {
       .attr('patternUnits',"userSpaceOnUse") 
       .attr('patternTransform', "rotate(45)")
       .append("rect")
+      .attr("id","diagonalRect")
       .attr("width","2")
       .attr("height", "4")
       .attr("transform", "translate(0,0)")
@@ -732,8 +736,8 @@ export class AreaChartComponent implements OnInit {
     })
 
     this.socket.maximizeChart().subscribe(data=>{
-      
-      //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+      console.log("maximized");
+      this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
       //this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
     })
   }

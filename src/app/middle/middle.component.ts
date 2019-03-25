@@ -61,14 +61,13 @@ export class MiddleComponent implements OnInit {
   zoomFromTablet: boolean;
   zoomDate1: any;
   zoomDate2: any;
+  allreadySet: boolean = false;
 
-  constructor(private http: HttpClient, private display : WebsocketService) { }
+  constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef) { }
 
   ngOnInit() {
 
-    this.initSvg();
-
-    this.drawChart(TEMPERATURES);
+    
       
   }
 
@@ -109,20 +108,25 @@ export class MiddleComponent implements OnInit {
         .on('zoom', function() { 
           this.zoomed(false);
         }.bind(this));
+      
+    // this.svg.append('defs').append('clipPath')
+    //     .attr('id', 'clip')
+    //     .append('rect')
+    //     .attr('width', this.width)
+    //     .attr('height', this.height);
+    
+    this.focus = d3.select(".focus");
+    this.focus.attr("transform", "translate(40, 20 )");
+    console.log("this.focus: ", d3.select(".focus"));
+    
 
-    this.svg.append('defs').append('clipPath')
-        .attr('id', 'clip')
-        .append('rect')
-        .attr('width', this.width)
-        .attr('height', this.height);
+    // this.focus = this.svg.append('g')
+    //     .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
+    //     .attr('class', 'focus');
 
-    this.focus = this.svg.append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
-        .attr('class', 'focus');
-
-    this.context = this.svg.append('g')
-        .attr('class', 'context')
-        .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
+    // this.context = this.svg.append('g')
+    //     .attr('class', 'context')
+    //     .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
   }
 
   private brushed(dragFromTablet,xDomainMin,xDomainMax,brushTransform) {
@@ -140,20 +144,42 @@ export class MiddleComponent implements OnInit {
 
   private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
     //var t = d3.event.transform;
-    console.log("zoomFromTablet: ", zoomFromTablet);
+    console.log("brushTransform: ", brushTransform);
+    console.log("this.width: ", this.width);
+
     // this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     // this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
+    
     //this.x.domain(t.rescaleX(this.x2).domain());
     //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+    if(!this.allreadySet){
+      let transX = brushTransform.x*-1;
+      let scaleX = 0.223;
 
+    
+      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+
+      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select("#hash4_6").attr('patternTransform', "rotate(80) scale(1.3)");
+    }
+    
+
+    this.allreadySet = true;
+   // this.focus.select(".clip-above1").attr("transform", "scale(0.2,1) translate(7400, 100 )");
 
     // if(!zoomFromTablet){
     //   if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
     //   var t = d3.event.transform;
     // }
     
-    // this moves the brush in the middleDisplay via the tablet
+    // this moves the brush in the middleDisplay via the tablet component
+    // it's not zooming!
     this.focus.select(".brush").call(this.brush2.move, [xDomainMin, xDomainMax].map(this.x2));
 
   }
@@ -170,6 +196,7 @@ export class MiddleComponent implements OnInit {
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
     
+    console.log("this.focus: ", this.focus);
     // append history line
     this.focus.append('g')
     .attr('class', 'axis axis--x')
@@ -186,6 +213,7 @@ export class MiddleComponent implements OnInit {
     .attr("height", 600 )
     .attr("fill", "black")
 
+    
     this.focus.append('g')
     .attr('class', 'axis axis--y')
     .call(this.yAxis);
@@ -202,7 +230,7 @@ export class MiddleComponent implements OnInit {
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
         .call(this.zoom);
 
-        this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
+       // this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
 
   }
 
@@ -216,14 +244,22 @@ export class MiddleComponent implements OnInit {
         this.initZoomMax = data.xDomainMax;
         this.initZoomMax = data.xDomainMin;
 
-        console.log("data.brushTransform: ",data.brushTransform );
+        //console.log("data.brushTransform: ",data.brushTransform );
+        
         this.zoomed(true,minDate,maxDate,data.brushTransform);
         
+        
+        
     })
+    this.initSvg();
 
+    this.drawChart(TEMPERATURES);
+
+    console.log("this.svg: ", this.elRef.nativeElement.querySelector(".focus"));
     let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
     console.log("initDates: ", initDates);
-    this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
+    this.x.domain(initDates);
+    //this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
   }
 
   @HostListener('window:resize', ['$event'])
