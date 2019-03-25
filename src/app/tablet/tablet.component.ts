@@ -143,6 +143,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   intersectionColor: d3.Area<[number, number]>;
   tasks2: any[];
   curveFactorLocked: number = 0;
+  isMaximized: boolean = false;
 
   constructor(private actionService : ActionService, 
               private socket : WebsocketService, 
@@ -305,6 +306,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     })
 
     this.done = [];
+
+    
     //this.initSvg();
     //this.drawChart(TEMPERATURES);
 
@@ -342,23 +345,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .translate(-s[0], 0));
   }
 
-  private zoomed() {
-    console.log("zoom");
+  private zoomed(isMaximized) {
 
-    if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
-    var t = d3.event.transform;
-
-    this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
-    this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
-
-    this.x.domain(t.rescaleX(this.x2).domain());
+    if(isMaximized){
+      this.focus.attr("transform", "translate(0,100) scale(3,1)");
+    }
+    else{
+      this.focus.attr("transform", "translate(0,100) scale(1,1)");
+    }
     
-    this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
-    this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
 
-    let brushT = {"k": t.k, "x": t.x, "y": t.y};
-    console.log("brushT: ", brushT);
-    //this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);
   }
 
   ngOnChanges() {
@@ -509,9 +505,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
-    console.log(" this.panel ", this.panel.nativeElement);
-    console.log("panel2: ", (document.querySelector('.mat-expansion-panel') as HTMLElement))
-    //this.panel._results[2]._body.style.marginBottom = "1px";
+    this.focus = d3.select(".focus");
     
     
   }
@@ -520,17 +514,45 @@ export class TabletComponent implements OnInit, AfterViewInit {
     console.log("resize");
     console.log("maximize", this.elRef.nativeElement.querySelectorAll('.cell'));
     let cellClass = this.elRef.nativeElement.querySelectorAll('.cell');
-    for (let index = 0; index < cellClass.length; index++) {
-      cellClass[index].style.flex= "0 0 0%";
-      cellClass[index].style.height= "0px";
-      
+    if(!this.isMaximized){
+      this.isMaximized = true;
+      for (let index = 0; index < cellClass.length; index++) {
+        if(index != 4 && index != 7){
+          cellClass[index].style.zIndex = "-20";
+          cellClass[index].style.visibility = "hidden";
+          cellClass[index].style.height = "0px"
+          cellClass[index].style.flex = "0 0 0";
+        }
+        else if (index == 4){
+          cellClass[index].style.flex = "0 0 100%";
+        }
+        
+      }
+      this.zoomed(true);
     }
-    this.elRef.nativeElement.querySelector('.example-list-right').style.minHeight = "0px";
-    this.mainChart.nativeElement.style.flex= "0 0 100%";
+    else{
+      this.isMaximized = false;
+      for (let index = 0; index < cellClass.length; index++) {
+        
+        if(index > 2 && index < 6){
+          cellClass[index].style.zIndex = "2";
+          cellClass[index].style.visibility = "visible";
+          cellClass[index].style.height = "78vh";
+          cellClass[index].style.flex = "0 0 33.3%";
+        }
+        else{
+          cellClass[index].style.zIndex = "2";
+          cellClass[index].style.visibility = "visible";
+          cellClass[index].style.height = "10vh";
+          cellClass[index].style.flex = "0 0 33.3%";
+        }
+        
+      }
+      this.zoomed(false);
+    }
+    
     this.socket.sendMaximized(true);
 
-
-    //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
   }
 
 }

@@ -144,8 +144,6 @@ export class MiddleComponent implements OnInit {
 
   private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
     //var t = d3.event.transform;
-    console.log("brushTransform: ", brushTransform);
-    console.log("this.width: ", this.width);
 
     // this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     // this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
@@ -154,8 +152,25 @@ export class MiddleComponent implements OnInit {
     //this.x.domain(t.rescaleX(this.x2).domain());
     //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
     if(!this.allreadySet){
+      console.log("brushTransform.x :", brushTransform.x );
       let transX = brushTransform.x*-1;
       let scaleX = 0.223;
+
+    
+      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+
+      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select("#hash4_6").attr('patternTransform', "rotate(80) scale(1.3)");
+    }
+
+    if(!zoomFromTablet){
+      let transX = 10;
+      let scaleX = 1;
 
     
       this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
@@ -205,7 +220,6 @@ export class MiddleComponent implements OnInit {
     .append("rect")
     .attr("x", (d) => {
       let date = new Date(2018,1,1,6,0,0);
-      console.log("date: ", this.x(date));
       return this.x(date);
     })
     .attr("y", -500)
@@ -237,28 +251,27 @@ export class MiddleComponent implements OnInit {
   ngAfterViewInit(){
     this.display.zoomChart().subscribe(data =>{
 
-        let minDate = new Date(data.xDomainMin);
-        let maxDate = new Date(data.xDomainMax);
-        this.zoomFromTablet = true;
-        //console.log("x init1: ", [minDate, maxDate].map(this.x2));
-        this.initZoomMax = data.xDomainMax;
-        this.initZoomMax = data.xDomainMin;
+      let minDate = new Date(data.xDomainMin);
+      let maxDate = new Date(data.xDomainMax);
+      this.zoomFromTablet = true;
+      //console.log("x init1: ", [minDate, maxDate].map(this.x2));
+      this.initZoomMax = data.xDomainMax;
+      this.initZoomMax = data.xDomainMin;
 
-        //console.log("data.brushTransform: ",data.brushTransform );
-        
-        this.zoomed(true,minDate,maxDate,data.brushTransform);
-        
-        
-        
+      //console.log("data.brushTransform: ",data.brushTransform );
+
+      this.zoomed(true,minDate,maxDate,data.brushTransform);
     })
     this.initSvg();
 
     this.drawChart(TEMPERATURES);
 
-    console.log("this.svg: ", this.elRef.nativeElement.querySelector(".focus"));
-    let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
-    console.log("initDates: ", initDates);
-    this.x.domain(initDates);
+    this.display.maximizeChart().subscribe(data=>{
+      this.zoomed(false,0,0,0);
+    })
+
+    // let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
+    // this.x.domain(initDates);
     //this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
   }
 

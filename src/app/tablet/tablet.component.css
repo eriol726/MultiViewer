@@ -6,6 +6,13 @@
     box-sizing: border-box;
   }
 
+#tabletChart{
+    position: fixed;
+    z-index: 1;
+    top: 0px;
+    width: 100%;
+}
+
 
 drag-scroll {
     height: 50px;
@@ -24,13 +31,15 @@ drag-scroll {
 }
 
 .cell {
-    flex: 0 0 32%;                   
+    flex: 0 0 33.33%;
+    z-index: 2;                   
     height: 78vh;
     border: 2px solid;
 }
 
 .cell:nth-child(-n+3) {
     height: 10vh;
+    background-color: #fff;
 }
 
 .cell:nth-child(n+4):nth-child(-n+6){

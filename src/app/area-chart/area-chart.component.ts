@@ -285,7 +285,7 @@ export class AreaChartComponent implements OnInit {
     //create the DOM element 
     
     this.svgMain = this.renderer.createElement('svg', 'svg');
-    console.log("li: ",this.svg );
+
     this.svgMain.style.height = "500px";
     this.svgMain.style.width = "100%";
     //create text for the element
@@ -297,7 +297,7 @@ export class AreaChartComponent implements OnInit {
     //Now append the li tag to divMessages div
     //this.renderer.
     //this.renderer.appendChild(this.mainChart.nativeElement,this.svgMain );
-    console.log("d3.select('svg'): ", this.svgMain);
+
     this.initSvg();
     this.drawChart(TEMPERATURES);
 
@@ -402,7 +402,6 @@ export class AreaChartComponent implements OnInit {
       .x((d: any) => this.x(d.date))
       .y0((d: any, i:number) => {
         if(i> 249 && i < 331  ){
-          console.log("interval innerarea2");
           return this.y(d.temperature+this.curveFactor);
         }else{
           return this.y(d.temperature);
@@ -468,7 +467,6 @@ export class AreaChartComponent implements OnInit {
   private brushed() {
     
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
-    console.log("brushed");
     let s = d3.event.selection || this.x2.range();
     let s2 = d3.event.selection || this.x4.range();
     
@@ -487,24 +485,24 @@ export class AreaChartComponent implements OnInit {
     // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
 
-    console.log("s: ", s);
     this.focus.select('.axis--x').call(this.xAxis);
     this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
         .scale(this.width / (s[1] - s[0]))
         .translate(-s[0], 0));
   }
 
-  private zoomed() {
-    console.log("zoom");
+  private zoomed(maximized) {
 
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
+
     var t = d3.event.transform;
 
     this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
+    console.log("this.zoomDate1: ", this.zoomDate1);
+
     // actual zoom function
-    console.log(t.rescaleX(this.x2).domain());
     this.x.domain(t.rescaleX(this.x2).domain());
 
     this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
@@ -515,12 +513,7 @@ export class AreaChartComponent implements OnInit {
     this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
     this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
 
-    // if(!this.lockedCM[0]){
-    //   this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
-    // }
 
-    //this.focus.select('#hash4_5').attr('d', this.collisionArea);
-    //this.focus.select('#hash4_5').attr('d', this.collisionArea.bind(this));
     
     if(this.panelOpenState || this.lockedCM[0]){
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
@@ -531,7 +524,6 @@ export class AreaChartComponent implements OnInit {
           return this.y(TEMPERATURES[7].values[i].temperature);
         }
       }));
-    //this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
     }else{
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
     }
@@ -539,12 +531,8 @@ export class AreaChartComponent implements OnInit {
 
     this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
-    
-    //this.focus.select('.axis--x').call(this.xAxis.scale(t.rescaleX(this.x2)));
-    //this.context.select('.brush').call(this.brush.move, this.x.range().map(t.invertX, t));
 
     let brushT = {"k": t.k, "x": t.x, "y": t.y};
-    console.log("brushT: ", brushT);
     this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);
 
 
@@ -737,8 +725,9 @@ export class AreaChartComponent implements OnInit {
 
     this.socket.maximizeChart().subscribe(data=>{
       console.log("maximized");
-      this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-      //this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
+      //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+     // this.context.select(".brush").call(this.brush.move, d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+      this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
     })
   }
 
