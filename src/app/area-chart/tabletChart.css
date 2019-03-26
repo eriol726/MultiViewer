@@ -81,16 +81,6 @@ fill: rgba(242, 161, 32, 0.8);
   text-anchor: middle;
 }
 
-.row {
-  float: left;
-  padding: 10px;
-  height: 100vh;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0px;
-  /*height: 300px;  Should be removed. Only for demonstration */
-}
-
 .rect {
   background-color: blue;
   width: 100px;

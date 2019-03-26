@@ -1,18 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener  } from '@angular/core';
-import * as Plotly from 'plotly.js';
 import * as d3 from 'd3';
-import * as d3Array from 'd3-array';
-import * as d3Shape from 'd3-shape';
-import * as d3Axis from 'd3-axis';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
-import {event as currentEvent} from 'd3-selection';
-import * as d3TimeFormat from 'd3-time-format';
-import { csvToJson } from 'convert-csv-to-json/src/csvToJson.js';
 import { TEMPERATURES } from '../../data/temperatures';
 import { HttpClient } from '@angular/common/http';
 import { WebsocketService } from '../websocket.service';
-import { selectAll } from 'd3';
 
 export interface Margin {
   top: number;
@@ -207,7 +199,7 @@ export class MiddleComponent implements OnInit {
   private drawChart(data) {
 
     this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
+    this.y.domain([0, 150]);
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
     

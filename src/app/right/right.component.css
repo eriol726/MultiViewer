@@ -1,3 +1,11 @@
+@import '../area-chart/tabletChart.css';
+
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
 #circle {
     background: #f00;
     width: 20px;
@@ -9,6 +17,7 @@
     float: left;
     width: calc(100% - 20px);
     padding: 10px;
+    height: 100vh;
     /*height: 300px;  Should be removed. Only for demonstration */
 }
   
@@ -27,8 +36,7 @@
 }
 
 .mat-expansion-panel-header {
-    height: 42px;
-    display: contents !important; 
+    height: 100% !important;
     padding: 0 0px !important; 
 }
 

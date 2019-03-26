@@ -63,6 +63,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   likes: any = 10;
   private myTemplate: any = "";
   @Input() url: string = "app/right.display.component.html";
+  @Input() ID: string;
 
   tasks: MyType[];
 
@@ -81,6 +82,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   data: any;
 
+  public hideChart: boolean = true;
+  public hidePanel: boolean = false;
   
   private margin: Margin;
   private margin2: Margin;
@@ -511,6 +514,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   resize(){
+    if(this.hideChart){
+      this.hideChart = false;
+      this.hidePanel = true;
+    }
+    else{
+      this.hideChart = true;
+      this.hidePanel = false;
+    }
     console.log("resize");
     console.log("maximize", this.elRef.nativeElement.querySelectorAll('.cell'));
     let cellClass = this.elRef.nativeElement.querySelectorAll('.cell');

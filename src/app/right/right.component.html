@@ -1,44 +1,50 @@
-<div class="row">
-  <mat-expansion-panel class="mat-elevation-z0"
-                                 (opened)="panelOpenState = true"
-                                 (closed)="panelOpenState = false"
-                                 [expanded]="isExpanded===i"
-                                 hideToggle="true"
-                                 *ngFor="let item of done1; let i = index" 
-                                 [attr.id]="i"
-                                 #panelRight >
-              <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
-                <mat-panel-title  >
-                  <div id="circle" ></div>
-                  <div id="title">{{item.text}}</div>
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-        
-                <div class="cardList">
-        
-                  <div class="cardBorder" (dblclick)="selectCard(i)">
-                    <div class="diag" style="width: 100%; height: 100%; position: relative;">
-                      <div class="cardLetter">A</div>
-                    </div>
-                  </div>
-                  
-        
-                  <div class="cardBorder" (dblclick)="selectCard(i)">
-                    <div class="diag" style="width: 100%; height: 100%; position: relative;">
-                      <div class="cardLetter">B</div>
-                    </div>
-                  </div>
-                  
-        
-                  <div class="cardBorder" (dblclick)="selectCard(i)">
-                    <div class="diag" style="width: 100%; height: 100%; position: relative;">
-                      <div class="cardLetter">C</div>
-                    </div>
-                  </div>
-                  
-        
-                </div >
-              
-            </mat-expansion-panel>
+<div class="row"  >
+  <div [hidden]="hideChart" style="height: 55%; margin-top: 10%"> 
+    <app-area-chart></app-area-chart>
+  </div>
+  <div [hidden]="hidePanel">
+  <mat-expansion-panel 
+      class="mat-elevation-z0"
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+      [expanded]="isExpanded===i"
+      hideToggle="true"
+      *ngFor="let item of done1; let i = index" 
+      [attr.id]="i"
+      #panelRight >
+      <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
+        <mat-panel-title  >
+          <div id="circle" ></div>
+          <div id="title">{{item.text}}</div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+        <div class="cardList">
+
+          <div class="cardBorder" (dblclick)="selectCard(i)">
+            <div class="diag" style="width: 100%; height: 100%; position: relative;">
+              <div class="cardLetter">A</div>
+            </div>
+          </div>
+          
+
+          <div class="cardBorder" (dblclick)="selectCard(i)">
+            <div class="diag" style="width: 100%; height: 100%; position: relative;">
+              <div class="cardLetter">B</div>
+            </div>
+          </div>
+          
+
+          <div class="cardBorder" (dblclick)="selectCard(i)">
+            <div class="diag" style="width: 100%; height: 100%; position: relative;">
+              <div class="cardLetter">C</div>
+            </div>
+          </div>
+          
+
+        </div>
+    </mat-expansion-panel>
+  </div>
+    
 </div>
 

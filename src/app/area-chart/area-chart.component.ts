@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChildren, ViewChild, Input, Renderer2 } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, ViewChild, Input, Renderer2, Injectable } from '@angular/core';
 import { TEMPERATURES } from 'src/data/temperatures';
 import * as d3 from 'd3';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import * as d3Shape from 'd3-shape';
 import { ActionService } from '../action.service';
 import { WebsocketService } from '../websocket.service';
+import { Subject } from 'rxjs';
 
 export interface Margin {
   top: number;
@@ -25,6 +26,8 @@ type MyType = {
   templateUrl: './area-chart.component.html',
   styleUrls: ['./area-chart.component.css']
 })
+
+// @Injectable()
 export class AreaChartComponent implements OnInit {
 
   title = 'multiViewer';
@@ -39,7 +42,7 @@ export class AreaChartComponent implements OnInit {
   likes: any = 10;
   private myTemplate: any = "";
   @Input() url: string = "app/right.display.component.html";
-
+  @Input() ID: string;
   tasks: MyType[];
 
   done: MyType[];
@@ -111,7 +114,7 @@ export class AreaChartComponent implements OnInit {
 
   public isExpanded: number  = -1;
     
-  
+  public renderContent = new Subject<boolean>();
  
   public thePanel;
   intersectionColor: d3.Area<[number, number]>;
@@ -284,19 +287,6 @@ export class AreaChartComponent implements OnInit {
     //d3.select('svg').append("g").attr("class", "test");
     //create the DOM element 
     
-    this.svgMain = this.renderer.createElement('svg', 'svg');
-
-    this.svgMain.style.height = "500px";
-    this.svgMain.style.width = "100%";
-    //create text for the element
-    const text = this.renderer.createText("tja");
-
-    //append text to li element
-    // this.renderer.appendChild(this.svgMain , text);
-    
-    //Now append the li tag to divMessages div
-    //this.renderer.
-    //this.renderer.appendChild(this.mainChart.nativeElement,this.svgMain );
 
     this.initSvg();
     this.drawChart(TEMPERATURES);
@@ -657,6 +647,8 @@ export class AreaChartComponent implements OnInit {
     //     .attr('transform', 'translate(0,' + this.height2 + ')')
     //     .call(this.xAxis2);
 
+    console.log("focus: ", this.focus._groups[0]);
+
     this.context.append('g')
         .attr('class', 'brush')
         .attr('visibility', 'hidden') 
@@ -666,8 +658,7 @@ export class AreaChartComponent implements OnInit {
     this.svg.append('rect')
         .attr('class', 'zoom')
         .attr('width', "100%")
-        .attr('height', "100%")
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
+        .attr('transform', 'translate(' + 0 + ',' + 0 + ')')
         .call(this.zoom);
 
     let svg = document.createElement('svg'); 
@@ -729,6 +720,10 @@ export class AreaChartComponent implements OnInit {
      // this.context.select(".brush").call(this.brush.move, d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
       this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
     })
+  }
+
+  public getContent(): void{
+    this.renderContent.next(true);
   }
 
 }

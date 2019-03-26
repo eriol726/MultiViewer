@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, ViewChildren, OnInit } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation } from '@angular/core';
 import { AppComponent} from "../app.component";
 import { Injectable } from '@angular/core';
 import { LeftComponent } from "../left/left.component";
@@ -8,6 +8,7 @@ import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-right',
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './right.component.html',
   styleUrls: ['./right.component.css']
 })
@@ -21,6 +22,8 @@ export class RightComponent implements OnInit, AfterViewInit {
 
   private panelOpenState = false;
   public isExpanded: number  = -1;
+  public hideChart: boolean = true;
+  public hidePanel: boolean = false;
 
   constructor(private actionService : ActionService, private display : WebsocketService) {
   }
@@ -71,6 +74,18 @@ export class RightComponent implements OnInit, AfterViewInit {
         //this.done1.content = data.containerData;
       }
     });
+
+    this.display.maximizeChart().subscribe(data=>{
+      if(this.hideChart){
+        this.hideChart = false;
+        this.hidePanel = true;
+      }
+      else{
+        this.hideChart = true;
+        this.hidePanel = false;
+      }
+      
+    })
       
     
   }

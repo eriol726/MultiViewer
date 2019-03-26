@@ -5,14 +5,13 @@ import { AppComponent } from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatNativeDateModule} from '@angular/material';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 import { PlotlyModule } from 'angular-plotly.js';
 import { WebsocketService } from './websocket.service';
 import { DragScrollModule } from 'ngx-drag-scroll';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import { DragulaModule } from 'ng2-dragula';
+import { Injectable,ElementRef } from '@angular/core';
 
 import { LeftComponent } from "./left/left.component";
 import { RightComponent } from './right/right.component';
@@ -50,7 +49,8 @@ import { AreaChartComponent } from './area-chart/area-chart.component';
     WebsocketService,
     LeftComponent,
     TabletComponent,
-    ActionService
+    ActionService,
+    AreaChartComponent
   ],
     
   bootstrap: [AppComponent]

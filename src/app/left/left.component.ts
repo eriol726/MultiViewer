@@ -1,11 +1,12 @@
-import { Component, ViewChildren, OnInit, Input, Inject, AfterViewInit, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { forwardRef } from '@angular/core';
+import { Component, ViewChildren, OnInit, Input, Inject, AfterViewInit, ElementRef, HostListener, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActionService } from '../action.service';
 import { WebsocketService } from '../websocket.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
 import { TEMPERATURES } from '../../data/temperatures';
-import { deflateRaw } from 'zlib';
+import { AreaChartComponent } from '../area-chart/area-chart.component';
+import { Subject } from 'rxjs';
+
 
 type MyType = {
   text: string;
@@ -17,6 +18,7 @@ type MyType = {
 @Component({
   selector: 'app-left',
   templateUrl: './left.component.html',
+  encapsulation: ViewEncapsulation.None,
   styleUrls: ['./left.component.css']
 })
 
@@ -26,6 +28,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   @Input() expand;
   @ViewChildren('panel') panel;
   @ViewChild('chart') mainChart: ElementRef;
+
 
   tasks2: {};
   tasks3 = { "content" : [
@@ -46,8 +49,12 @@ export class LeftComponent implements OnInit, AfterViewInit {
   height: number;
   g: any;
 
+  hideChart: boolean = true;
+  hideCM: boolean= false;
 
-  constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
+ 
+// https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
+  constructor(private actionService : ActionService, private display : WebsocketService,private areaChart: AreaChartComponent) {
 
   }
 
@@ -82,6 +89,11 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log("ngInit");
+  
+    // this.areaChart.renderContent.subscribe(value =>
+    //   {
+    //     this.getContent();
+    //   })
 
     this.svg = d3.select("svg");
     this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
@@ -104,7 +116,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.g.select(".axis--x").append("rect")
     .attr("class", "historyLine")
     .attr("width", 2)
-    .attr("height", 600 )
+    .attr("height", "100%" )
     .attr("fill", "black")
 
     this.draw();
@@ -198,6 +210,9 @@ export class LeftComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+
+    console.log("this.areaChart: ", this.areaChart);
+
     this.display.expandItem().subscribe(data=>{
       if(data.type === "task"){
       }
@@ -220,6 +235,22 @@ export class LeftComponent implements OnInit, AfterViewInit {
       }
     })
 
+    this.display.maximizeChart().subscribe(data=>{
+      if(this.hideCM){
+        this.hideChart = true;
+        this.hideCM = false;
+      }
+      else{
+        this.hideChart = false;
+        this.hideCM = true;
+      }
+      
+    })
+
+  }
+
+  private getContent(){
+    console.log("tja");
   }
 
 
@@ -229,6 +260,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.draw();
     
   }
+
 
 
 }

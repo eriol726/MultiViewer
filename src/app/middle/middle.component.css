@@ -1,3 +1,18 @@
 @import '../area-chart/tabletChart.css'; 
 
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+.row {
+    float: left;
+    padding: 10px;
+    height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px;
+    /*height: 300px;  Should be removed. Only for demonstration */
+  }
+
+svg{
+    margin-top: 10%;
+    height: 55%; 
+}
