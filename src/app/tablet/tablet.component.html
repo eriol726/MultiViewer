@@ -38,8 +38,8 @@
                                   #panelRight >
                 <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
                   <mat-panel-title  >
-                    <div id="circle" ></div>
-                    <div id="title">{{item.text}}</div>
+                      <object [data]= 'sanitizer.bypassSecurityTrustResourceUrl("assets/cm_" + (i+1) + ".svg")' style="width: 100%; height: 100%" type="image/svg+xml">
+                      </object>
                   </mat-panel-title>
                 </mat-expansion-panel-header>
           

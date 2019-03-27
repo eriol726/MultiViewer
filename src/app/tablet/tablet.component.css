@@ -40,7 +40,7 @@ drag-scroll {
 }
 
 .cell {
-    flex: 0 0 33.33%;
+    flex: 0 0 33%;
     z-index: 2;                   
     height: 78vh;
     border: 2px solid;

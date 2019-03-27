@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation } from '@angular/core';
-import * as Plotly from 'plotly.js';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
@@ -7,19 +6,10 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem, CdkDrag
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
-import * as d3Scale from 'd3-scale';
-import * as d3ScaleChromatic from 'd3-scale-chromatic';
-import * as d3Shape from 'd3-shape';
-import * as d3Array from 'd3-array';
-import * as d3Axis from 'd3-axis';
-import * as d3Zoom from 'd3-zoom';
-import * as d3Brush from 'd3-brush';
 import { HttpClient } from '@angular/common/http';
 import { TEMPERATURES } from '../../data/temperatures';
-import * as greinerHormann from 'greiner-hormann';
-import * as clipperLib from 'js-angusj-clipper/web';
 import { DragulaService } from 'ng2-dragula';
-import { MapType } from '@angular/compiler';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface Margin {
   top: number;
@@ -35,6 +25,7 @@ type MyType = {
   endDate: Date;
 }
 
+declare var require: any;
 @Component({
   selector: 'app-tablet',
   encapsulation: ViewEncapsulation.None,
@@ -65,6 +56,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @Input() url: string = "app/right.display.component.html";
   @Input() ID: string;
 
+  private svgPath = "../../assets/";
   tasks: MyType[];
 
   done: MyType[];
@@ -152,7 +144,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private socket : WebsocketService, 
               private http: HttpClient, 
               private elRef:ElementRef,
-              private dragulaService: DragulaService) { 
+              private dragulaService: DragulaService,
+              public sanitizer: DomSanitizer) { 
 
       let drake = dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
@@ -549,13 +542,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
           cellClass[index].style.zIndex = "2";
           cellClass[index].style.visibility = "visible";
           cellClass[index].style.height = "78vh";
-          cellClass[index].style.flex = "0 0 33.3%";
+          cellClass[index].style.flex = "0 0 33%";
         }
         else{
           cellClass[index].style.zIndex = "2";
           cellClass[index].style.visibility = "visible";
           cellClass[index].style.height = "10vh";
-          cellClass[index].style.flex = "0 0 33.3%";
+          cellClass[index].style.flex = "0 0 33%";
         }
         
       }
