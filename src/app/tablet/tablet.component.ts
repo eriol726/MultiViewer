@@ -158,7 +158,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
           let isCopyAble = (target.id !== 'right');
 
-          if (this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+          if (this.done.some((x,i) => i.toString() == el.id) ){
             isCopyAble = false;
           }else{
             
@@ -186,7 +186,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       }).drake.on("drop", function(el,target, source){
         if(target){
-          if (!this.done.some((x) => x.text == el.querySelector("#title").innerHTML) ){
+          if (!this.done.some((x,i) => i.toString() == el.id) ){
             this.done.push(this.tasks[el.id]);
             this.isExpanded = -1;//parseInt(el.id);
             console.log("this.tasks: ", this.tasks);
