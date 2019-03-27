@@ -108,7 +108,7 @@ drag-scroll {
 
 .cardBorder{
     display: inline-block;
-    height: 500px;
+    height: 100px;
     width: 100%;
     border: 3px solid;
     margin-right: 10px;
