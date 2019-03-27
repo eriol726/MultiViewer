@@ -1,11 +1,14 @@
 <div class="row" #chart>
 
-    <svg [hidden]="false" width="100%" height="100%" ></svg>
-
     
 
 
-    <div [hidden]="true" style="height: 55%; margin-top: 10%"> 
-        <!-- <app-area-chart></app-area-chart> -->
+    <div [hidden]="hideChart" style="height: 55%; margin-top: 10%"> 
+        <app-area-chart></app-area-chart>
     </div>
+
+    <div [hidden]="hideCM" style="height: 100%">
+        <svg  class="CMchart"  width="100%" height="100%" ></svg>
+    </div>
+    
 </div>

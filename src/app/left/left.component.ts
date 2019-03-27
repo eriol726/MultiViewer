@@ -54,7 +54,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
  
 // https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
-  constructor(private actionService : ActionService, private display : WebsocketService,private areaChart: AreaChartComponent) {
+  constructor(private actionService : ActionService, private display : WebsocketService) {
 
   }
 
@@ -94,8 +94,9 @@ export class LeftComponent implements OnInit, AfterViewInit {
     //   {
     //     this.getContent();
     //   })
-
-    this.svg = d3.select("svg");
+    
+    this.svg = d3.select(".CMchart");
+    console.log("this.svg: ", this.svg);
     this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
     this.xLinear = d3.scaleLinear();
@@ -103,7 +104,8 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.y = d3.scaleBand().padding(0.1);
 
     this.g = this.svg.append("g")
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+      .attr("class", "CMhistory");
   
 
     
@@ -211,8 +213,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(){
 
-    console.log("this.areaChart: ", this.areaChart);
-
     this.display.expandItem().subscribe(data=>{
       if(data.type === "task"){
       }
@@ -239,8 +239,10 @@ export class LeftComponent implements OnInit, AfterViewInit {
       if(this.hideCM){
         this.hideChart = true;
         this.hideCM = false;
+        console.log("show CMchart");
       }
       else{
+        console.log("hide CMchart");
         this.hideChart = false;
         this.hideCM = true;
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy  } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
@@ -17,7 +17,8 @@ export interface Margin {
   selector: 'app-middle',
   encapsulation: ViewEncapsulation.None,
   templateUrl: './middle.component.html',
-  styleUrls: ['./middle.component.css']
+  styleUrls: ['./middle.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MiddleComponent implements OnInit {
   @ViewChild('chart') private chartContainer: ElementRef;
