@@ -38,6 +38,8 @@
     "material-design-icons": "^3.0.1",
     "ng2-dragula": "^2.1.1",
     "ngx-drag-scroll": "^7.1.4",
+    "ngx-swiper-wrapper": "^7.2.1",
+    "ngx-useful-swiper": "^0.3.1-beta",
     "plotly": "^1.0.6",
     "plotly.js": "^1.44.2",
     "process": "^0.11.10",
@@ -45,6 +47,7 @@
     "rxjs": "~6.3.3",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
+    "swiper": "^4.5.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },

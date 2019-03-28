@@ -123,7 +123,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
     this.draw();
 
-    this.update(this.data2);
+    //this.update(this.data2);
 
   }
 

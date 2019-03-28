@@ -5,9 +5,15 @@
           
         <div class="grid" >
             
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
+          <div class="cell">
+            <p>ACTION PLAN</p>
+          </div>
+          <div class="cell">
+              <p>LATE PASSENGERS</p>
+          </div>
+          <div class="cell">
+            COUNTERMEASURES
+          </div>
           
           <div class="cell">
             <div
@@ -19,7 +25,7 @@
             </div>
           </div>
           
-          <div class="cell" style="z-index: 3" >
+          <div class="cell" style="z-index: 3; " >
               <app-area-chart id="chart1"></app-area-chart>
           </div>
           
@@ -44,9 +50,29 @@
                   </mat-panel-title>
                 </mat-expansion-panel-header>
           
-                  <div class="cardList">
+                  <div class="cardList" #cardList>
+                      <div  class="swiper-container" [swiper]="config" [(index)]="index">
+                        <div class="swiper-wrapper">
+                          <div class="swiper-slide">
+                            Swiper slide content
+                          </div>
+                          <div class="swiper-slide">
+                              Swiper slide content2
+                            </div>
+                            <div class="swiper-slide">
+                                Swiper slide content3
+                              </div>
+                        </div>
+                        
+                        <div class="swiper-scrollbar"></div>
+                        <div class="swiper-pagination"></div>
+                        
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                      </div>
+                    
           
-                    <div class="cardBorder" (dblclick)="selectCard(i)">
+                    <!-- <div class="cardBorder" (dblclick)="selectCard(i)">
                       <div class="diag" style="width: 100%; height: 100%; position: relative;">
                         <div class="cardLetter">A</div>
                       </div>
@@ -64,7 +90,7 @@
                       <div class="diag" style="width: 100%; height: 100%; position: relative;">
                         <div class="cardLetter">C</div>
                       </div>
-                    </div>
+                    </div> -->
                     
           
                   </div >

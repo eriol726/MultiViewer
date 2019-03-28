@@ -34,6 +34,19 @@ declare var require: any;
 })
 export class TabletComponent implements OnInit, AfterViewInit {
 
+  config: any = {
+    pagination: {
+    el: '.swiper-pagination',
+    },
+    paginationClickable: true,
+    navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+    },
+    spaceBetween: 30
+  };
+  
+
   title = 'multiViewer';
   graphDataOriginal = 0;
   graphDataImproved  = 0;
@@ -48,6 +61,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('cell') cell: ElementRef;
   @ViewChild('appCompButton') appCompButton;
   @ViewChild('chart') mainChart: ElementRef;
+  @ViewChildren('cardList') cardList: ElementRef;
 
   @ViewChild('chart') private chartContainer: ElementRef;
 
@@ -147,6 +161,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private dragulaService: DragulaService,
               public sanitizer: DomSanitizer) { 
 
+       
+        // mySwiper = new Swiper('.swiper-container', {
+        //   speed: 400,
+        //   spaceBetween: 100
+        // });
+
       let drake = dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
           console.log("source.id: ", source.id);
@@ -172,15 +192,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
         },
         invalid: function (el, handle) {
           let prevent = false;
-          if(Number.isInteger(parseInt(el.id))){
+          //console.log("el: ", el.querySelector(".cardList"));
+          console.log("handle: ", handle.className);
+          if(handle.className == "swiper-slide swiper-slide-active"){
+            console.log("hej");
             //el.className += " mat-expanded";
             //this.elRef.nativeElement.querySelector('.example-list').children[el.id].children[1];
       
-            //prevent = true;
+            prevent = true;
             //console.log("this.isExpanded: ", this.elRef.nativeElement.querySelector('.example-list').children[el.id].children);
           }
           
-          return false; // don't prevent any drags from initiating by default
+          return prevent; // don't prevent any drags from initiating by default
         }.bind(this),
         
 
@@ -220,6 +243,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
+    console.log("swiper: ", this.elRef.nativeElement.querySelector('.swiper-slide'));  
     if(this.panelOpenState){
       this.isExpanded = index;
       this.socket.sendExpand("task",index,index);
@@ -304,11 +328,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.done = [];
 
     
+    
     //this.initSvg();
     //this.drawChart(TEMPERATURES);
 
   
   }
+
 
   
 
@@ -502,6 +528,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.focus = d3.select(".focus");
+    console.log("cardlist: ", this.cardList);
     
     
   }

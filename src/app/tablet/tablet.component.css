@@ -1,10 +1,15 @@
 @import '../area-chart/tabletChart.css'; 
+@import '~swiper/dist/css/swiper.min.css';
 
 *, *:after, *:before {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
   }
+
+body {
+    background-color: #a2a7aa;
+}
 
 #tabletChart{
     position: fixed;
@@ -31,6 +36,7 @@ drag-scroll {
 .box {
     width:100vw;
     height:100vh;
+    padding: 10px;
 }
 
 .grid {
@@ -44,11 +50,16 @@ drag-scroll {
     z-index: 2;                   
     height: 78vh;
     border: 2px solid;
+    background-color: #fff;
 }
 
 .cell:nth-child(-n+3) {
     height: 10vh;
     background-color: #fff;
+
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
 
 .cell:nth-child(n+4):nth-child(-n+6){
@@ -102,7 +113,7 @@ drag-scroll {
 .cardList{
     display: block;
     width: 100%; 
-    height: 100%;
+    height: 100px;
 }
 
 
@@ -179,4 +190,27 @@ drag-scroll {
     opacity: 0.2;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
     filter: alpha(opacity=20);
+  }
+
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
   }

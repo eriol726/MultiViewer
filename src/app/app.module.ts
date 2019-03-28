@@ -19,6 +19,16 @@ import { MiddleComponent } from './middle/middle.component';
 import { TabletComponent } from './tablet/tablet.component';
 import { ActionService } from './action.service';
 import { AreaChartComponent } from './area-chart/area-chart.component';
+import { SwiperModule } from 'ngx-swiper-wrapper';
+import { SWIPER_CONFIG } from 'ngx-swiper-wrapper';
+import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
+
+const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
+  direction: 'horizontal',
+  slidesPerView: 'auto',
+  observer: true
+  
+};
 
 
 @NgModule({
@@ -41,6 +51,7 @@ import { AreaChartComponent } from './area-chart/area-chart.component';
     MatNativeDateModule,
     ReactiveFormsModule,
     PlotlyModule,
+    SwiperModule,
     DragScrollModule,
     DragulaModule.forRoot()
   ],
@@ -50,7 +61,11 @@ import { AreaChartComponent } from './area-chart/area-chart.component';
     LeftComponent,
     TabletComponent,
     ActionService,
-    AreaChartComponent
+    AreaChartComponent,
+    {
+      provide: SWIPER_CONFIG,
+      useValue: DEFAULT_SWIPER_CONFIG
+    }
   ],
     
   bootstrap: [AppComponent]
