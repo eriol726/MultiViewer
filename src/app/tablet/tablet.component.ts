@@ -209,7 +209,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       }).drake.on("drop", function(el,target, source){
         if(target){
-          if (!this.done.some((x,i) => i.toString() == el.id) ){
+          // if CM is not in action plan push
+          console.log("this.done: ", this.done);
+          if (!this.done.some((x,i) => x.text == el.id) ){
             this.done.push(this.tasks[el.id]);
             this.isExpanded = -1;//parseInt(el.id);
             console.log("this.tasks: ", this.tasks);
@@ -501,15 +503,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   selectCard(index){
-    this.selectedCM[index] = true;
     
-    console.log("index: ", index);
+    console.log("index: ", index, "locked: ", this.selectedCM[index]);
     if(this.lockedCM[index].locked){
+      console.log("unlock");
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
+      this.lockedCM[index].locked = false;
     }
     else{
+      console.log("locked");
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
-      
+      this.lockedCM[index].locked = true
     }
 
     this.socket.sendLock("done",index);

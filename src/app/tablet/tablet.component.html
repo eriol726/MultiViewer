@@ -44,7 +44,7 @@
                                   #panelRight >
                 <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
                   <mat-panel-title  >
-                      <img id='{{i+1}}' src='assets/cm_{{i+1}}.svg' style="width: 100%; height: 100%"/>
+                      <img id='{{i+1}}' src='assets/cm_{{i+1}}.svg' style="width: 100%; height: 100%; background-color: #fff"/>
                       <!-- <object [data]= 'sanitizer.bypassSecurityTrustResourceUrl("assets/cm_" + (i+1) + ".svg")' style="width: 100%; height: 100%" type="image/svg+xml">
                       </object> -->
                   </mat-panel-title>
@@ -52,23 +52,22 @@
           
                   <div class="cardList" #cardList>
                       <div  class="swiper-container" [swiper]="config" [(index)]="index">
-                        <div class="swiper-wrapper">
-                          <div class="swiper-slide">
+                        <div class="swiper-wrapper" (dblclick)="selectCard(i)">
+                          <div class="swiper-slide" >
                             Swiper slide content
                           </div>
-                          <div class="swiper-slide">
+                          <div class="swiper-slide" >
                               Swiper slide content2
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" >
                                 Swiper slide content3
                               </div>
                         </div>
-                        
-                        <div class="swiper-scrollbar"></div>
+                      
                         <div class="swiper-pagination"></div>
                         
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
+                        <!-- <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div> -->
                       </div>
                     
           

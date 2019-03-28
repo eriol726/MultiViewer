@@ -31,9 +31,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
 
   tasks2: {};
-  tasks3 = { "content" : [
-    {"text": "task 0", "color":"rgb(38, 143, 85)"},
-  ]};
 
   private innerWidth: number;
   svg ;
@@ -41,7 +38,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   x;
   y;
 
-  data2: MyType[] = [{"text": "task 0", "color":"rgb(38, 143, 85)","startDate": new Date(2018,1,1,6,30,0), "endDate": new Date(2018,1,1,7,30,0)}];
+  data2: MyType[] = [];
   barHeigt: number;
   xLinear: d3.ScaleLinear<number, number>;
   xTime: d3.ScaleTime<number, number>;
@@ -227,11 +224,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
         
         
         
-      }else if(data.type === "remove"){
-        transferArrayItem(this.tasks3.content,
-          [],
-          data.previousIndex,
-          data.currentIndex);
       }
     })
 
