@@ -25,7 +25,7 @@
             </div>
           </div>
           
-          <div class="cell" style="z-index: 3; " >
+          <div class="cell" style="z-index: 3; height: 70vh; " >
               <app-area-chart id="chart1"></app-area-chart>
           </div>
           
@@ -44,9 +44,10 @@
                                   #panelRight >
                 <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
                   <mat-panel-title  >
-                      <img id='{{i+1}}' src='assets/cm_{{i+1}}.svg' style="width: 100%; height: 100%; background-color: #fff"/>
-                      <!-- <object [data]= 'sanitizer.bypassSecurityTrustResourceUrl("assets/cm_" + (i+1) + ".svg")' style="width: 100%; height: 100%" type="image/svg+xml">
-                      </object> -->
+
+                        <iframe id='{{i+1}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="width: 100%; height: 100%; background-color: #fff; border: 0px"></iframe>
+                        <div class="iframeOverlay"></div>
+
                   </mat-panel-title>
                 </mat-expansion-panel-header>
           
@@ -54,52 +55,35 @@
                       <div  class="swiper-container" [swiper]="config" [(index)]="index">
                         <div class="swiper-wrapper" (dblclick)="selectCard(i)">
                           <div class="swiper-slide" >
-                            Swiper slide content
+                              <iframe class="card" src="assets/Rescheduling_Overview_Tablet.svg" ></iframe>
+                              <div class="iframeOverlay"></div>
                           </div>
                           <div class="swiper-slide" >
-                              Swiper slide content2
-                            </div>
-                            <div class="swiper-slide" >
-                                Swiper slide content3
-                              </div>
+                            Swiper slide content2
+                          </div>
+                          <div class="swiper-slide" >
+                            Swiper slide content3
+                          </div>
                         </div>
-                      
-                        <div class="swiper-pagination"></div>
+                        <div class="swiper-pagination">
+                            <p>dsfdsfs</p>
+                        </div>
+                        <!-- <div style=" position: absolute; z-index: 11; bottom: 0px; left: 0px;
+                        right: 0px; text-align: center">
+                          sdfs -->
+                          <div class="arrowUp">
+                            <svg><polyline  points="298.58 166.55 318.36 181.53 338.14 166.55" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                          </div>
                         
-                        <!-- <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div> -->
                       </div>
-                    
-          
-                    <!-- <div class="cardBorder" (dblclick)="selectCard(i)">
-                      <div class="diag" style="width: 100%; height: 100%; position: relative;">
-                        <div class="cardLetter">A</div>
-                      </div>
-                    </div>
-                    
-          
-                    <div class="cardBorder" (dblclick)="selectCard(i)">
-                      <div class="diag" style="width: 100%; height: 100%; position: relative;">
-                        <div class="cardLetter">B</div>
-                      </div>
-                    </div>
-                    
-          
-                    <div class="cardBorder" (dblclick)="selectCard(i)">
-                      <div class="diag" style="width: 100%; height: 100%; position: relative;">
-                        <div class="cardLetter">C</div>
-                      </div>
-                    </div> -->
-                    
-          
                   </div >
                 
               </mat-expansion-panel>
             </div>
           </div>
-          <div class="cell"></div>
+          <!-- <div class="cell"></div> -->
           <div class="cell" (dblclick)="resize()" ></div>
-          <div class="cell" ></div>
+          <!-- <div class="cell" ></div> -->
         </div>
       </div>
       <!-- <div [hidden]="false">

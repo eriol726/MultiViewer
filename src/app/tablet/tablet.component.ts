@@ -245,12 +245,23 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
-    console.log("swiper: ", this.elRef.nativeElement.querySelector('.swiper-slide'));  
+
+    let iframeEl = this.elRef.nativeElement.querySelector("[id=" + CSS.escape(index+1) +"]");
+    let card = this.elRef.nativeElement.querySelector(".card");
+    console.log("card: ", iframeEl.contentWindow.document.getElementsByClassName("arrow"));
+    
     if(this.panelOpenState){
       this.isExpanded = index;
       this.socket.sendExpand("task",index,index);
+      iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
+      iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
+      iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
     }
     else{
+      
+      iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
+      iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
+      iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
       this.socket.sendExpand("task",-1,index);
     }
 
@@ -533,6 +544,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.focus = d3.select(".focus");
     console.log("cardlist: ", this.cardList);
+    console.log("switch: ", this.elRef.nativeElement.querySelector("[id='1']"));
+    console.log("switch: ", this.elRef.nativeElement.querySelector(".svgCM"));
+    console.log("switch: ", this.elRef.nativeElement.querySelector(".cell"));
+    console.log("switch: ", d3.select('.switch'));
     
     
   }
