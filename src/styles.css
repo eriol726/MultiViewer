@@ -4,7 +4,7 @@
 html, body{
   padding: 0;
   margin: 0;
-  overflow:auto;
+  /* overflow:auto; */
 }
 html{
   min-height: 100%;

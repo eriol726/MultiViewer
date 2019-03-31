@@ -199,7 +199,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
             //el.className += " mat-expanded";
             //this.elRef.nativeElement.querySelector('.example-list').children[el.id].children[1];
       
-            prevent = true;
+            // prevent = true;
             //console.log("this.isExpanded: ", this.elRef.nativeElement.querySelector('.example-list').children[el.id].children);
           }
           

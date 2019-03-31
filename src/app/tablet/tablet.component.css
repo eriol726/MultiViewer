@@ -88,11 +88,11 @@ drag-scroll {
 
 .example-list-right {
     /* border: solid 1px #ccc; */
-    min-height: 60px;
+    /* min-height: 60px; */
     /* background: white; */
     overflow: hidden;
-    display: block;
-    height: 102%;
+    /* display: block; */
+    /* height: 800px; */
     /* https://stackblitz.com/edit/mat-drag-drop-xfdfuh?file=src%2Fapp%2Fapp.component.html */
 }
 
@@ -149,28 +149,43 @@ drag-scroll {
 
 .mat-expansion-panel  {
     border-radius: 0 !important;
+    background-color: #f4f4f4;
     /* border: 2px solid; */
+    /* display: unset !important; */
     transition: none !important;
     box-shadow: none !important;
-    margin: -2px !important;
+    margin-bottom: 10px !important;
+    /* display: flex !important; */
+    /* margin: -2px !important; */
+    /* height: 100px !important; */
     /* height: 50% !important; */
-    background-color: #f4f4f4 !important;
+    /* background-color: #f4f4f4 !important; */
     /* padding: 5px; */
+}
+.mat-expansion-panel-header {
+    /* height: 100%!important; */
+    /* min-height: 107px !important; */
+    /* display: contents !important; */
+    margin-bottom: 0px;
+    padding: 0 0px !important;  
+    height: 110px;;
+  
+}
+.mat-content{
+    /* height: 107px !important; */
+    
 }
 
 .mat-expanded {
-    background-color: rgb(208, 230, 255);
+    background-color: rgb(255, 255, 255);
 }
 
-.mat-expansion-panel-header {
-    /* height: 100% !important; */
-    display: contents !important; 
-    padding: 0 0px !important; 
-}
+
 
 .mat-expansion-panel-body{
     padding: 0px !important;
-    height: 250px;
+    height: 300px;
+    /* height: 250px; */
 }
 .mat-expansion-panel-header-title{
     margin-right: 0px !important;
@@ -178,12 +193,13 @@ drag-scroll {
 }
 
 .mat-expansion-panel-content{
-    margin-bottom: 10px !important;
-    /* height: 30%; */
+    /* margin-bottom: 10px !important; */
+    
+    /* height: 330px; */
 }
 
 .swiper-pagination{
-    bottom: 20px !important;
+    bottom: 0px !important;
 } 
 
 .card{
