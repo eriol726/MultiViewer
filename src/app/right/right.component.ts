@@ -45,7 +45,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       console.log("data: ", data);
       
       this.isExpanded = data.state;
-      
+
       
       if(data.type === "task"){
         if(this.panelOpenState == false){

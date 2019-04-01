@@ -247,7 +247,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.tabletComp.handleLeftPanel(0);
 
     let iframeEl = this.elRef.nativeElement.querySelector("[id=" + CSS.escape(index+1) +"]");
-    let card = this.elRef.nativeElement.querySelector(".card");
+    console.log("iframeEl: ", iframeEl);
     console.log("card: ", iframeEl.contentWindow.document.getElementsByClassName("arrow"));
     
     if(this.panelOpenState){
@@ -256,12 +256,21 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
+      iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "hidden";
+      if(index == 3){
+        this.elRef.nativeElement.querySelector("[id=" + CSS.escape("0") +"]").style.height = "0px";
+      }
+      
     }
     else{
       
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
+      //iframeEl.contentWindow.document.getElementsByTagName("mat-expansion-panel-header")[0].style.backgroundColor = "#f4f4f4";
+      console.log("close: ", iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility);
+      iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "visible";
+      this.elRef.nativeElement.querySelector("[id=" + CSS.escape("0") +"]").style.height = "100%";
       this.socket.sendExpand("task",-1,index);
     }
 

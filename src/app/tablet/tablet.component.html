@@ -43,7 +43,7 @@
                                   [attr.id]="i"
                                   #panelRight >
                 <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*" (click)="expandTaskPanel(i)" >
-                  <mat-panel-title  style="height: 100%">
+                  <mat-panel-title  >
 
                         <iframe id='{{i+1}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="width: 100%; height: 100%;  border: 0px;"></iframe>
                         <div class="iframeOverlay"></div>
@@ -59,10 +59,12 @@
                               <div class="iframeOverlay"></div>
                           </div>
                           <div class="swiper-slide" >
-                            Swiper slide content2
+                              <iframe class="card" src="assets/Rescheduling_AGV5_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                              <div class="iframeOverlay"></div>
                           </div>
                           <div class="swiper-slide" >
-                            Swiper slide content3
+                              <iframe class="card" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                              <div class="iframeOverlay"></div>
                           </div>
                         </div>
                         <div class="swiper-pagination"></div>
