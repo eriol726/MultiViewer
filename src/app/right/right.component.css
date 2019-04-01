@@ -23,21 +23,38 @@
   
 
 .mat-expansion-panel  {
+    /* height: 25%; */
     border-radius: 0 !important;
     border: 2px solid;
     transition: none !important;
     box-shadow: none !important;
     margin: -2px !important;
-    padding: 5px;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1;
+    /* padding: 5px; */
 }
 
 .mat-expanded {
     background-color: rgb(208, 230, 255);
 }
 
+.mat-content{
+    min-width: 100%;
+    min-height: 100%;
+}
+
 .mat-expansion-panel-header {
     height: 100% !important;
     padding: 0 0px !important; 
+}
+
+.mat-expansion-panel-header-title > .panel-iframe  {
+    flex-grow: 1;
+}
+
+.mat-expansion-panel-header-title > .panel-iframe ~ .panel-iframe {
+    flex-grow: 3;
 }
 
 .iframeOverlay{
@@ -65,19 +82,20 @@
 
 
 .cardList{
-    display: block;
-    width: 100%; 
-    height: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
 
 .cardBorder{
-    display: inline-block;
-    height: 500px;
+
+    
+    height: 400px;
+    /*
     width: 32%;
     border: 3px solid;
     margin-right: 10px;
-    background-color: #fff;
+    background-color: #fff; */
 }
 
 .diag {

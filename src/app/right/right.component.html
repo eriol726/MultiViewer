@@ -2,7 +2,7 @@
   <div [hidden]="hideChart" style="height: 55%; margin-top: 10%"> 
     <app-area-chart></app-area-chart>
   </div>
-  <div [hidden]="hidePanel">
+  <div  style="display: flex; flex-direction: column; min-height: 100%;" [hidden]="hidePanel">
   <mat-expansion-panel 
       class="mat-elevation-z0"
       (opened)="panelOpenState = true"
@@ -11,38 +11,29 @@
       hideToggle="true"
       *ngFor="let item of done1; let i = index" 
       [attr.id]="i"
+      
       #panelRight >
-      <mat-expansion-panel-header (click)="expandTaskPanel(i)" >
-        <mat-panel-title style="height: 100%" >
-          <div id="circle" ></div>
-          <iframe id='{{i+1}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="width: 100%; height: 100%;  border: 0px;"></iframe>
-          <div class="iframeOverlay"></div>
+      <mat-expansion-panel-header  collapsedHeight="*" expandedHeight="*" (click)="expandTaskPanel(i)" >
+        <mat-panel-title style="height: 100%" >   
+          <iframe id='{{i+1}}' class="panel-iframe" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="height: 100%"  ></iframe>
+          <iframe  class="panel-iframe" [src]='"assets/Rescheduling_Screen.svg" | safe' style="height: 100%"></iframe>
+        
          
         </mat-panel-title>
       </mat-expansion-panel-header>
 
         <div class="cardList">
-            <p>{{i+1}}</p>
-          <div class="cardBorder" (dblclick)="selectCard(i)">
-              <object data="../../assets/cm_1.svg" type="image/svg+xml">
-                <img src="yourfallback.jpg" />
-              </object>
+          <div style="flex-grow: 1"  (dblclick)="selectCard(i)">
+            <iframe class="card" src="assets/Rescheduling_AGV3_Screen.svg" style="height: 350px;  border: 0px;  padding: 0px 10px;  " ></iframe>
           </div>
           
-
-          <div class="cardBorder" (dblclick)="selectCard(i)">
-              <object data="../../assets/cm_2.svg" type="image/svg+xml">
-                <img src="yourfallback.jpg" />
-              </object>
+          <div style="flex-grow: 2" (dblclick)="selectCard(i)">
+            <iframe class="card" src="assets/Rescheduling_AGV5_Screen.svg" style=" height: 350px;  border: 0px;  padding: 0px 10px;  " ></iframe>
           </div>
           
-          <div class="cardBorder" (dblclick)="selectCard(i)">
-              <object data="../../assets/cm_3.svg" type="image/svg+xml">
-                <img src="yourfallback.jpg" />
-              </object>
+          <div style="flex-grow: 4" (dblclick)="selectCard(i)">
+            <iframe class="card" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="height: 350px; border: 0px;  padding: 0px 10px;  " ></iframe>
           </div>
-          
-
         </div>
     </mat-expansion-panel>
   </div>
