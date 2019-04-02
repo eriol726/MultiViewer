@@ -2,7 +2,7 @@
   <div [hidden]="hideChart" style="height: 55%; margin-top: 10%"> 
     <app-area-chart></app-area-chart>
   </div>
-  <div  style="display: flex; flex-direction: column; min-height: 100%;" [hidden]="hidePanel">
+  <div style="display: flex; flex-direction: column; min-height: 100%;" [hidden]="hidePanel">
   <mat-expansion-panel 
       class="mat-elevation-z0"
       (opened)="panelOpenState = true"
@@ -15,9 +15,11 @@
       #panelRight >
       <mat-expansion-panel-header  collapsedHeight="*" expandedHeight="*" (click)="expandTaskPanel(i)" >
         <mat-panel-title style="height: 100%" >   
-          <iframe id='{{i+1}}' class="panel-iframe" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="height: 100%"  ></iframe>
-          <iframe  class="panel-iframe" [src]='"assets/Rescheduling_Screen.svg" | safe' style="height: 100%"></iframe>
-        
+          <iframe #iframe id='{{i+1}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="border: 0px" ></iframe>
+
+            <iframe [hidden]="panelOpenState" id='{{i+1}}_AGV' class="panel-iframe" [src]='"assets/Rescheduling_Screen.svg" | safe' style="border: 0px"></iframe>
+            <iframe [hidden]="!panelOpenState" id='{{i+1}}_Overview_Screen' class="panel-iframe" [src]='"assets/Rescheduling_Overview_Screen.svg" | safe' style="border: 0px"></iframe>
+
          
         </mat-panel-title>
       </mat-expansion-panel-header>

@@ -14,8 +14,10 @@
                 <tspan letter-spacing="-0.05em">T</tspan>
                 <tspan x="5.86" y="0" letter-spacing="0em">od</tspan>
                 <tspan x="18.96" y="0" letter-spacing="-0.01em">a</tspan>
-                <tspan x="24.99" y="0">y</tspan></text><text transform="translate(30.41 136.26)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">Preview</text>
-                <path d="M69.27,170.22H39.75a12,12,0,0,1,0-24H69.27a12,12,0,1,1,0,24" fill="#f2f2f2"/>
+                <tspan x="24.99" y="0">y</tspan>
+                </text>
+                <text class="preview" transform="translate(30.41 136.26)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">Preview</text>
+                <path id="switch-background" d="M69.27,170.22H39.75a12,12,0,0,1,0-24H69.27a12,12,0,1,1,0,24" fill="#f2f2f2"/>
                 <path id="switch" d="M53.94,157.72a15,15,0,1,1-15-15,15,15,0,0,1,15,15" fill="#b3b3b3"/>
                 <path d="M90,53a33.5,33.5,0,1,1-33.5-33.5A33.5,33.5,0,0,1,90,53" fill="#e3f0fc"/>
                 <text transform="translate(121.12 72.99)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">

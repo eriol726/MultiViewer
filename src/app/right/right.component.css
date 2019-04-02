@@ -6,6 +6,10 @@
     box-sizing: border-box;
   }
 
+body{
+    background-color: rgb(244, 244, 244);
+}
+
 #circle {
     background: #f00;
     width: 20px;
@@ -15,7 +19,7 @@
 
 .row {
     float: left;
-    width: calc(100% - 20px);
+    width: 100%;
     padding: 10px;
     height: 100vh;
     /*height: 300px;  Should be removed. Only for demonstration */
@@ -25,28 +29,44 @@
 .mat-expansion-panel  {
     /* height: 25%; */
     border-radius: 0 !important;
-    border: 2px solid;
+    /* border: 2px solid; */
     transition: none !important;
     box-shadow: none !important;
-    margin: -2px !important;
+    /* margin: -2px !important; */
     display: flex !important;
     flex-direction: column !important;
     flex: 1;
+    margin-bottom: 20px !important;
     /* padding: 5px; */
 }
 
 .mat-expanded {
-    background-color: rgb(208, 230, 255);
+    /* background-color: rgb(208, 230, 255); */
+}
+
+.mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) 
+.mat-expansion-panel-header:hover 
+{
+    background-color: #ffffff;
 }
 
 .mat-content{
     min-width: 100%;
     min-height: 100%;
+    flex-direction: column !important;
+
 }
 
 .mat-expansion-panel-header {
     height: 100% !important;
     padding: 0 0px !important; 
+    flex: 1;
+    flex-direction: column !important;
+}
+
+
+.mat-expansion-panel-header-title{
+    margin-right: 0px !important;
 }
 
 .mat-expansion-panel-header-title > .panel-iframe  {

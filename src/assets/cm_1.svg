@@ -16,11 +16,11 @@
                     <tspan letter-spacing="-0.05em">T</tspan><tspan x="5.86" y="0" letter-spacing="0em">od</tspan>
                     <tspan x="18.96" y="0" letter-spacing="-0.01em">a</tspan><tspan x="24.99" y="0">y</tspan>
                 </text>
-                <text transform="translate(25.97 145.65)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">
+                <text class="preview" transform="translate(25.97 145.65)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">
                     Preview
                 </text>
                 <path d="M85.45,56.65A33.5,33.5,0,1,1,52,23.15a33.5,33.5,0,0,1,33.5,33.5" fill="#e3f0fc"/>
-                <path d="M64.83,179.61H35.31a12,12,0,0,1,0-24H64.83a12,12,0,0,1,0,24" fill="#f2f2f2"/>
+                <path id="switch-background" d="M64.83,179.61H35.31a12,12,0,0,1,0-24H64.83a12,12,0,0,1,0,24" fill="#f2f2f2"/>
                 <path id="switch" d="M49.5,167.11a15,15,0,1,1-15-15,15,15,0,0,1,15,15" fill="#b3b3b3"/>
                 <text transform="translate(120.12 73.36)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
                     Charging 2 AGVs for 1 hour before this time frame 
@@ -30,7 +30,7 @@
                 <text transform="translate(582.43 52.1) scale(1.07 1)" font-size="27.2" fill="#2277d6" font-family="Titillium-Semibold, Titillium" font-weight="600">
                     1h
                 </text>
-                <circle cx="562.84" cy="76" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4"/>
+                <circle class="circle" cx="562.84" cy="76" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4"/>
                     <path d="M562.84,59.06A18.16,18.16,0,0,1,581,77.22H562.84Z" fill="#8dc5f2"/>
             </g>
             <g id="Layer_2-2" data-name="Layer 2">

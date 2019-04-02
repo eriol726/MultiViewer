@@ -16,8 +16,8 @@
     <tspan x="18.96" y="0" letter-spacing="-0.01em">a</tspan>
     <tspan x="24.99" y="0">y</tspan>
     </text>
-    <text transform="translate(32.41 136.54)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">Preview</text>
-    <path d="M71.27,170.5H41.75a12,12,0,0,1,0-24H71.27a12,12,0,0,1,0,24" fill="#f2f2f2"/>
+    <text class="preview" transform="translate(32.41 136.54)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">Preview</text>
+    <path id="switch-background" d="M71.27,170.5H41.75a12,12,0,0,1,0-24H71.27a12,12,0,0,1,0,24" fill="#f2f2f2"/>
     <path id="switch" d="M55.94,158a15,15,0,1,1-15-15,15,15,0,0,1,15,15" fill="#b3b3b3"/>
     <text transform="translate(120.12 79.29)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">Assigning a person to conduct x-ray check may help 
     <tspan x="0" y="25">make the security control process faster.</tspan>
