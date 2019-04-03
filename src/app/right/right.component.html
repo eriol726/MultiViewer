@@ -10,31 +10,42 @@
       [expanded]="isExpanded===i"
       hideToggle="true"
       *ngFor="let item of done1; let i = index" 
-      [attr.id]="i"
+      id='panel_{{i}}'
       
       #panelRight >
       <mat-expansion-panel-header  collapsedHeight="*" expandedHeight="*" (click)="expandTaskPanel(i)" >
-        <mat-panel-title style="height: 100%" >   
-          <iframe #iframe id='{{i+1}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="border: 0px" ></iframe>
+        <mat-panel-title  >   
+          <iframe #iframe id='{{i+1}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="border: 0px; flex-grow: 1; " ></iframe>
 
-            <iframe [hidden]="panelOpenState" id='{{i+1}}_AGV' class="panel-iframe" [src]='"assets/Rescheduling_Screen.svg" | safe' style="border: 0px"></iframe>
-            <iframe [hidden]="!panelOpenState" id='{{i+1}}_Overview_Screen' class="panel-iframe" [src]='"assets/Rescheduling_Overview_Screen.svg" | safe' style="border: 0px"></iframe>
+          <div style="flex-grow: 3">
+              <iframe  id='{{i+1}}_AGV' class="panel-iframe" [src]='"assets/Rescheduling_Screen_"+(i+1)+".svg" | safe' style="border: 0px; flex-grow: 1; height: 100%;width: 100%"></iframe>
+          </div>
+
+          <!-- *ngIf="panelOpenState == false;else other_content"  -->
+          
+          <!-- <ng-template #other_content >
+            <div style="flex-grow: 3">
+              <iframe  id='{{i+1}}_Overview_Screen' class="panel-iframe" [src]='"assets/Rescheduling_Screen_"+(i+1)+".svg" | safe' style=" border: 0px; flex-grow: 1; height: 100%;width: 100%;"></iframe>
+            </div>
+          </ng-template> -->
+          
+          
 
          
         </mat-panel-title>
       </mat-expansion-panel-header>
 
         <div class="cardList">
-          <div style="flex-grow: 1"  (dblclick)="selectCard(i)">
-            <iframe class="card" src="assets/Rescheduling_AGV3_Screen.svg" style="height: 350px;  border: 0px;  padding: 0px 10px;  " ></iframe>
+          <div style="flex-grow: 3"  (dblclick)="selectCard(i)">
+            <iframe id="card{{i}}_0" src="assets/Rescheduling_AGV3_Screen.svg" style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
           </div>
           
-          <div style="flex-grow: 2" (dblclick)="selectCard(i)">
-            <iframe class="card" src="assets/Rescheduling_AGV5_Screen.svg" style=" height: 350px;  border: 0px;  padding: 0px 10px;  " ></iframe>
+          <div style="flex-grow: 3" (dblclick)="selectCard(i)">
+            <iframe id="card{{i}}_1" src="assets/Rescheduling_AGV5_Screen.svg" style=" height: 100%; width: 100%;   border: 0px;  padding: 0px 10px;  " ></iframe>
           </div>
           
-          <div style="flex-grow: 4" (dblclick)="selectCard(i)">
-            <iframe class="card" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="height: 350px; border: 0px;  padding: 0px 10px;  " ></iframe>
+          <div style="flex-grow: 3" (dblclick)="selectCard(i)">
+            <iframe id="card{{i}}_2" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="height: 100%; width: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
           </div>
         </div>
     </mat-expansion-panel>

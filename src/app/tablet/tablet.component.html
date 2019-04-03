@@ -51,8 +51,8 @@
                   </mat-panel-title>
                 </mat-expansion-panel-header  >
           
-                  <div class="cardList" #cardList>
-                      <div  class="swiper-container" [swiper]="config" [(index)]="index">
+                  <div class="cardList" >
+                      <div  class="swiper-container" [swiper]="config" (indexChange)="onIndexChange($event)" #cardList>
                         <div class="swiper-wrapper" (dblclick)="selectCard(i)">
                           <div class="swiper-slide" >
                               <iframe class="card" src="assets/Rescheduling_Overview_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>

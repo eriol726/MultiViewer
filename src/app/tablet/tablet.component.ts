@@ -553,12 +553,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.focus = d3.select(".focus");
     console.log("cardlist: ", this.cardList);
-    console.log("switch: ", this.elRef.nativeElement.querySelector("[id='1']"));
+    console.log("switch: ", this.elRef.nativeElement.querySelector(".swiper-container"));
     console.log("switch: ", this.elRef.nativeElement.querySelector(".svgCM"));
     console.log("switch: ", this.elRef.nativeElement.querySelector(".cell"));
     console.log("switch: ", d3.select('.switch'));
     
     
+  }
+
+  onIndexChange(index: number) {
+    console.log('Swiper index: ' + index);
+    this.socket.sendSwipe(index);
   }
 
   resize(){

@@ -45,6 +45,11 @@ io.on('connection', (socket) => {
         io.emit('maximizeChart', {state: maximized});    
     });
 
+    socket.on('swipeCM', (index) => {
+        console.log("Message Received, zoom: " + index);
+        io.emit('swipeCM',index);    
+    });
+
 
 },{reconnection:false});
 

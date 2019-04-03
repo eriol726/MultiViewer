@@ -40,9 +40,18 @@ body{
     /* padding: 5px; */
 }
 
-.mat-expanded {
-    /* background-color: rgb(208, 230, 255); */
+.mat-expansion-panel-content {
+    flex: 1 !important;
 }
+
+.mat-expansion-panel-body {
+    flex: 1 !important;
+}
+
+
+/* .mat-expanded {
+    background-color: rgb(208, 230, 255);
+} */
 
 .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) 
 .mat-expansion-panel-header:hover 
@@ -58,24 +67,25 @@ body{
 }
 
 .mat-expansion-panel-header {
-    height: 100% !important;
+    height: auto!important; 
     padding: 0 0px !important; 
-    flex: 1;
+    flex: 1 !important;
     flex-direction: column !important;
 }
 
 
 .mat-expansion-panel-header-title{
     margin-right: 0px !important;
+    flex-grow: 1;
 }
-
+/* 
 .mat-expansion-panel-header-title > .panel-iframe  {
     flex-grow: 1;
 }
 
 .mat-expansion-panel-header-title > .panel-iframe ~ .panel-iframe {
     flex-grow: 3;
-}
+} */
 
 .iframeOverlay{
     position:absolute;
@@ -104,6 +114,7 @@ body{
 .cardList{
     display: flex;
     flex-direction: row;
+    height: 60vh;
 }
 
 

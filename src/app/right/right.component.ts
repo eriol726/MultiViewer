@@ -15,7 +15,8 @@ import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 export class RightComponent implements OnInit, AfterViewInit {
   // @Input() tasks: string;
-  @ViewChildren('iframe') iframes: QueryList<any>;;
+  @ViewChildren('iframe') iframes: QueryList<any>;openPanelIndex: number;
+;
   @ViewChildren('panel') panel;
   @ViewChild('panelRight') panelRight;
   open: any = [];
@@ -73,16 +74,44 @@ export class RightComponent implements OnInit, AfterViewInit {
       console.log("data: ", data);
       
       this.isExpanded = data.state;
+      this.openPanelIndex = data.closedIndex;
 
       document.getElementById("1_Overview_Screen")
       
       if(data.type === "task"){
         if(this.panelOpenState == false){
           this.panelOpenState = true;
-          document.getElementById("1_Overview_Screen").style.transform = "translate(-70px,0px)"
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
+          
+          for (let i = 0; i < this.done1.length; i++) {
+            if(i != data.closedIndex ){
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "0px";
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0";
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
+            }
+
+            if(i == data.closedIndex+1){
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
+            }
+          }
+          
+          if(data.closedIndex == 0){
+            console.log("panel height: ", this.elRef.nativeElement.querySelector('#panel_1'));
+
+            
+          }
+          
+          //document.getElementById("1_Overview_Screen").style.transform = "translate(-70px,0px)"
         }
         else{
           this.panelOpenState = false;
+          for (let i = 0; i < this.done1.length; i++) {
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
+          }
         }  
       }
         
@@ -114,6 +143,37 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.hidePanel = false;
       }
       
+    })
+
+    this.display.swipeCM().subscribe(index =>{
+      
+      console.log("swipe index: ", index);
+      console.log("CM: ",this.elRef.nativeElement.querySelector('#card'+index));
+      
+      
+      switch (index) {
+        case 0:
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "#f4f4f4";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "#fff";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "#fff";
+          break;
+        case 1:
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "#f4f4f4";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "#fff";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "#fff";
+          break;
+        case 2:
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "#f4f4f4";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "#fff";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "#fff";
+          break;
+      
+        default:
+          break;
+      }
+      
+      
+ 
     })
       
     
