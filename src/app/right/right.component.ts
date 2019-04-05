@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation, ElementRef, ViewChild, QueryList } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation, ElementRef, ViewChild, QueryList, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { AppComponent} from "../app.component";
 import { Injectable } from '@angular/core';
 import { LeftComponent } from "../left/left.component";
@@ -31,9 +31,10 @@ export class RightComponent implements OnInit, AfterViewInit {
   public isExpanded: number  = -1;
   public hideChart: boolean = true;
   public hidePanel: boolean = false;
-  public panelHeight2: string = "100px";
+  public panelHeight2: string =  "0px";
+  private initPanelItemHeight: string = "";
 
-  constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
+  constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
   }
 
   show(index){
@@ -58,7 +59,13 @@ export class RightComponent implements OnInit, AfterViewInit {
         CM.contentWindow.document.getElementById("switch-background").setAttribute("visibility" , "hidden");
         CM.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "hidden";
       }
-      
+
+      let fixedHeaderheigh = this.elRef.nativeElement.querySelector('.mat-expansion-panel-header').offsetHeight;
+      let fixedHeaderheigh0 = this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').offsetHeight;
+      let fixedHeaderheigh1 = this.elRef.nativeElement.querySelector('[id="mat-expansion-panel-header-0"]').offsetHeight;
+      let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
+      console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
+      this.initPanelItemHeight =  initPanelHeightNmbr+"px";
       //let numberOne: number = 1;
       //let CM1 = document.getElementById('1');
       
@@ -71,93 +78,54 @@ export class RightComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(){
     
-    //this.iframe._results[0].nativeElement.addEventListener('load', this.loadIframe.bind(this));
-    //console.log("iframe: ", this.iframe);
-    let fixedHeaderheigh = this.elRef.nativeElement.querySelector('.mat-expansion-panel-header');
-    
-    let fixedHeaderheigh2 = this.panelheader.changes.subscribe(result =>{
-      console.log("height subscribe: ", result._results[0]._element.nativeElement.offsetHeight)
-      //fixedHeaderheigh2 = result._results[0]._element.nativeElement.offsetHeight; 
-      //this.panelHeight2 = result._results[0]._element.nativeElement.offsetHeight;
-      
-    });
-
-    let fixedHeaderheigh1 = this.elRef.nativeElement.querySelector('.class-header');
-      console.log("fixedHeaderheigh1: ", fixedHeaderheigh1);
-    
 
     this.iframes.changes.subscribe(result =>{
       //console.log("result: ", result._results[0].nativeElement)
     })
-
+    
     this.display.expandItem().subscribe(data=>{
-      this.panelHeight2 = "216px";
-      let fixedHeaderheigh1 = this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').clientHeight;
-      let fixedHeaderheigh4 = document.getElementById('mat-expansion-panel-header-0').style.height = "216px";
-      console.log("fixedHeaderheigh4: ", fixedHeaderheigh4);
-      this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').style.height = "216px";
+      
+      
+      // this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').style.height = "216px";
       
       this.isExpanded = data.state;
       this.openPanelIndex = data.closedIndex;
 
 
-      // this.accordion.toArray()[data.closedIndex].expand();
-
-      // if(data.state < 0){
-      //   this.accordion.toArray()[data.closedIndex].collapse();
-      // }
+      this.panelHeight2 = this.initPanelItemHeight;
       
       
-      if(!this.panelOpenState ){
-        //this.elRef.nativeElement.querySelector('.header-class').offsetHeight);
 
+      if(this.panelOpenState == false){
+        this.panelOpenState = true;
+        console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
+        this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
+        
+        for (let i = 0; i < this.done1.length; i++) {
+          if(i != data.closedIndex ){
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "0px";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
+          }
 
+          //show the item under clicked item
+          if(i == data.closedIndex+1){
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
+          }
+        }
       }
-
-
-      document.getElementById("1_Overview_Screen")
-      
-      // if(data.type === "task"){
-      //   if(this.panelOpenState == false){
-      //     this.panelOpenState = true;
-      //     console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
-          
-      //     for (let i = 0; i < this.done1.length; i++) {
-      //       if(i != data.closedIndex ){
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "0px";
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0";
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
-      //       }
-
-      //       //show the item under clicked item
-      //       if(i == data.closedIndex+1){
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('transition',"none", "!important");
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
-      //       }
-      //     }
-          
-      //     if(data.closedIndex == 0){
-      //       console.log("panel height: ", this.elRef.nativeElement.querySelector('#panel_1'));
-
-            
-      //     }
-          
-      //     //document.getElementById("1_Overview_Screen").style.transform = "translate(-70px,0px)"
-      //   }
-      //   else{
-      //     // get back to normal panel state
-          
-      //     this.panelOpenState = false;
-      //     for (let i = 0; i < this.done1.length; i++) {
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";
-      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
-      //     }
-      //   }  
-      // }
+      else{
+        // get back to normal panel state
+        this.panelOpenState = false;
+        for (let i = 0; i < this.done1.length; i++) {
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
+        }
+      }  
+  
         
     });
     
@@ -226,7 +194,14 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   expandTaskPanel(index){
+
+
     
+  }
+
+  ngAfterViewChecked()
+  {
+    // this.cdRef.detectChanges();
   }
 
   ngOnInit(){
