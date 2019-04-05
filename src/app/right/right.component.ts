@@ -16,11 +16,13 @@ import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from "igniteui-a
 
 export class RightComponent implements OnInit, AfterViewInit {
   // @Input() tasks: string;
-  @ViewChildren('iframe') iframes: QueryList<any>;openPanelIndex: number;
+  @ViewChildren('iframe') iframes: QueryList<any>;
+  openPanelIndex: number;
   @ViewChildren(IgxExpansionPanelComponent) public accordion: QueryList<IgxExpansionPanelComponent>;
 
   @ViewChildren('panel') panel;
   @ViewChild('panelRight') panelRight;
+  @ViewChildren('panelHeader') panelheader: QueryList<any>;
   open: any = [];
 
   done1 = [];
@@ -29,6 +31,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   public isExpanded: number  = -1;
   public hideChart: boolean = true;
   public hidePanel: boolean = false;
+  public panelHeight2: string = "100px";
 
   constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
   }
@@ -62,71 +65,99 @@ export class RightComponent implements OnInit, AfterViewInit {
     
   }
 
+  ngOnChanges() {
+    
+  }
+
   ngAfterViewInit(){
     
     //this.iframe._results[0].nativeElement.addEventListener('load', this.loadIframe.bind(this));
     //console.log("iframe: ", this.iframe);
+    let fixedHeaderheigh = this.elRef.nativeElement.querySelector('.mat-expansion-panel-header');
+    
+    let fixedHeaderheigh2 = this.panelheader.changes.subscribe(result =>{
+      console.log("height subscribe: ", result._results[0]._element.nativeElement.offsetHeight)
+      //fixedHeaderheigh2 = result._results[0]._element.nativeElement.offsetHeight; 
+      //this.panelHeight2 = result._results[0]._element.nativeElement.offsetHeight;
+      
+    });
+
+    let fixedHeaderheigh1 = this.elRef.nativeElement.querySelector('.class-header');
+      console.log("fixedHeaderheigh1: ", fixedHeaderheigh1);
+    
 
     this.iframes.changes.subscribe(result =>{
-      console.log("result: ", result._results[0].nativeElement)
+      //console.log("result: ", result._results[0].nativeElement)
     })
 
     this.display.expandItem().subscribe(data=>{
-
-      console.log("data: ", data);
+      this.panelHeight2 = "216px";
+      let fixedHeaderheigh1 = this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').clientHeight;
+      let fixedHeaderheigh4 = document.getElementById('mat-expansion-panel-header-0').style.height = "216px";
+      console.log("fixedHeaderheigh4: ", fixedHeaderheigh4);
+      this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').style.height = "216px";
       
       this.isExpanded = data.state;
       this.openPanelIndex = data.closedIndex;
+
 
       // this.accordion.toArray()[data.closedIndex].expand();
 
       // if(data.state < 0){
       //   this.accordion.toArray()[data.closedIndex].collapse();
       // }
+      
+      
+      if(!this.panelOpenState ){
+        //this.elRef.nativeElement.querySelector('.header-class').offsetHeight);
+
+
+      }
+
 
       document.getElementById("1_Overview_Screen")
       
-      if(data.type === "task"){
-        if(this.panelOpenState == false){
-          this.panelOpenState = true;
-          console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
+      // if(data.type === "task"){
+      //   if(this.panelOpenState == false){
+      //     this.panelOpenState = true;
+      //     console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
+      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
           
-          for (let i = 0; i < this.done1.length; i++) {
-            if(i != data.closedIndex ){
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "0px";
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0";
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
-            }
+      //     for (let i = 0; i < this.done1.length; i++) {
+      //       if(i != data.closedIndex ){
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "0px";
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0";
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
+      //       }
 
-            //show the item under clicked item
-            if(i == data.closedIndex+1){
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('transition',"none", "!important");
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
-            }
-          }
+      //       //show the item under clicked item
+      //       if(i == data.closedIndex+1){
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('transition',"none", "!important");
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
+      //       }
+      //     }
           
-          if(data.closedIndex == 0){
-            console.log("panel height: ", this.elRef.nativeElement.querySelector('#panel_1'));
+      //     if(data.closedIndex == 0){
+      //       console.log("panel height: ", this.elRef.nativeElement.querySelector('#panel_1'));
 
             
-          }
+      //     }
           
-          //document.getElementById("1_Overview_Screen").style.transform = "translate(-70px,0px)"
-        }
-        else{
-          // get back to normal panel state
+      //     //document.getElementById("1_Overview_Screen").style.transform = "translate(-70px,0px)"
+      //   }
+      //   else{
+      //     // get back to normal panel state
           
-          this.panelOpenState = false;
-          for (let i = 0; i < this.done1.length; i++) {
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";
-              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
-          }
-        }  
-      }
+      //     this.panelOpenState = false;
+      //     for (let i = 0; i < this.done1.length; i++) {
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";
+      //         this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
+      //     }
+      //   }  
+      // }
         
     });
     

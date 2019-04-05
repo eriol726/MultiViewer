@@ -42,7 +42,11 @@ body{
 .mat-expansion-panel-header {
     padding: 0 0px !important; 
     flex-direction: column !important;
-    flex: 1 !important;
+    flex: 1;
+}
+
+.header-class{
+    /* min-height: 217px; */
 }
 
 .mat-expansion-panel-header-title{
@@ -76,5 +80,5 @@ body{
 .cardList{
     display: flex;
     flex-direction: row;
-    height: 57vh;
+    height: 50vh;
 }
