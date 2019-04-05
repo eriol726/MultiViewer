@@ -23,10 +23,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
-            "scripts": ["../MultiViewer/node_modules/pusher-js/dist/web/pusher.min.js"  
-            ]
+            "scripts": [  ]
           },
           "configurations": {
             "production": {
@@ -80,7 +79,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "assets": [

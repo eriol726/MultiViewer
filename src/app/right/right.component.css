@@ -28,6 +28,9 @@ body{
 
 .mat-expansion-panel  {
     border-radius: 0 !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
     transition: none !important;
     box-shadow: none !important;
     display: flex !important;
@@ -73,5 +76,5 @@ body{
 .cardList{
     display: flex;
     flex-direction: row;
-    height: 60vh;
+    height: 57vh;
 }

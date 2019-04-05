@@ -4,30 +4,31 @@
   </div>
   <div style="display: flex; flex-direction: column; min-height: 100%;" [hidden]="hidePanel">
   <mat-expansion-panel 
-      class="mat-elevation-z0"
       (opened)="panelOpenState = true"
       (closed)="panelOpenState = false"
       [expanded]="isExpanded===i"
       hideToggle="true"
       *ngFor="let item of done1; let i = index" 
       id='panel_{{i}}'
-      
+      [@.disabled]="true"
       #panelRight >
       <mat-expansion-panel-header  collapsedHeight="*" expandedHeight="*" (click)="expandTaskPanel(i)" >
         <mat-panel-title  >   
           <iframe #iframe id='{{i+1}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="border: 0px; flex-grow: 1; " ></iframe>
 
-          <div style="flex-grow: 3">
-              <iframe  id='{{i+1}}_AGV' class="panel-iframe" [src]='"assets/Rescheduling_Screen_"+(i+1)+".svg" | safe' style="border: 0px; flex-grow: 1; height: 100%;width: 100%"></iframe>
-          </div>
+          <div *ngIf="panelOpenState == false;else other_content"  style="flex-grow: 2" >
 
-          <!-- *ngIf="panelOpenState == false;else other_content"  -->
+                <iframe  id='{{i+1}}_AGV' class="panel-iframe" [src]='"assets/Rescheduling_Screen_"+(i+1)+".svg" | safe' style="border: 0px; flex: 5; height: 100%;width: 100%"></iframe>
+
+          </div>
           
-          <!-- <ng-template #other_content >
-            <div style="flex-grow: 3">
-              <iframe  id='{{i+1}}_Overview_Screen' class="panel-iframe" [src]='"assets/Rescheduling_Screen_"+(i+1)+".svg" | safe' style=" border: 0px; flex-grow: 1; height: 100%;width: 100%;"></iframe>
+          
+          <ng-template #other_content >
+            <div style="flex-grow: 2">
+              <iframe  id='{{i+1}}_Overview_Screen' class="panel-iframe" [src]='"assets/Rescheduling_Overview_Screen.svg" | safe' style="transform: translate(-100px, 0px); border: 0px; flex: 5; height: 100%;width: 100%;"></iframe>
             </div>
-          </ng-template> -->
+          </ng-template>
+          
           
         
          

@@ -90,7 +90,7 @@ export class RightComponent implements OnInit, AfterViewInit {
         if(this.panelOpenState == false){
           this.panelOpenState = true;
           console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
-          //this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
           
           for (let i = 0; i < this.done1.length; i++) {
             if(i != data.closedIndex ){
@@ -103,6 +103,7 @@ export class RightComponent implements OnInit, AfterViewInit {
             if(i == data.closedIndex+1){
               this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
               this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
+              this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('transition',"none", "!important");
               this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
             }
           }
@@ -117,6 +118,7 @@ export class RightComponent implements OnInit, AfterViewInit {
         }
         else{
           // get back to normal panel state
+          
           this.panelOpenState = false;
           for (let i = 0; i < this.done1.length; i++) {
               this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
