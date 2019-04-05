@@ -33,6 +33,7 @@
     "express": "^4.16.4",
     "greiner-hormann": "^1.4.1",
     "http": "0.0.0",
+    "igniteui-angular": "^7.2.3",
     "js-angusj-clipper": "^1.0.1",
     "js-clipper": "^1.0.1",
     "material-design-icons": "^3.0.1",

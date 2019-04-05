@@ -5,6 +5,7 @@ import { LeftComponent } from "../left/left.component";
 import { ActionService } from '../action.service';
 import { WebsocketService } from '../websocket.service';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from "igniteui-angular";
 
 @Component({
   selector: 'app-right',
@@ -16,7 +17,8 @@ import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 export class RightComponent implements OnInit, AfterViewInit {
   // @Input() tasks: string;
   @ViewChildren('iframe') iframes: QueryList<any>;openPanelIndex: number;
-;
+  @ViewChildren(IgxExpansionPanelComponent) public accordion: QueryList<IgxExpansionPanelComponent>;
+
   @ViewChildren('panel') panel;
   @ViewChild('panelRight') panelRight;
   open: any = [];
@@ -76,12 +78,19 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.isExpanded = data.state;
       this.openPanelIndex = data.closedIndex;
 
+      // this.accordion.toArray()[data.closedIndex].expand();
+
+      // if(data.state < 0){
+      //   this.accordion.toArray()[data.closedIndex].collapse();
+      // }
+
       document.getElementById("1_Overview_Screen")
       
       if(data.type === "task"){
         if(this.panelOpenState == false){
           this.panelOpenState = true;
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
+          console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
+          //this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
           
           for (let i = 0; i < this.done1.length; i++) {
             if(i != data.closedIndex ){
@@ -90,6 +99,7 @@ export class RightComponent implements OnInit, AfterViewInit {
               this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
             }
 
+            //show the item under clicked item
             if(i == data.closedIndex+1){
               this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
               this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
@@ -106,6 +116,7 @@ export class RightComponent implements OnInit, AfterViewInit {
           //document.getElementById("1_Overview_Screen").style.transform = "translate(-70px,0px)"
         }
         else{
+          // get back to normal panel state
           this.panelOpenState = false;
           for (let i = 0; i < this.done1.length; i++) {
               this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
@@ -149,6 +160,8 @@ export class RightComponent implements OnInit, AfterViewInit {
       
       console.log("swipe index: ", index);
       console.log("CM: ",this.elRef.nativeElement.querySelector('#card'+index));
+
+      
       
       
       switch (index) {

@@ -27,31 +27,26 @@ body{
   
 
 .mat-expansion-panel  {
-    /* height: 25%; */
     border-radius: 0 !important;
-    /* border: 2px solid; */
     transition: none !important;
     box-shadow: none !important;
-    /* margin: -2px !important; */
     display: flex !important;
-    flex-direction: column !important;
     flex: 1;
+    flex-direction: column !important;
     margin-bottom: 20px !important;
-    /* padding: 5px; */
 }
 
-.mat-expansion-panel-content {
+.mat-expansion-panel-header {
+    padding: 0 0px !important; 
+    flex-direction: column !important;
     flex: 1 !important;
 }
 
-.mat-expansion-panel-body {
-    flex: 1 !important;
+.mat-expansion-panel-header-title{
+    margin-right: 0px !important;
+    /* min-height: 250px; */
+
 }
-
-
-/* .mat-expanded {
-    background-color: rgb(208, 230, 255);
-} */
 
 .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) 
 .mat-expansion-panel-header:hover 
@@ -63,29 +58,9 @@ body{
     min-width: 100%;
     min-height: 100%;
     flex-direction: column !important;
+    width: 100%;
 
 }
-
-.mat-expansion-panel-header {
-    height: auto!important; 
-    padding: 0 0px !important; 
-    flex: 1 !important;
-    flex-direction: column !important;
-}
-
-
-.mat-expansion-panel-header-title{
-    margin-right: 0px !important;
-    flex-grow: 1;
-}
-/* 
-.mat-expansion-panel-header-title > .panel-iframe  {
-    flex-grow: 1;
-}
-
-.mat-expansion-panel-header-title > .panel-iframe ~ .panel-iframe {
-    flex-grow: 3;
-} */
 
 .iframeOverlay{
     position:absolute;
@@ -95,55 +70,8 @@ body{
     height:100%;
 }
 
-#circle {
-    background-color: rgba(255, 255, 255, 1);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    float: left;
-    border: 2px solid;
-}
-#title{
-    float: left;
-    margin: auto 4px;
-    font-size: 20px;
-}
-
-
-
 .cardList{
     display: flex;
     flex-direction: row;
     height: 60vh;
-}
-
-
-.cardBorder{
-
-    
-    height: 400px;
-    /*
-    width: 32%;
-    border: 3px solid;
-    margin-right: 10px;
-    background-color: #fff; */
-}
-
-.diag {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M1 0 L0 1 L99 100 L100 99' fill='black' /><path d='M0 99 L99 0 L100 1 L1 100' fill='black' /></svg>");
-    background-repeat:no-repeat;
-    background-position:center center;
-    background-size: 100% 100%, auto;
-}
-
-.cardLetter{
-    position: absolute;
-    bottom: 50px;
-    margin-right: auto;
-    margin-left: auto;
-    left: 0;
-    right: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 100px;
 }

@@ -23,6 +23,7 @@ import { SwiperModule } from 'ngx-swiper-wrapper';
 import { SWIPER_CONFIG } from 'ngx-swiper-wrapper';
 import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 import { SafePipe } from './safe.pipe';
+import { IgxIconModule, IgxExpansionPanelModule} from "igniteui-angular";
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   direction: 'horizontal',
@@ -55,6 +56,8 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
     PlotlyModule,
     SwiperModule,
     DragScrollModule,
+    IgxIconModule,
+    IgxExpansionPanelModule,
     DragulaModule.forRoot()
   ],
   providers: [
