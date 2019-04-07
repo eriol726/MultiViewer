@@ -32,7 +32,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   public hideChart: boolean = true;
   public hidePanel: boolean = false;
   public panelHeight2: string =  "0px";
-  private initPanelItemHeight: string = "";
+  private initPanelItemHeight: string = "0px";
 
   constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
   }
@@ -102,6 +102,7 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
         
         for (let i = 0; i < this.done1.length; i++) {
+          // remove all exept from the opened
           if(i != data.closedIndex ){
             this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "0px";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0";
@@ -113,6 +114,13 @@ export class RightComponent implements OnInit, AfterViewInit {
             this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
+          }
+          console.log("i: ", i, "this.done1.length :", this.done1.length);
+          if(data.closedIndex == this.done1.length-1){
+            
+            this.elRef.nativeElement.querySelector('#panel_'+(this.done1.length-2)).style.height = "100%";
+            this.elRef.nativeElement.querySelector('#panel_'+(this.done1.length-2)).style.flex = "0.25";
+            this.elRef.nativeElement.querySelector('#panel_'+(this.done1.length-2)).style.setProperty('margin-bottom', '20px', 'important');
           }
         }
       }

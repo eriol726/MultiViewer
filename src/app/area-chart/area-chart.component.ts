@@ -710,7 +710,6 @@ export class AreaChartComponent implements OnInit {
     });
 
     this.socket.lockItem().subscribe(data=>{
-      console.log("lock");
       this.selectCard(data.state);
     })
 

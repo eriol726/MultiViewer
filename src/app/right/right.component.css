@@ -28,10 +28,6 @@ body{
 
 .mat-expansion-panel  {
     border-radius: 0 !important;
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    -o-transition: none !important;
-    transition: none !important;
     box-shadow: none !important;
     display: flex !important;
     flex: 1;
@@ -45,13 +41,9 @@ body{
     flex: 1;
 }
 
-.header-class{
-    /* min-height: 217px; */
-}
 
 .mat-expansion-panel-header-title{
     margin-right: 0px !important;
-    /* min-height: 250px; */
 
 }
 

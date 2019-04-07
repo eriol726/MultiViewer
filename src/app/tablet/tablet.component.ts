@@ -146,7 +146,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   public isExpanded: number  = -1;
     
-  
+  private initPanelItemHeight: string = "0px";
+  public panelItemHeight: string = "20px";
  
   public thePanel;
   intersectionColor: d3.Area<[number, number]>;
@@ -246,11 +247,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
 
-    let iframeEl = this.elRef.nativeElement.querySelector("[id=" + CSS.escape(index+1) +"]");
-    console.log("iframeEl: ", iframeEl);
+    let iframeEl = this.elRef.nativeElement.querySelector("#main_svg_"+(index));
+    console.log("iframeEl: ", iframeEl, " i: ", index);
     console.log("card: ", iframeEl.contentWindow.document.getElementsByClassName("arrow"));
     
+    
     if(this.panelOpenState){
+
+      this.panelItemHeight = this.initPanelItemHeight;
       this.isExpanded = index;
       this.socket.sendExpand("task",index,index);
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
@@ -258,7 +262,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
       iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "hidden";
       if(index == 3){
-        this.elRef.nativeElement.querySelector("[id=" + CSS.escape("0") +"]").style.height = "0px";
+        this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "0px";
       }
       
     }
@@ -270,7 +274,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       //iframeEl.contentWindow.document.getElementsByTagName("mat-expansion-panel-header")[0].style.backgroundColor = "#f4f4f4";
       console.log("close: ", iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility);
       iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "visible";
-      this.elRef.nativeElement.querySelector("[id=" + CSS.escape("0") +"]").style.height = "100%";
+      this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "100%";
       this.socket.sendExpand("task",-1,index);
     }
 
@@ -525,14 +529,26 @@ export class TabletComponent implements OnInit, AfterViewInit {
   selectCard(index){
     
     console.log("index: ", index, "locked: ", this.selectedCM[index]);
+
+    let iframeEl = this.elRef.nativeElement.querySelector("#main_svg_"+index);
     if(this.lockedCM[index].locked){
       console.log("unlock");
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
       this.lockedCM[index].locked = false;
+      this.elRef.nativeElement.querySelector('#card_'+index+"_0").style.backgroundColor = "#fff";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_1").style.backgroundColor = "#fff";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_2").style.backgroundColor = "#fff";
+      iframeEl.contentWindow.document.getElementById('cm_rect_background').setAttribute("fill" , "#fff");
+      iframeEl.style.backgroundColor = "#f4f4f4";
     }
     else{
-      console.log("locked");
-      this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
+      console.log("locked: ", this.elRef.nativeElement.querySelectorAll('.card'));
+      this.elRef.nativeElement.querySelector('#card_'+index+"_0").style.backgroundColor = "yellow";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_1").style.backgroundColor = "yellow";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_2").style.backgroundColor = "yellow";
+      iframeEl.style.backgroundColor = "yellow";
+      console.log("rect: ", iframeEl.contentWindow.document.getElementsByClassName('cm_background')[0]);
+      iframeEl.contentWindow.document.getElementById('cm_rect_background').setAttribute("fill" , "yellow");
       this.lockedCM[index].locked = true
     }
 
@@ -551,6 +567,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
+    
     this.focus = d3.select(".focus");
     console.log("cardlist: ", this.cardList);
     console.log("switch: ", this.elRef.nativeElement.querySelector(".swiper-container"));
@@ -559,6 +576,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
     console.log("switch: ", d3.select('.switch'));
     
     
+  }
+
+  loadIframe(){
+    let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
+    console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
+    this.initPanelItemHeight =  initPanelHeightNmbr+"px";
+    this.panelItemHeight = this.initPanelItemHeight;
   }
 
   onIndexChange(index: number) {

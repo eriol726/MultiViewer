@@ -1,6 +1,5 @@
 
-    <div class="box">
-        
+    <div class="box">      
       <div [hidden]="false">
           
         <div class="grid" >
@@ -27,43 +26,39 @@
           
           <div class="cell" style="z-index: 3; height: 70vh; " >
               <app-area-chart id="chart1"></app-area-chart>
-          </div>
+          </div> 
           
           <div class="cell" >
-            <div
-              dragula="COPYABLE" id="right"
-              class="example-list-right"
-              > 
+            <div dragula="COPYABLE" id="right" class="example-list-right"> 
               <mat-expansion-panel class="mat-elevation-z0"
                                   (opened)="panelOpenState = true"
                                   (closed)="panelOpenState = false"
                                   [expanded]="isExpanded===i"
                                   hideToggle="true"
                                   *ngFor="let item of tasks; let i = index" 
-                                  [attr.id]="i"
+                                  [attr.id]='"panel_item_"+i'
                                   #panelRight >
-                <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*" (click)="expandTaskPanel(i)" >
-                  <mat-panel-title  >
-
-                        <iframe id='{{i+1}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="width: 100%; height: 100%;  border: 0px;"></iframe>
+                <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
+                  <mat-panel-title  [style.height]="panelItemHeight">
+                        <iframe id='main_svg_{{i}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' (load)="loadIframe()" style="border: 0px; flex-grow: 1; "></iframe>
                         <div class="iframeOverlay"></div>
 
                   </mat-panel-title>
-                </mat-expansion-panel-header  >
+                </mat-expansion-panel-header >
           
                   <div class="cardList" >
-                      <div  class="swiper-container" [swiper]="config" (indexChange)="onIndexChange($event)" #cardList>
+                      <div  class="swiper-container" [swiper]="config" (indexChange)="onIndexChange($event)" style="height: 100%;" #cardList>
                         <div class="swiper-wrapper" (dblclick)="selectCard(i)">
                           <div class="swiper-slide" >
-                              <iframe class="card" src="assets/Rescheduling_Overview_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                              <iframe id="card_{{i}}_0" class="card" src="assets/Rescheduling_Overview_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
                               <div class="iframeOverlay"></div>
                           </div>
                           <div class="swiper-slide" >
-                              <iframe class="card" src="assets/Rescheduling_AGV5_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                              <iframe id="card_{{i}}_1" class="card" src="assets/Rescheduling_AGV5_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
                               <div class="iframeOverlay"></div>
                           </div>
                           <div class="swiper-slide" >
-                              <iframe class="card" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                              <iframe id="card_{{i}}_2" class="card" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
                               <div class="iframeOverlay"></div>
                           </div>
                           
@@ -77,16 +72,19 @@
                   </div >
                 
               </mat-expansion-panel>
+              <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" style="margin-top: 10px">
+                <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
+                  <mat-panel-title  >
+                  </mat-panel-title>
+                </mat-expansion-panel-header >
+              </mat-expansion-panel>
             </div>
           </div>
           <!-- <div class="cell"></div> -->
           <div class="cell" (dblclick)="resize()" ></div>
           <!-- <div class="cell" ></div> -->
         </div>
-      </div>
-      <!-- <div [hidden]="false">
-        <app-area-chart id="chart2"></app-area-chart>
-      </div> -->
+      </div> 
 
     </div>
     
