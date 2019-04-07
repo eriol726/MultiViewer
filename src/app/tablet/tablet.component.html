@@ -72,12 +72,14 @@
                   </div >
                 
               </mat-expansion-panel>
-              <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" style="margin-top: 10px">
+              <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" >
                 <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
-                  <mat-panel-title  >
-                  </mat-panel-title>
                 </mat-expansion-panel-header >
               </mat-expansion-panel>
+              <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" >
+                  <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
+                  </mat-expansion-panel-header >
+                </mat-expansion-panel>
             </div>
           </div>
           <!-- <div class="cell"></div> -->
