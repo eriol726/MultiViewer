@@ -1,91 +1,94 @@
 
     <div class="box">      
-      <div [hidden]="false">
-          
-        <div class="grid" >
-            
-          <div class="cell">
-            <p>ACTION PLAN</p>
-          </div>
-          <div class="cell">
-              <p>LATE PASSENGERS</p>
-          </div>
-          <div class="cell">
-            COUNTERMEASURES
-          </div>
-          
-          <div class="cell">
-            <div
-              dragula="COPYABLE" id="left"
-              class="example-list"
-              (click)="closeLeftPanel($event.target)"
-              >
-            
+      <div [hidden]="false" style="display: flex; height: 100%">
+          <div class="column">
+            <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
+              <p>ACTION PLAN</p>
+            </div>
+
+            <div class="cell" style="flex: 0 0 95%;">
+              <div
+                dragula="COPYABLE" id="left"
+                class="example-list"
+                (click)="closeLeftPanel($event.target)">
+              </div>
             </div>
           </div>
-          
-          <div class="cell" style="z-index: 3; height: 70vh; " >
-              <app-area-chart id="chart1"></app-area-chart>
-          </div> 
-          
-          <div class="cell" >
-            <div dragula="COPYABLE" id="right" class="example-list-right"> 
-              <mat-expansion-panel class="mat-elevation-z0"
-                                  (opened)="panelOpenState = true"
-                                  (closed)="panelOpenState = false"
-                                  [expanded]="isExpanded===i"
-                                  hideToggle="true"
-                                  *ngFor="let item of tasks; let i = index" 
-                                  [attr.id]='"panel_item_"+i'
-                                  #panelRight >
-                <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
-                  <mat-panel-title  [style.height]="panelItemHeight">
-                        <iframe id='main_svg_{{i}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' (load)="loadIframe()" style="border: 0px; flex-grow: 1; "></iframe>
-                        <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
 
-                  </mat-panel-title>
-                </mat-expansion-panel-header >
-          
-                  <div class="cardList" >
-                      <div  class="swiper-container" [swiper]="config" (indexChange)="onIndexChange($event)" style="height: 100%;" #cardList>
-                        <div class="swiper-wrapper" (dblclick)="selectCard(i)">
-                          <div class="swiper-slide" >
-                              <iframe id="card_{{i}}_0" class="card" src="assets/Rescheduling_Overview_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                              <div class="iframeOverlay"></div>
+          <div class="column">
+            <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
+                <p>LATE PASSENGERS</p>
+            </div>
+
+            <div class="cell" style="z-index: 3; flex: 0 0 60%; " >
+              <app-area-chart id="chart1"></app-area-chart>
+            </div>
+
+            <div class="cell" style="flex: 0 0 35.0%; ">
+              <iframe  src="assets/Flight_Information_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>            
+            </div>
+          </div> 
+
+          <div class="column">
+            <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
+              <p>COUNTERMEASURES</p>
+            </div>
+
+            <div class="cell" style="flex: 0 0 95%; ">
+              <div dragula="COPYABLE" id="right" class="example-list-right"> 
+                <mat-expansion-panel class="mat-elevation-z0"
+                                    (opened)="panelOpenState = true"
+                                    (closed)="panelOpenState = false"
+                                    [expanded]="isExpanded===i"
+                                    hideToggle="true"
+                                    *ngFor="let item of tasks; let i = index" 
+                                    [attr.id]='"panel_item_"+i'
+                                    #panelRight >
+                  <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
+                    <mat-panel-title  [style.height]="panelItemHeight">
+                          <iframe id='main_svg_{{i}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' (load)="loadIframe()" style="border: 0px; flex-grow: 1; "></iframe>
+                          <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
+  
+                    </mat-panel-title>
+                  </mat-expansion-panel-header >
+            
+                    <div class="cardList" >
+                        <div  class="swiper-container" [swiper]="config" (indexChange)="onIndexChange($event)" style="height: 100%;" #cardList>
+                          <div class="swiper-wrapper" (dblclick)="selectCard(i)">
+                            <div class="swiper-slide" >
+                                <iframe id="card_{{i}}_0" class="card" src="assets/Rescheduling_Overview_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                                <div class="iframeOverlay"></div>
+                            </div>
+                            <div class="swiper-slide" >
+                                <iframe id="card_{{i}}_1" class="card" src="assets/Rescheduling_AGV5_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                                <div class="iframeOverlay"></div>
+                            </div>
+                            <div class="swiper-slide" >
+                                <iframe id="card_{{i}}_2" class="card" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
+                                <div class="iframeOverlay"></div>
+                            </div>
+                            
                           </div>
-                          <div class="swiper-slide" >
-                              <iframe id="card_{{i}}_1" class="card" src="assets/Rescheduling_AGV5_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                              <div class="iframeOverlay"></div>
-                          </div>
-                          <div class="swiper-slide" >
-                              <iframe id="card_{{i}}_2" class="card" src="assets/Rescheduling_Previous_Usage_Screen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                              <div class="iframeOverlay"></div>
-                          </div>
+                          <div class="swiper-pagination"></div>
+                            <div class="arrowUp">
+                              <svg><polyline  points="298.58 166.55 318.36 181.53 338.14 166.55" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                            </div>
                           
                         </div>
-                        <div class="swiper-pagination"></div>
-                          <div class="arrowUp">
-                            <svg><polyline  points="298.58 166.55 318.36 181.53 338.14 166.55" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-                          </div>
-                        
-                      </div>
-                  </div >
-                
-              </mat-expansion-panel>
-              <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" >
-                <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
-                </mat-expansion-panel-header >
-              </mat-expansion-panel>
-              <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" >
+                    </div >
+                  
+                </mat-expansion-panel>
+                <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" >
                   <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
                   </mat-expansion-panel-header >
                 </mat-expansion-panel>
-            </div>
-          </div>
-          <!-- <div class="cell"></div> -->
-          <div class="cell" (dblclick)="resize()" ></div>
-          <!-- <div class="cell" ></div> -->
-        </div>
+                <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" >
+                    <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
+                    </mat-expansion-panel-header >
+                  </mat-expansion-panel>
+              </div>
+            </div> <!-- cell -->
+          </div> <!-- column -->
       </div> 
 
     </div>
