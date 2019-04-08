@@ -291,31 +291,31 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
       iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "hidden";
-      if(index == 3){
-        this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "0px";
-      }
-
+      // if(index == 3){
+      //   this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "0px";
+      // }
+      this.elRef.nativeElement.querySelector('#panel_item_'+index).style.flex = "initial";
       for (let i = 0; i < this.tasks.length; i++) {
         // remove all exept from the opened
         if(i != index ){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
-          this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "0px";
-          this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "0";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
+          // this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "0px";
+          // this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "0";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
         }
   
-        //show the item under clicked item
+        //show the panel item under clicked item
         if(i == index+1){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
         }
-        console.log("i: ", i, "this.done1.length :", this.tasks.length);
+        // if last panel item is expanded show panel item above
         if(index == this.tasks.length-1){
           
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.height = "auto";
-          this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.flex = "0.25";
+          // this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.flex = "1";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.setProperty('margin-bottom', '0px', 'important');
         }
       }
@@ -334,7 +334,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       for (let i = 0; i < this.tasks.length; i++) {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
-        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
         this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "1";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
