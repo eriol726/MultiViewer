@@ -147,7 +147,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public isExpanded: number  = -1;
     
   private initPanelItemHeight: string = "0px";
-  public panelItemHeight: string = "20px";
+  public panelItemHeight: string = "21px";
  
   public thePanel;
   intersectionColor: d3.Area<[number, number]>;
@@ -168,9 +168,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
         //   spaceBetween: 100
         // });
 
-      let drake = dragulaService.createGroup('COPYABLE', {
+      let drake1 = dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
           console.log("source.id: ", source.id);
+          console.log("el: ", el);
           return source.id === 'right';
         },
         accepts: (el, target, source, sibling) => {
@@ -179,7 +180,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
           let isCopyAble = (target.id !== 'right');
 
-          if (this.done.some((x,i) => i.toString() == el.id) ){
+          let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
+          if (this.done.some((x,i) => i == taskIndex) ){
             isCopyAble = false;
           }else{
             
@@ -206,40 +208,67 @@ export class TabletComponent implements OnInit, AfterViewInit {
           
           return prevent; // don't prevent any drags from initiating by default
         }.bind(this),
-        
 
       }).drake.on("drop", function(el,target, source){
+        
         if(target){
           // if CM is not in action plan push
-          console.log("this.done: ", this.done);
-          if (!this.done.some((x,i) => x.text == el.id) ){
-            this.done.push(this.tasks[el.id]);
+          let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
+          if (!this.done.some((x,i) => x.text == taskIndex) ){
+            
+            this.done.push(this.tasks[taskIndex]);
             this.isExpanded = -1;//parseInt(el.id);
-            console.log("this.tasks: ", this.tasks);
-            this.socket.sendMove("change",0,0,this.tasks[el.id]);
-            //this.isExpanded = parseInt(el.id) == this.isExpanded ? -1 : parseInt(el.id);
+            this.socket.sendMove("change",0,0,this.tasks[taskIndex]);
    
             el.style.backgroundColor = "yellow";
-            this.elRef.nativeElement.querySelector('.example-list-right').children[el.id].style.backgroundColor = "gray";
+            el.id = "panel_item_copy_"+taskIndex;
+            el.querySelector('#main_svg_'+taskIndex).id = "main_svg_copy_"+taskIndex;
+
+            this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "gray";
 
           }
+
+          for (let i = 0; i < this.tasks.length; i++) {
+            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
+            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+            this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
+            this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "1";
+            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+          }
+          let mainSvg = this.elRef.nativeElement.querySelector("#main_svg_"+(taskIndex));
+          mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
+          mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
+          mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
+          
         }
           
       }.bind(this));
+
+      drake1.on("cloned", function(clone,original, type){
+        console.log("type: ", type);
+        console.log("clone: ", clone);
+        console.log("original: ", original);
+      });
       
       
  
     
   }
 
-  closeLeftPanel(){
-    console.log("length: ", this.elRef.nativeElement.querySelector('.example-list'));
-    console.log("this.done.length: ", this.done.length);
+  closeLeftPanel(elementRef){
+    console.log("index: ", parseInt(elementRef.id[elementRef.id.length-1]));
+    let index = parseInt(elementRef.id[elementRef.id.length-1]);
+    
     for (let index = 0; index < this.done.length; index++) {
       this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.height = "0px";
       this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.visibility = "hidden";
       
     }
+    let expandedPanelItem = this.elRef.nativeElement.querySelector("#panel_item_copy_"+index);
+    let newClassName = expandedPanelItem.className.replace("mat-expanded", "");
+    expandedPanelItem.children[0].className = newClassName;
+    expandedPanelItem.className = newClassName
+    console.log("newClassName: ", newClassName);
     
     
   }
@@ -257,6 +286,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.panelItemHeight = this.initPanelItemHeight;
       this.isExpanded = index;
       this.socket.sendExpand("task",index,index);
+      console.log("switch: ", iframeEl.contentWindow.document.getElementById("switch"));
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
@@ -277,14 +307,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
   
         //show the item under clicked item
         if(i == index+1){
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
         }
         console.log("i: ", i, "this.done1.length :", this.tasks.length);
         if(index == this.tasks.length-1){
           
-          this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.height = "100%";
+          this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.flex = "0.25";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.setProperty('margin-bottom', '0px', 'important');
         }
@@ -299,13 +329,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
       //iframeEl.contentWindow.document.getElementsByTagName("mat-expansion-panel-header")[0].style.backgroundColor = "#f4f4f4";
       console.log("close: ", iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility);
       iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "visible";
-      this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "100%";
+      this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "auto";
       this.socket.sendExpand("task",-1,index);
 
       for (let i = 0; i < this.tasks.length; i++) {
-        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-        this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "100%";
+        this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "1";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
       }

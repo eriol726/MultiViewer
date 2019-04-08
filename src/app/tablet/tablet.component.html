@@ -18,7 +18,7 @@
             <div
               dragula="COPYABLE" id="left"
               class="example-list"
-              (click)="closeLeftPanel()"
+              (click)="closeLeftPanel($event.target)"
               >
             
             </div>
@@ -41,7 +41,7 @@
                 <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
                   <mat-panel-title  [style.height]="panelItemHeight">
                         <iframe id='main_svg_{{i}}' class="svgCM" [src]='"assets/cm_" + (i+1) + ".svg" | safe' (load)="loadIframe()" style="border: 0px; flex-grow: 1; "></iframe>
-                        <div class="iframeOverlay"></div>
+                        <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
 
                   </mat-panel-title>
                 </mat-expansion-panel-header >
