@@ -155,6 +155,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   curveFactorLocked: number = 0;
   isMaximized: boolean = false;
 
+  hideTabletPanels = false;
+
   constructor(private actionService : ActionService, 
               private socket : WebsocketService, 
               private http: HttpClient, 
@@ -168,7 +170,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         //   spaceBetween: 100
         // });
 
-      let drake1 = dragulaService.createGroup('COPYABLE', {
+        dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
           console.log("source.id: ", source.id);
           console.log("el: ", el);
@@ -177,9 +179,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
         accepts: (el, target, source, sibling) => {
           // To avoid dragging from left to right container
           //console.log("hej ", drake.drake.dragging);
-
+          console.log("target.id: ", target.id);
           let isCopyAble = (target.id !== 'right');
-
+          
           let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
           if (this.done.some((x,i) => i == taskIndex) ){
             isCopyAble = false;
@@ -195,23 +197,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
         },
         invalid: function (el, handle) {
           let prevent = false;
-          //console.log("el: ", el.querySelector(".cardList"));
-          console.log("handle: ", handle.className);
+
           if(handle.className == "swiper-slide swiper-slide-active"){
             console.log("hej");
-            //el.className += " mat-expanded";
-            //this.elRef.nativeElement.querySelector('.example-list').children[el.id].children[1];
-      
-            // prevent = true;
-            //console.log("this.isExpanded: ", this.elRef.nativeElement.querySelector('.example-list').children[el.id].children);
           }
           
           return prevent; // don't prevent any drags from initiating by default
         }.bind(this),
 
       }).drake.on("drop", function(el,target, source){
-        
+        console.log("drop target", target);
         if(target){
+          
           // if CM is not in action plan push
           let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
           if (!this.done.some((x,i) => x.text == taskIndex) ){
@@ -243,15 +240,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
         }
           
       }.bind(this));
-
-      drake1.on("cloned", function(clone,original, type){
-        console.log("type: ", type);
-        console.log("clone: ", clone);
-        console.log("original: ", original);
-      });
-      
-      
- 
     
   }
 
@@ -656,54 +644,62 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.socket.sendSwipe(index);
   }
 
+  middleSwipe(){
+    console.log("click");
+  }
+
   resize(){
-    if(this.hideChart){
-      this.hideChart = false;
-      this.hidePanel = true;
-    }
-    else{
-      this.hideChart = true;
-      this.hidePanel = false;
-    }
-    console.log("resize");
-    console.log("maximize", this.elRef.nativeElement.querySelectorAll('.cell'));
-    let cellClass = this.elRef.nativeElement.querySelectorAll('.cell');
-    if(!this.isMaximized){
-      this.isMaximized = true;
-      for (let index = 0; index < cellClass.length; index++) {
-        if(index != 4 && index != 7){
-          cellClass[index].style.zIndex = "-20";
-          cellClass[index].style.visibility = "hidden";
-          cellClass[index].style.height = "0px"
-          cellClass[index].style.flex = "0 0 0";
-        }
-        else if (index == 4){
-          cellClass[index].style.flex = "0 0 100%";
-        }
+    console.log("hide");
+    this.hideTabletPanels = true;
+
+    this.focus.attr("transform", "translate(0,170)");
+    // if(this.hideChart){
+    //   this.hideChart = false;
+    //   this.hidePanel = true;
+    // }
+    // else{
+    //   this.hideChart = true;
+    //   this.hidePanel = false;
+    // }
+    // console.log("resize");
+    // console.log("maximize", this.elRef.nativeElement.querySelectorAll('.cell'));
+    // let cellClass = this.elRef.nativeElement.querySelectorAll('.cell');
+    // if(!this.isMaximized){
+    //   this.isMaximized = true;
+    //   for (let index = 0; index < cellClass.length; index++) {
+    //     if(index != 4 && index != 7){
+    //       cellClass[index].style.zIndex = "-20";
+    //       cellClass[index].style.visibility = "hidden";
+    //       cellClass[index].style.height = "0px"
+    //       cellClass[index].style.flex = "0 0 0";
+    //     }
+    //     else if (index == 4){
+    //       cellClass[index].style.flex = "0 0 100%";
+    //     }
         
-      }
-      this.zoomed(true);
-    }
-    else{
-      this.isMaximized = false;
-      for (let index = 0; index < cellClass.length; index++) {
+    //   }
+    //   this.zoomed(true);
+    // }
+    // else{
+    //   this.isMaximized = false;
+    //   for (let index = 0; index < cellClass.length; index++) {
         
-        if(index > 2 && index < 6){
-          cellClass[index].style.zIndex = "2";
-          cellClass[index].style.visibility = "visible";
-          cellClass[index].style.height = "78vh";
-          cellClass[index].style.flex = "0 0 33%";
-        }
-        else{
-          cellClass[index].style.zIndex = "2";
-          cellClass[index].style.visibility = "visible";
-          cellClass[index].style.height = "10vh";
-          cellClass[index].style.flex = "0 0 33%";
-        }
+    //     if(index > 2 && index < 6){
+    //       cellClass[index].style.zIndex = "2";
+    //       cellClass[index].style.visibility = "visible";
+    //       cellClass[index].style.height = "78vh";
+    //       cellClass[index].style.flex = "0 0 33%";
+    //     }
+    //     else{
+    //       cellClass[index].style.zIndex = "2";
+    //       cellClass[index].style.visibility = "visible";
+    //       cellClass[index].style.height = "10vh";
+    //       cellClass[index].style.flex = "0 0 33%";
+    //     }
         
-      }
-      this.zoomed(false);
-    }
+    //   }
+    //   this.zoomed(false);
+    // }
     
     this.socket.sendMaximized(true);
 

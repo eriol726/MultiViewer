@@ -60,12 +60,12 @@ export class RightComponent implements OnInit, AfterViewInit {
         CM.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "hidden";
       }
 
-      let fixedHeaderheigh = this.elRef.nativeElement.querySelector('.mat-expansion-panel-header').offsetHeight;
-      let fixedHeaderheigh0 = this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').offsetHeight;
-      let fixedHeaderheigh1 = this.elRef.nativeElement.querySelector('[id="mat-expansion-panel-header-0"]').offsetHeight;
-      let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
-      console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
-      this.initPanelItemHeight =  initPanelHeightNmbr+"px";
+      if(document.getElementById('mat-expansion-panel-header-0')){
+        let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
+        console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
+        this.initPanelItemHeight =  initPanelHeightNmbr+"px";
+      }
+      
       //let numberOne: number = 1;
       //let CM1 = document.getElementById('1');
       
