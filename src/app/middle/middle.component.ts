@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef  } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
@@ -23,6 +23,7 @@ export interface Margin {
 export class MiddleComponent implements OnInit {
   @ViewChild('chart') private chartContainer: ElementRef;
   @ViewChild('row') private rowContainer: ElementRef;
+  @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
   @Input() private data: Array<any>;
 
   private margin: Margin;
@@ -109,7 +110,7 @@ export class MiddleComponent implements OnInit {
     //     .attr('height', this.height);
     
     this.focus = d3.select(".focus");
-    this.focus.attr("transform", "translate(40, 20 )");
+    this.focus.attr("transform", "translate(0, 20 )");
     console.log("this.focus: ", d3.select(".focus"));
     
 
@@ -147,7 +148,7 @@ export class MiddleComponent implements OnInit {
     if(!this.allreadySet){
       console.log("brushTransform.x :", brushTransform.x );
       let transX = brushTransform.x*-1;
-      let scaleX = 0.223;
+      let scaleX = 0.230;
 
     
       this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
@@ -206,36 +207,37 @@ export class MiddleComponent implements OnInit {
     
     console.log("this.focus: ", this.focus);
     // append history line
-    this.focus.append('g')
-    .attr('class', 'axis axis--x')
-    .attr('transform', 'translate(0,' + this.height + ')')
-    .call(this.xAxis)
-    .append("rect")
-    .attr("x", (d) => {
-      let date = new Date(2018,1,1,6,0,0);
-      return this.x(date);
-    })
-    .attr("y", -500)
-    .attr("width", 2)
-    .attr("height", 600 )
-    .attr("fill", "black")
+    // this.focus.append('g')
+    // .attr('class', 'axis axis--x')
+    // .attr('transform', 'translate(0,' + this.height + ')')
+    // .call(this.xAxis)
+    // .append("rect")
+    // .attr("x", (d) => {
+    //   let date = new Date(2018,1,1,6,0,0);
+    //   return this.x(date);
+    // })
+    // .attr("y", -500)
+    // .attr("width", 2)
+    // .attr("height", 600 )
+    // .attr("fill", "black")
 
     
-    this.focus.append('g')
-    .attr('class', 'axis axis--y')
-    .call(this.yAxis);
+    // this.focus.append('g')
+    // .attr('class', 'axis axis--y')
+    // .call(this.yAxis);
 
-    this.focus.append('g')
-        .attr('class', 'brush') 
-        .call(this.brush2)
-        .call(this.brush2.move, this.x2.range());
+    //append brush
+    // this.focus.append('g')
+    //     .attr('class', 'brush top') 
+    //     .call(this.brush2)
+    //     .call(this.brush2.move, this.x2.range());
 
-    this.svg.append('rect')
-        .attr('class', 'zoom')
-        .attr('width', this.width)
-        .attr('height', this.height)
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
-        .call(this.zoom);
+    // this.svg.append('rect')
+    //     .attr('class', 'zoom')
+    //     .attr('width', this.width)
+    //     .attr('height', this.height)
+    //     .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
+    //     .call(this.zoom);
 
        // this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
 
@@ -255,9 +257,14 @@ export class MiddleComponent implements OnInit {
 
       this.zoomed(true,minDate,maxDate,data.brushTransform);
     })
+    //this.viewContainerRef._data.renderElement.firstChild.style.height = "";
+    this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
+    //this.placeholder.nativeElement.firstChild.style.paddingTop = "150px";
+
+
     this.initSvg();
 
-    this.drawChart(TEMPERATURES);
+    //this.drawChart(TEMPERATURES);
 
     this.display.maximizeChart().subscribe(data=>{
       this.zoomed(false,0,0,0);

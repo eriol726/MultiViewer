@@ -3,16 +3,24 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700);
 
 .row {
-    float: left;
-    padding: 10px;
-    height: 100vh;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0px;
+    /* float: left;
+    padding: 10px; */
+    width:100vw;
+    height:100vh;
+    /* box-sizing: border-box;
+    padding: 0px; */
     /*height: 300px;  Should be removed. Only for demonstration */
   }
 
 svg{
-    margin-top: 10%;
-    height: 55%; 
+    /* padding-top: 9%; */
+    /* height: 55%;  */
 }
+
+.selection{
+    stroke-width: 2px;
+    stroke: #2277d6;
+    height: 67%;
+    transform: translate(-20px,-10px);
+}
+

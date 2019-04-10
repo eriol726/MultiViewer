@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, TemplateRef, ContentChild, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
@@ -51,6 +51,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   graphDataOriginal = 0;
   graphDataImproved  = 0;
   
+  private otherContent: any;
   @ViewChildren('chartTablet') chartTablet;
   @ViewChildren('panelRight') panelRight;
   @ViewChildren('panelLeft') panelLeft;
@@ -61,6 +62,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('cell') cell: ElementRef;
   @ViewChild('appCompButton') appCompButton;
   @ViewChild('chart') mainChart: ElementRef;
+
+  @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
+
+  @ViewChild('contentPlaceholder') set content(content: any) {
+    this.otherContent = content;
+  }
   @ViewChildren('cardList') cardList: ElementRef;
 
   @ViewChild('chart') private chartContainer: ElementRef;
@@ -148,6 +155,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
   private initPanelItemHeight: string = "0px";
   public panelItemHeight: string = "21px";
+
+
  
   public thePanel;
   intersectionColor: d3.Area<[number, number]>;
@@ -162,7 +171,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private http: HttpClient, 
               private elRef:ElementRef,
               private dragulaService: DragulaService,
-              public sanitizer: DomSanitizer) { 
+              public sanitizer: DomSanitizer,
+              private changeDetector : ChangeDetectorRef) { 
 
        
         // mySwiper = new Swiper('.swiper-container', {
@@ -406,8 +416,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
     })
 
     this.done = [];
-
-    
     
     //this.initSvg();
     //this.drawChart(TEMPERATURES);
@@ -649,10 +657,19 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   resize(){
-    console.log("hide");
+    
     this.hideTabletPanels = true;
+    this.changeDetector.detectChanges();
+    let focus1 = d3.select(".focus");
 
-    this.focus.attr("transform", "translate(0,170)");
+    console.log("viewContainerRef", this.viewContainerRef._data.renderElement.firstChild.style);
+    console.log("otherContent", this.otherContent.focus);
+    this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
+    //focus1 = this.otherContent.select('focus');
+    //this.otherContent.focus.attr("transform", "translate(0,250)");
+    //this.elRef.nativeElement.querySelector("#chart2").style.paddingTop = "150px";
+    this.focus.attr("fill", "black");
+
     // if(this.hideChart){
     //   this.hideChart = false;
     //   this.hidePanel = true;
