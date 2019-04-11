@@ -16,7 +16,7 @@
               #panelRight >
               <mat-expansion-panel-header [collapsedHeight]="panelHeight2" [expandedHeight]="panelHeight2" (click)="expandTaskPanel(i)" #panelHeader >
                 <mat-panel-title  >   
-                  <iframe #iframe id='{{i+1}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/cm_" + (i+1) + ".svg" | safe' style="border: 0px; flex-grow: 1; " ></iframe>
+                  <iframe #iframe id='cm_left_{{i+1}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/Screen/Right/r_0_left_screen.svg" | safe' style="border: 0px; flex-grow: 1; " ></iframe>
         
                   <div *ngIf="isExpanded!==i;else other_content"  style="flex-grow: 2" >
                     <iframe  id='{{i+1}}_AGV' class="panel-iframe" [src]='"assets/Screen/Right/r_"+i+"_right_Screen.svg" | safe' style="border: 0px; flex: 5; height: 100%;width: 100%"></iframe>

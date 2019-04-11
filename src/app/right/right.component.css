@@ -28,7 +28,7 @@ body{
 
 .mat-expansion-panel  {
     border-radius: 0 !important;
-    box-shadow: none !important;
+    /* box-shadow: none !important; */
     display: flex !important;
     flex: 1;
     flex-direction: column !important;

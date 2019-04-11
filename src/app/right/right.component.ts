@@ -51,14 +51,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   loadIframe(index){
 
       console.log("i: ", index)
-      if(index>0){
-        let CM = this.elRef.nativeElement.querySelector("[id=" + CSS.escape(index.toString()) +"]");
-        CM.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
-        CM.contentWindow.document.getElementsByClassName("preview")[0].setAttribute("visibility" , "hidden");
-        CM.contentWindow.document.getElementById("switch").setAttribute("visibility" , "hidden");
-        CM.contentWindow.document.getElementById("switch-background").setAttribute("visibility" , "hidden");
-        CM.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "hidden";
-      }
+
 
       if(document.getElementById('mat-expansion-panel-header-0')){
         let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
@@ -95,12 +88,15 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.panelHeight2 = this.initPanelItemHeight;
       
       
-
+      let mainSvg = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex+1));
       if(this.panelOpenState == false){
         this.panelOpenState = true;
         console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
-        this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4"
+        this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4";
         
+        mainSvg.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
+        
+      
         for (let i = 0; i < this.done1.length; i++) {
           // remove all exept from the opened
           if(i != data.closedIndex ){
@@ -127,6 +123,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       else{
         // get back to normal panel state
         this.panelOpenState = false;
+        mainSvg.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
         for (let i = 0; i < this.done1.length; i++) {
             this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";

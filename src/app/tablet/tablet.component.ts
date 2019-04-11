@@ -240,7 +240,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
             this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
             this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "1";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+            //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
           }
           let mainSvg = this.elRef.nativeElement.querySelector("#main_svg_"+(taskIndex));
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
@@ -300,21 +300,21 @@ export class TabletComponent implements OnInit, AfterViewInit {
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
           // this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "0px";
           // this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "0";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+          //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
         }
   
         //show the panel item under clicked item
         if(i == index+1){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+          //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
         }
         // if last panel item is expanded show panel item above
         if(index == this.tasks.length-1){
           
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.height = "auto";
           // this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.flex = "1";
-          this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.setProperty('margin-bottom', '0px', 'important');
+          //this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.setProperty('margin-bottom', '0px', 'important');
         }
       }
       
@@ -335,7 +335,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
         this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "1";
-        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+        //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
       }
     }
 
