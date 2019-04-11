@@ -2,6 +2,13 @@
 
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700);
 
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+
 .row {
     /* float: left;
     padding: 10px; */
@@ -23,4 +30,6 @@ svg{
     height: 67%;
     transform: translate(-20px,-10px);
 }
+
+
 

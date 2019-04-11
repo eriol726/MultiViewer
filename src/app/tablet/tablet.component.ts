@@ -597,17 +597,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("unlock");
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
       this.lockedCM[index].locked = false;
-      this.elRef.nativeElement.querySelector('#card_'+index+"_0").style.backgroundColor = "#fff";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_1").style.backgroundColor = "#fff";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_2").style.backgroundColor = "#fff";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_A").style.backgroundColor = "#fff";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_B").style.backgroundColor = "#fff";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_C").style.backgroundColor = "#fff";
       iframeEl.contentWindow.document.getElementById('cm_rect_background').setAttribute("fill" , "#fff");
       iframeEl.style.backgroundColor = "#f4f4f4";
     }
     else{
       console.log("locked: ", this.elRef.nativeElement.querySelectorAll('.card'));
-      this.elRef.nativeElement.querySelector('#card_'+index+"_0").style.backgroundColor = "yellow";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_1").style.backgroundColor = "yellow";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_2").style.backgroundColor = "yellow";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_A").style.backgroundColor = "yellow";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_B").style.backgroundColor = "yellow";
+      this.elRef.nativeElement.querySelector('#card_'+index+"_C").style.backgroundColor = "yellow";
       iframeEl.style.backgroundColor = "yellow";
       console.log("rect: ", iframeEl.contentWindow.document.getElementsByClassName('cm_background')[0]);
       iframeEl.contentWindow.document.getElementById('cm_rect_background').setAttribute("fill" , "yellow");
@@ -641,10 +641,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   loadIframe(){
-    let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
-    console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
-    this.initPanelItemHeight =  initPanelHeightNmbr+"px";
-    this.panelItemHeight = this.initPanelItemHeight;
+    setTimeout(() => {
+      let initPanelHeightNmbr = this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight;
+      console.log("offsetHeight nativeElement: ", this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight);
+      this.initPanelItemHeight =  initPanelHeightNmbr+"px";
+      this.panelItemHeight = this.initPanelItemHeight;
+    }, 1000);
+    
   }
 
   onIndexChange(index: number) {
@@ -658,17 +661,27 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   resize(){
     
-    this.hideTabletPanels = true;
-    this.changeDetector.detectChanges();
-    let focus1 = d3.select(".focus");
 
-    console.log("viewContainerRef", this.viewContainerRef._data.renderElement.firstChild.style);
-    console.log("otherContent", this.otherContent.focus);
-    this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
+    if(!this.hideTabletPanels){
+      this.hideTabletPanels = true;
+      this.changeDetector.detectChanges();
+      let focus1 = d3.select(".focus");
+
+      console.log("viewContainerRef", this.viewContainerRef._data.renderElement.firstChild.style);
+      console.log("otherContent", this.otherContent.focus);
+      this.socket.sendMaximized(true);
+      this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
+    }
+    else{
+      this.hideTabletPanels = false;
+      this.socket.sendMaximized(false);
+    }
+     
+    
     //focus1 = this.otherContent.select('focus');
     //this.otherContent.focus.attr("transform", "translate(0,250)");
     //this.elRef.nativeElement.querySelector("#chart2").style.paddingTop = "150px";
-    this.focus.attr("fill", "black");
+
 
     // if(this.hideChart){
     //   this.hideChart = false;
@@ -718,7 +731,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //   this.zoomed(false);
     // }
     
-    this.socket.sendMaximized(true);
+    
 
   }
 
