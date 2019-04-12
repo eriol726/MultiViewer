@@ -192,13 +192,17 @@ export class AreaChartComponent implements OnInit {
 
     switch(index){
       case 0: {
-        
+          let fade = 0;
           this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
         
 
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+            if(i > 200 && i < 249){
+              return this.y(TEMPERATURES[7].values[i].temperature+ fade++);
+            }
+
             if(i> 249 && i < 331  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }

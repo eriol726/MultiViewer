@@ -15,9 +15,6 @@
 }
 
 .row {
-    float: left;
-    width: calc(100% - 20px);
-    padding: 10px;
     height: 100vh;
     /*height: 300px;  Should be removed. Only for demonstration */
   }

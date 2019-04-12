@@ -245,7 +245,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           let mainSvg = this.elRef.nativeElement.querySelector("#main_svg_"+(taskIndex));
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
-          mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
+          //mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
           
         }
           

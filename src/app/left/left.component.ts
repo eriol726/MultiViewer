@@ -94,14 +94,14 @@ export class LeftComponent implements OnInit, AfterViewInit {
     
     this.svg = d3.select(".CMchart");
     console.log("this.svg: ", this.svg);
-    this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
+    this.margin = { top: 20, right: 0, bottom: 30, left: 0 };
 
     this.xLinear = d3.scaleLinear();
     this.xTime = d3.scaleTime();
     this.y = d3.scaleBand().padding(0.1);
 
     this.g = this.svg.append("g")
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+      .attr("transform", "translate(" + 0 + "," + 0 + ")")
       .attr("class", "CMhistory");
   
 
@@ -134,7 +134,13 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.xLinear.rangeRound([0, this.width]);
     this.xTime.rangeRound([0, this.width]);
 
-    this.xTime.domain([TEMPERATURES[0].values[70].date,TEMPERATURES[0].values[148].date]);
+    let index = -1;
+    let startDate = new Date(2018,1,1,11,14,0);
+    let endDate = new Date(2018,1,1,14,47,0);
+    let filteredObj = TEMPERATURES[0].values.findIndex(item => item.date === startDate);
+
+
+    this.xTime.domain([startDate,endDate]);
     this.y.domain([0,5]);
     
     this.g.select(".axis--x")
@@ -142,7 +148,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
     .call(d3.axisBottom(this.xTime)
     .tickFormat(d3.timeFormat('%H:%M')));
     
-    let date = new Date(2018,1,1,6,0,0);
+    let date = new Date(2018,1,1,12,0,0);
     let x = this.xTime(date);
 
     this.g.select(".historyLine")
@@ -174,7 +180,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
             return this.xTime(startDate);
           }.bind(this))
           .attr("y", function(d, i) {				//Set new y position, based on the updated yScale
-            return 25*i;
+            return 25*i+100;
           }.bind(this))
           .attr("width",  function(d) {
             console.log("this.xTime(d.endDate): ", this.xTime(d.endDate));
@@ -198,10 +204,10 @@ export class LeftComponent implements OnInit, AfterViewInit {
       .attr("text-anchor", "middle")
       .attr("x", function(d, i) {
         let startDate = new Date(d.startDate);
-        return this.xTime(startDate)+this.margin.right;
+        return this.xTime(startDate)+this.margin.right+20;
       }.bind(this))
       .attr("y", function(d, i) {
-          return 25*i+15;
+          return 25*i+15+100;
       })
       .attr("font-family", "sans-serif")
       .attr("font-size", "11px")
