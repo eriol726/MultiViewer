@@ -3,7 +3,7 @@
 @import 'dragulaStyle.css';
 
 @font-face {
-    font-family: titillium;
+    font-family: Titillium;
     src: url(../../assets/Titillium/Titillium-Regular.otf) format("opentype");
   }
 
@@ -117,7 +117,7 @@ drag-scroll {
 }
 
 .example-list > mat-expansion-panel {
-    background-color: rgb(251, 255, 20);
+    /* background-color: rgb(251, 255, 20); */
 }
 
 #title{
@@ -148,7 +148,7 @@ drag-scroll {
     flex: 1;
     flex-direction: column !important;
     margin-bottom: 10px !important;
-    background-color: #f4f4f4 !important;
+    /* background-color: #f4f4f4 !important; */
 }
 .mat-expansion-panel-header {
     padding: 0 0px !important; 
@@ -171,12 +171,12 @@ drag-scroll {
 .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) 
 .mat-expansion-panel-header:hover 
 {
-    background-color: #f4f4f4;
+    /* background-color: #fff; */
 }
 
 
 .mat-expanded {
-    background-color: rgb(255, 255, 255) !important;
+    /* background-color: rgb(255, 255, 255) !important; */
 }
 
 .mat-expansion-panel-body{
@@ -212,8 +212,13 @@ drag-scroll {
 }
 
 .swiper-pagination{
-    bottom: 0px !important;
+    /* bottom: 0px !important; */
 } 
+
+.swiper-container{
+    height: 100%; 
+    padding-bottom: 30px;
+}
 
 .swiper-slide {
     text-align: center;

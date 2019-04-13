@@ -180,7 +180,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         //   spaceBetween: 100
         // });
 
-        dragulaService.createGroup('COPYABLE', {
+      dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
           console.log("source.id: ", source.id);
           console.log("el: ", el);
@@ -190,33 +190,19 @@ export class TabletComponent implements OnInit, AfterViewInit {
           // To avoid dragging from left to right container
           //console.log("hej ", drake.drake.dragging);
           console.log("target.id: ", target.id);
+          console.log("el.id: ", el.id);
           let isCopyAble = (target.id !== 'right');
           
-          let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
-          if (this.done.some((x,i) => i == taskIndex) ){
-            isCopyAble = false;
-          }else{
-            
-            //console.log("added: ", this.elRef.nativeElement.querySelector("[id='1']"));
-           
-            
-            //el.children[0].style.backgroundColor = "blue";
-          }
-
-          return isCopyAble;
-        },
-        invalid: function (el, handle) {
-          let prevent = false;
-
-          if(handle.className == "swiper-slide swiper-slide-active"){
-            console.log("hej");
-          }
+          let taskIndex = el.id.toString()[el.id.toString().length-1];
           
-          return prevent; // don't prevent any drags from initiating by default
-        }.bind(this),
-
+          // if moved element exsist in this.done, dont copy it
+          if (this.done.some((x,i) => x.text == taskIndex) ){
+            isCopyAble = false;
+          }
+          return isCopyAble;
+        }
       }).drake.on("drop", function(el,target, source){
-        console.log("drop target", target);
+        console.log("drop target", target, " el: ", el);
         if(target){
           
           // if CM is not in action plan push
@@ -227,11 +213,21 @@ export class TabletComponent implements OnInit, AfterViewInit {
             this.isExpanded = -1;//parseInt(el.id);
             this.socket.sendMove("change",0,0,this.tasks[taskIndex]);
    
-            el.style.backgroundColor = "yellow";
+            // we must change the name of the copied elements so we now which background color we will change
             el.id = "panel_item_copy_"+taskIndex;
-            el.querySelector('#main_svg_'+taskIndex).id = "main_svg_copy_"+taskIndex;
 
             this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "gray";
+            let cards = el.querySelectorAll(".card");
+            for (let index = 0; index < cards.length; index++) {
+              el.querySelectorAll(".card")[index].id = "card_"+taskIndex+"_"+index+"_copy";
+              this.elRef.nativeElement.querySelector('#card_'+taskIndex+"_"+index).style.backgroundColor = "gray";
+              
+            }
+            
+            console.log("card: ", el.querySelectorAll(".card")[0].id);
+            el.querySelector('#main_svg_'+taskIndex).id = "main_svg_copy_"+taskIndex;
+
+          
 
           }
 
@@ -262,11 +258,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.visibility = "hidden";
       
     }
-    let expandedPanelItem = this.elRef.nativeElement.querySelector("#panel_item_copy_"+index);
-    let newClassName = expandedPanelItem.className.replace("mat-expanded", "");
-    expandedPanelItem.children[0].className = newClassName;
-    expandedPanelItem.className = newClassName
-    console.log("newClassName: ", newClassName);
+    // let expandedPanelItem = this.elRef.nativeElement.querySelector("#panel_item_copy_"+index);
+    // let newClassName = expandedPanelItem.className.replace("mat-expanded", "");
+    // expandedPanelItem.children[0].className = newClassName;
+    // expandedPanelItem.className = newClassName
+   // console.log("newClassName: ", newClassName);
     
     
   }
@@ -288,7 +284,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
-      iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "hidden";
       // if(index == 3){
       //   this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "0px";
       // }
@@ -325,8 +320,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
       //iframeEl.contentWindow.document.getElementsByTagName("mat-expansion-panel-header")[0].style.backgroundColor = "#f4f4f4";
-      console.log("close: ", iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility);
-      iframeEl.contentWindow.document.getElementsByTagName("image")[0].style.visibility = "visible";
       this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "auto";
       this.socket.sendExpand("task",-1,index);
 
@@ -591,26 +584,28 @@ export class TabletComponent implements OnInit, AfterViewInit {
   selectCard(index){
     
     console.log("index: ", index, "locked: ", this.selectedCM[index]);
-
+    let cards = this.elRef.nativeElement.querySelector("#panel_item_"+index).querySelectorAll(".card");
+    console.log("cards: ", cards);
     let iframeEl = this.elRef.nativeElement.querySelector("#main_svg_"+index);
     if(this.lockedCM[index].locked){
       console.log("unlock");
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
       this.lockedCM[index].locked = false;
-      this.elRef.nativeElement.querySelector('#card_'+index+"_A").style.backgroundColor = "#fff";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_B").style.backgroundColor = "#fff";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_C").style.backgroundColor = "#fff";
-      iframeEl.contentWindow.document.getElementById('cm_rect_background').setAttribute("fill" , "#fff");
-      iframeEl.style.backgroundColor = "#f4f4f4";
+
+      for (let i = 0; i < cards.length; i++) {
+        this.elRef.nativeElement.querySelector('#card_'+index+"_"+i).style.backgroundColor = "#fff";
+      }
+      this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "#fff";
     }
     else{
       console.log("locked: ", this.elRef.nativeElement.querySelectorAll('.card'));
-      this.elRef.nativeElement.querySelector('#card_'+index+"_A").style.backgroundColor = "yellow";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_B").style.backgroundColor = "yellow";
-      this.elRef.nativeElement.querySelector('#card_'+index+"_C").style.backgroundColor = "yellow";
-      iframeEl.style.backgroundColor = "yellow";
-      console.log("rect: ", iframeEl.contentWindow.document.getElementsByClassName('cm_background')[0]);
-      iframeEl.contentWindow.document.getElementById('cm_rect_background').setAttribute("fill" , "yellow");
+      for (let i = 0; i < cards.length; i++) {
+        console.log("card: ", this.elRef.nativeElement.querySelector("#card_"+index+"_"+i));
+        this.elRef.nativeElement.querySelector("#card_"+index+"_"+i).style.backgroundColor = "yellow";
+      }
+      this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "yellow";
+
+
       this.lockedCM[index].locked = true
     }
 
