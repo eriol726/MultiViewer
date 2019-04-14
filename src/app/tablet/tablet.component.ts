@@ -660,10 +660,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     if(!this.hideTabletPanels){
       this.hideTabletPanels = true;
       this.changeDetector.detectChanges();
-      let focus1 = d3.select(".focus");
 
-      console.log("viewContainerRef", this.viewContainerRef._data.renderElement.firstChild.style);
-      console.log("otherContent", this.otherContent.focus);
       this.socket.sendMaximized(true);
       this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
     }

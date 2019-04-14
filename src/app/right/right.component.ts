@@ -151,7 +151,7 @@ export class RightComponent implements OnInit, AfterViewInit {
     });
 
     this.display.maximizeChart().subscribe(data=>{
-      if(this.hideChart){
+      if(!this.hidePanel){
         this.hideChart = false;
         this.hidePanel = true;
       }

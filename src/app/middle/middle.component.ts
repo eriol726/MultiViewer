@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone  } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
 import { TEMPERATURES } from '../../data/temperatures';
 import { HttpClient } from '@angular/common/http';
 import { WebsocketService } from '../websocket.service';
+import { BehaviorSubject } from 'rxjs';
 
 export interface Margin {
   top: number;
@@ -20,7 +21,7 @@ export interface Margin {
   styleUrls: ['./middle.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MiddleComponent implements OnInit {
+export class MiddleComponent implements OnInit, AfterViewInit {
   @ViewChild('chart') private chartContainer: ElementRef;
   @ViewChild('row') private rowContainer: ElementRef;
   @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
@@ -56,11 +57,15 @@ export class MiddleComponent implements OnInit {
   zoomDate1: any;
   zoomDate2: any;
   allreadySet: boolean = false;
+  hideChart: boolean;
+  expanded1: boolean = false;
+  testvar: number = 55; 
+  testEmitter$ = new BehaviorSubject<boolean>(this.expanded1);
 
-  constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef) { }
+
+  constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
 
   ngOnInit() {
-
     
       
   }
@@ -180,6 +185,7 @@ export class MiddleComponent implements OnInit {
     
 
     this.allreadySet = true;
+    
    // this.focus.select(".clip-above1").attr("transform", "scale(0.2,1) translate(7400, 100 )");
 
     // if(!zoomFromTablet){
@@ -243,7 +249,29 @@ export class MiddleComponent implements OnInit {
 
   }
 
+  loadIframe(){
+    setTimeout(() => {
+      console.log( "Layer_2-2:" ,  );
+      let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+      
+      
+      
+      let x = chartBackground.contentWindow.document.getElementById("Layer_2-2").getBoundingClientRect().x;
+      let width = chartBackground.contentWindow.document.getElementById("Layer_2-2").getBoundingClientRect().width;
+      //this.viewContainerRef._data.renderElement.style.width= width+x+"px";
+      // the height of the entire screen
+      let height = this.viewContainerRef._data.renderElement.offsetHeight;
+      console.log( "chartBackground: " , height);
+
+      this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+x+","+height*0.25+"), scale(0.90)" );
+
+    },1000);
+  }
+
   ngAfterViewInit(){
+
+    
+    
     this.display.zoomChart().subscribe(data =>{
 
       let minDate = new Date(data.xDomainMin);
@@ -258,9 +286,11 @@ export class MiddleComponent implements OnInit {
       this.zoomed(true,minDate,maxDate,data.brushTransform);
     })
     //this.viewContainerRef._data.renderElement.firstChild.style.height = "";
-    this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
+    //this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
+    console.log("this.viewContainerRef._data.renderElement: ", this.viewContainerRef._data.renderElement.querySelector('.focus'));
     //this.placeholder.nativeElement.firstChild.style.paddingTop = "150px";
 
+    
 
     this.initSvg();
 
@@ -268,21 +298,22 @@ export class MiddleComponent implements OnInit {
 
     this.display.maximizeChart().subscribe(data=>{
       this.zoomed(false,0,0,0);
-    })
+      if(!this.expanded1){
+        this.expanded1 = true;
+        this.testEmitter$.next(this.expanded1);
 
+      }
+      else{
+        this.expanded1 = false;
+        this.testEmitter$.next(this.expanded1);
+        
+      }
+      console.log("expand", this.testvar);
+    })
+    
     // let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
     // this.x.domain(initDates);
     //this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
   }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    
-    
-  }
-  
- 
-  
-
 
 }

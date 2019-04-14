@@ -17,8 +17,8 @@ type MyType = {
 
 @Component({
   selector: 'app-left',
-  templateUrl: './left.component.html',
   encapsulation: ViewEncapsulation.None,
+  templateUrl: './left.component.html',
   styleUrls: ['./left.component.css']
 })
 
@@ -48,6 +48,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
   hideChart: boolean = true;
   hideCM: boolean= false;
+  testVar: number =55;
 
  
 // https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
@@ -234,19 +235,20 @@ export class LeftComponent implements OnInit, AfterViewInit {
     })
 
     this.display.maximizeChart().subscribe(data=>{
-      if(this.hideCM){
+      if(!this.hideChart){
         this.hideChart = true;
         this.hideCM = false;
+        this.testVar = 66;
         console.log("show CMchart");
       }
       else{
         console.log("hide CMchart");
         this.hideChart = false;
         this.hideCM = true;
+        this.testVar = 99;
       }
       
     })
-
   }
 
   private getContent(){
