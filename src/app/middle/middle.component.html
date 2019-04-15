@@ -1,11 +1,11 @@
 <!-- <plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot> -->
 <div class="row" #row>
-
         <div [hidden]="testEmitter$ | async" style="height:100%; width: 100%">
                 <iframe src="assets/Screen/Central/central_screen_nograph_ccp_activated.svg" (load)="loadIframe()" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
                 <app-area-chart id="chart2" style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; padding: 0px 0% 0px 0%" #contentPlaceholder></app-area-chart>
         </div>
         <div [hidden]="!testEmitter$ | async" style="height:100%; width: 100%">
-                <iframe src="assets/Screen/Central/Exp_TabletScreen_noGraph.svg" (load)="loadIframe()" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
+                
+                <iframe [src]="(graphEmitter$ | async) | safe" (load)="loadIframe()" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
         </div>
 </div>

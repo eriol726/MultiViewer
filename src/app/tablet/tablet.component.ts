@@ -155,8 +155,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
   private initPanelItemHeight: string = "0px";
   public panelItemHeight: string = "21px";
-
-
  
   public thePanel;
   intersectionColor: d3.Area<[number, number]>;
@@ -284,32 +282,27 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
-      // if(index == 3){
-      //   this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "0px";
-      // }
+
       this.elRef.nativeElement.querySelector('#panel_item_'+index).style.flex = "initial";
       for (let i = 0; i < this.tasks.length; i++) {
         // remove all exept from the opened
         if(i != index ){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
-          // this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "0px";
-          // this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "0";
-          //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+
+          let closedPanelItem = this.elRef.nativeElement.querySelector("#main_svg_"+(i));
+
+          closedPanelItem.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
+          closedPanelItem.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
         }
-  
         //show the panel item under clicked item
         if(i == index+1){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
-          //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
         }
         // if last panel item is expanded show panel item above
         if(index == this.tasks.length-1){
-          
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.height = "auto";
-          // this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.flex = "1";
-          //this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.setProperty('margin-bottom', '0px', 'important');
         }
       }
       
@@ -601,15 +594,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("locked: ", this.elRef.nativeElement.querySelectorAll('.card'));
       for (let i = 0; i < cards.length; i++) {
         console.log("card: ", this.elRef.nativeElement.querySelector("#card_"+index+"_"+i));
-        this.elRef.nativeElement.querySelector("#card_"+index+"_"+i).style.backgroundColor = "yellow";
+        this.elRef.nativeElement.querySelector("#card_"+index+"_"+i).style.backgroundColor = "#dce5ea";
       }
-      this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "yellow";
+      //gray
+      this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "#dce5ea";
 
 
       this.lockedCM[index].locked = true
     }
 
-    this.socket.sendLock("done",index);
+    this.socket.sendLock(this.lockedCM[index].locked,index);
     
   }
   
@@ -662,68 +656,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.changeDetector.detectChanges();
 
       this.socket.sendMaximized(true);
-      this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
+      this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "15%";
     }
     else{
       this.hideTabletPanels = false;
       this.socket.sendMaximized(false);
     }
-     
-    
-    //focus1 = this.otherContent.select('focus');
-    //this.otherContent.focus.attr("transform", "translate(0,250)");
-    //this.elRef.nativeElement.querySelector("#chart2").style.paddingTop = "150px";
-
-
-    // if(this.hideChart){
-    //   this.hideChart = false;
-    //   this.hidePanel = true;
-    // }
-    // else{
-    //   this.hideChart = true;
-    //   this.hidePanel = false;
-    // }
-    // console.log("resize");
-    // console.log("maximize", this.elRef.nativeElement.querySelectorAll('.cell'));
-    // let cellClass = this.elRef.nativeElement.querySelectorAll('.cell');
-    // if(!this.isMaximized){
-    //   this.isMaximized = true;
-    //   for (let index = 0; index < cellClass.length; index++) {
-    //     if(index != 4 && index != 7){
-    //       cellClass[index].style.zIndex = "-20";
-    //       cellClass[index].style.visibility = "hidden";
-    //       cellClass[index].style.height = "0px"
-    //       cellClass[index].style.flex = "0 0 0";
-    //     }
-    //     else if (index == 4){
-    //       cellClass[index].style.flex = "0 0 100%";
-    //     }
-        
-    //   }
-    //   this.zoomed(true);
-    // }
-    // else{
-    //   this.isMaximized = false;
-    //   for (let index = 0; index < cellClass.length; index++) {
-        
-    //     if(index > 2 && index < 6){
-    //       cellClass[index].style.zIndex = "2";
-    //       cellClass[index].style.visibility = "visible";
-    //       cellClass[index].style.height = "78vh";
-    //       cellClass[index].style.flex = "0 0 33%";
-    //     }
-    //     else{
-    //       cellClass[index].style.zIndex = "2";
-    //       cellClass[index].style.visibility = "visible";
-    //       cellClass[index].style.height = "10vh";
-    //       cellClass[index].style.flex = "0 0 33%";
-    //     }
-        
-    //   }
-    //   this.zoomed(false);
-    // }
-    
-    
+      
 
   }
 

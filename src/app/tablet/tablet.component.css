@@ -106,7 +106,7 @@ drag-scroll {
     min-height: 60px;
     overflow: hidden;
     display: block;
-    height: 102%;
+    height: 100%;
     width: 100%;
 }
 

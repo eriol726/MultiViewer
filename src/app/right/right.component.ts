@@ -84,22 +84,32 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.isExpanded = data.state;
       this.openPanelIndex = data.closedIndex;
 
-
+      console.log("this.openPanelIndex ", this.openPanelIndex);
+      console.log("this.openPanelIndex ", this.openPanelIndex);
       this.panelHeight2 = this.initPanelItemHeight;
       
       
-      let mainSvg = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex+1));
-      if(this.panelOpenState == false){
+      let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
+
+      if(data.state != -1){
         this.panelOpenState = true;
-        console.log("open panel: ", this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0));
+        
+        // set the first card background to gray
         this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4";
         
-        mainSvg.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
+        
         
       
         for (let i = 0; i < this.done1.length; i++) {
+          if(i == data.closedIndex){
+            console.log("mainSvg: ", expandedPanelItemLeft);
+            expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
+          }
+          
           // remove all exept from the opened
           if(i != data.closedIndex ){
+            let closedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+i);
+            closedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
             this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "0px";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '0px', 'important');
@@ -111,7 +121,7 @@ export class RightComponent implements OnInit, AfterViewInit {
             this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "0.25";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
           }
-          console.log("i: ", i, "this.done1.length :", this.done1.length);
+
           if(data.closedIndex == this.done1.length-1){
             
             this.elRef.nativeElement.querySelector('#panel_'+(this.done1.length-2)).style.height = "100%";
@@ -119,11 +129,12 @@ export class RightComponent implements OnInit, AfterViewInit {
             this.elRef.nativeElement.querySelector('#panel_'+(this.done1.length-2)).style.setProperty('margin-bottom', '20px', 'important');
           }
         }
+
       }
       else{
         // get back to normal panel state
         this.panelOpenState = false;
-        mainSvg.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+        expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
         for (let i = 0; i < this.done1.length; i++) {
             this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
             this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";
@@ -168,23 +179,21 @@ export class RightComponent implements OnInit, AfterViewInit {
       console.log("CM: ",this.elRef.nativeElement.querySelector('#card'+index));
 
       
-      
-      
       switch (index) {
         case 0:
           this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "#f4f4f4";
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "#fff";
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "#fff";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "";
           break;
         case 1:
           this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "#f4f4f4";
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "#fff";
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "#fff";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "";
           break;
         case 2:
           this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "#f4f4f4";
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "#fff";
-          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "#fff";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "";
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "";
           break;
       
         default:
@@ -194,6 +203,20 @@ export class RightComponent implements OnInit, AfterViewInit {
       
  
     })
+
+    this.display.lockItem().subscribe(data =>{
+      console.log("index: ", data);
+      if(data.type){
+        this.elRef.nativeElement.querySelector('#panel_'+data.state).style.background = "#dce5ea";
+      }
+      else{
+        this.elRef.nativeElement.querySelector('#panel_'+data.state).style.background = "";
+      }
+      
+      
+    })
+
+    
       
     
   }
@@ -218,6 +241,14 @@ export class RightComponent implements OnInit, AfterViewInit {
     })
     
     
+  }
+
+  createRange(number){
+    var items: number[] = [];
+    for(var i = 1; i <= number; i++){
+       items.push(i);
+    }
+    return items;
   }
 
   

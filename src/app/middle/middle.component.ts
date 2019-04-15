@@ -61,6 +61,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   expanded1: boolean = false;
   testvar: number = 55; 
   testEmitter$ = new BehaviorSubject<boolean>(this.expanded1);
+  
+  public expandedCentralSVG: string = "assets/Screen/Central/Exp_TabletScreen_noGraph.svg";
+  graphEmitter$ = new BehaviorSubject<string>(this.expandedCentralSVG);
 
 
   constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
@@ -146,7 +149,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     // this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     // this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
-
+    console.log("brushTransform.x :", brushTransform.x );
+    
     
     //this.x.domain(t.rescaleX(this.x2).domain());
     //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
@@ -273,6 +277,27 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     
     
     this.display.zoomChart().subscribe(data =>{
+      if(this.expanded1){
+        if(data.brushTransform.x >  -900){
+        
+          console.log("change graph", data.brushTransform.x);
+          this.expandedCentralSVG =  "assets/Screen/Central/central_screen_nograph_ccp_activated.svg";
+          this.graphEmitter$.next(this.expandedCentralSVG);
+        }
+        if(data.brushTransform.x < -900 && data.brushTransform.x > -2000){
+        
+          console.log("change graph", data.brushTransform.x);
+          this.expandedCentralSVG =  "assets/Expanded_View_RightScreen.svg";
+          this.graphEmitter$.next(this.expandedCentralSVG);
+        }
+        else if(data.brushTransform.x < -2000 && data.brushTransform.x > -900){
+    
+        }
+        else if(data.brushTransform.x < -9000){
+    
+        }
+      }
+        
 
       let minDate = new Date(data.xDomainMin);
       let maxDate = new Date(data.xDomainMax);

@@ -37,7 +37,7 @@ export class WebsocketService {
   }
 
   lockItem() {
-    let observable = new Observable<{type:String, state:number}>(observer => {
+    let observable = new Observable<{type:Boolean, state:number}>(observer => {
         this.socket.on('lockItem', (data) => {
           observer.next(data);
         });
