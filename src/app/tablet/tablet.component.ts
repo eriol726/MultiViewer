@@ -209,19 +209,25 @@ export class TabletComponent implements OnInit, AfterViewInit {
             
             this.done.push(this.tasks[taskIndex]);
             this.isExpanded = -1;//parseInt(el.id);
-            this.socket.sendMove("change",0,0,this.tasks[taskIndex]);
+            this.socket.sendMove("change",0,taskIndex,this.tasks[taskIndex]);
    
             // we must change the name of the copied elements so we now which background color we will change
             el.id = "panel_item_copy_"+taskIndex;
 
-            this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "gray";
+            // gray out when CM is chosen
+            //this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "#d9d9d9";
+            
+            el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
+            this.elRef.nativeElement.querySelector('#iframeOverlay_'+taskIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
+
             let cards = el.querySelectorAll(".card");
             for (let index = 0; index < cards.length; index++) {
               el.querySelectorAll(".card")[index].id = "card_"+taskIndex+"_"+index+"_copy";
-              this.elRef.nativeElement.querySelector('#card_'+taskIndex+"_"+index).style.backgroundColor = "gray";
               
+              this.elRef.nativeElement.querySelector('#card_'+taskIndex+"_"+index).style.backgroundColor = "rgba(217,217,217,0.68)";
             }
             
+
             console.log("card: ", el.querySelectorAll(".card")[0].id);
             el.querySelector('#main_svg_'+taskIndex).id = "main_svg_copy_"+taskIndex;
 
@@ -348,43 +354,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   
-
-  dropTasks(event: CdkDragDrop<string[]>) {
-    console.log("removed cm");
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.socket.sendMove("change",event.previousIndex,event.currentIndex,event.container.data);
-    } else {
-      
-      transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
-      this.socket.sendMove("add",event.previousIndex,event.currentIndex,event.container.data);
-      console.log("green transfer prevData: ", event.container.data[event.previousIndex], " \n currentData" , event.container.data[event.currentIndex]);
-    }
-  }
-  dropDones(event: CdkDragDrop<string[]>) {
-    console.log("inside selected cm");
-
-    
-
-
-
-    if (event.previousContainer === event.container) {
-      console.log("move done");
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.socket.sendMove("changeDone",event.previousIndex,event.currentIndex,event.container.data);
-
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
-      this.socket.sendMove("remove",event.previousIndex,event.currentIndex,event.container.data);
-    }
-    console.log("blue transfer prevData:")
-  }
 
   private getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;

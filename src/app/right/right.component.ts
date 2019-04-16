@@ -84,8 +84,6 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.isExpanded = data.state;
       this.openPanelIndex = data.closedIndex;
 
-      console.log("this.openPanelIndex ", this.openPanelIndex);
-      console.log("this.openPanelIndex ", this.openPanelIndex);
       this.panelHeight2 = this.initPanelItemHeight;
       
       
@@ -146,19 +144,17 @@ export class RightComponent implements OnInit, AfterViewInit {
     });
     
     this.display.moveItem().subscribe(data=>{
-      if(data.type === "changeDone"){
-        console.log("data.previousIndex: ", data.previousIndex, " \n data.currentIndex: ", data.currentIndex);
-        moveItemInArray(this.done1, data.previousIndex, data.currentIndex);
-      }
-      else if(data.type === "add"){
-        transferArrayItem(this.done1,
-          [],
-          data.previousIndex,
-          data.currentIndex);
-
-      } else if(data.type === "remove"){
-        //this.done1.content = data.containerData;
-      }
+      console.log("data: ", data.currentIndex);
+      this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+data.currentIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
+      this.isExpanded = -1;
+      this.panelOpenState = false;
+      let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
+        expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+        for (let i = 0; i < this.done1.length; i++) {
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.height = "100%";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.flex = "1";
+            this.elRef.nativeElement.querySelector('#panel_'+i).style.setProperty('margin-bottom', '20px', 'important');
+        }
     });
 
     this.display.maximizeChart().subscribe(data=>{
