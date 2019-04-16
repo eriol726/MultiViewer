@@ -110,7 +110,9 @@ export class AreaChartComponent implements OnInit {
   private lockedCM = [{"locked": false, "graphFactor": 5},
                       {"locked": false, "graphFactor": 20},
                       {"locked": false, "graphFactor": 10},
-                      {"locked": false, "graphFactor": 15}];
+                      {"locked": false, "graphFactor": 15},
+                      {"locked": false, "graphFactor": 0},
+                      {"locked": false, "graphFactor": 2}];
 
   public isExpanded: number  = -1;
   public fade = 0;
@@ -274,6 +276,14 @@ export class AreaChartComponent implements OnInit {
         }));
         this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
         break;
+      }
+      case 4:{
+        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
+        this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+        this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+      }
+      case 5:{
+        this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
       }
       default: {
         break;

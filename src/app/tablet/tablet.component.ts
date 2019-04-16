@@ -613,6 +613,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.socket.sendSwipe(index);
   }
 
+  CCP_activation(index: number) {
+    console.log('Swiper index: ' + index);
+    this.socket.sendExpand("task",index+4,0);
+    this.socket.sendCCP(1);
+  }
+
   middleSwipe(){
     console.log("click");
   }

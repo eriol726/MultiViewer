@@ -28,7 +28,7 @@
             </div>
 
             <div class="cell" style="border-top: 5px solid red; background-color: #fff ">
-              <div  class="swiper-container" [swiper]="config" >
+              <div  class="swiper-container" [swiper]="config" (indexChange)="CCP_activation($event)" >
                 <div class="swiper-wrapper" (dblclick)="resize()">
                   <div class="swiper-slide" >
                     <iframe src="assets/Tablet/Central/m_1_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
@@ -97,11 +97,11 @@
                 </mat-expansion-panel>
                 
 
-                <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" >
+                <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4" >
                   <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight"  >
                   </mat-expansion-panel-header >
                 </mat-expansion-panel>
-                <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" >
+                <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4">
                   <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" >
                   </mat-expansion-panel-header >
                 </mat-expansion-panel>
@@ -111,9 +111,9 @@
       </div>
       <ng-template #other_content >
          
-          <iframe src="assets/Expanded_View_CentralScreen_noGraph.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
-          <app-area-chart id="chart2" style="width: 100%; height: 100%;; position: absolute; top: 0px; left: 0px " #contentPlaceholder></app-area-chart>
-          <div (dblclick)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; background-color: red; "></div>
+        <iframe src="assets/Expanded_View_CentralScreen_noGraph.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
+        <app-area-chart id="chart2" style="width: 100%; height: 100%;; position: absolute; top: 0px; left: 0px " #contentPlaceholder></app-area-chart>
+        <div (dblclick)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; background-color: red; "></div>
       </ng-template> 
 
     </div>

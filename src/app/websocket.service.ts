@@ -96,6 +96,18 @@ export class WebsocketService {
     return observable;
   }
 
+  switchCCP(){
+    let observable = new Observable<number>(observer => {
+      this.socket.on('swipeCM', (data) => {
+        observer.next(data);
+      });
+      return () => {
+        this.socket.disconnect();
+      }
+    });
+    return observable;
+  }
+
   sendExpand(data, data1, data2){
     this.socket.emit('expandItem', data, data1, data2 );
   }
@@ -117,6 +129,10 @@ export class WebsocketService {
   }
 
   sendSwipe(data){
+    this.socket.emit('swipeCM',data);
+  }
+
+  sendCCP(data){
     this.socket.emit('swipeCM',data);
   }
 }

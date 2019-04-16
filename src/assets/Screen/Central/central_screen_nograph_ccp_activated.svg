@@ -48,7 +48,7 @@
                 <line x1="1759.64" y1="115.9" x2="1756.14" y2="889.51" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
                 <line x1="1613.34" y1="115.22" x2="1609.84" y2="888.83" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
                 <line x1="1467.05" y1="114.58" x2="1463.54" y2="888.19" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
-                <line x1="1320.75" y1="113.82" x2="1317.24" y2="888.81" fill="none" stroke="#e2e2e2" stroke-miterlimit="10"/>
+                <line id="lineAppend" x1="1320.75" y1="113.82" x2="1317.24" y2="888.81" fill="none" stroke="#e2e2e2" stroke-miterlimit="10"/>
                 <line x1="1174.45" y1="111.14" x2="1170.94" y2="888.13" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
                 <line x1="1028.15" y1="109.57" x2="1024.7" y2="888.3" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
                 <line x1="1101.27" y1="109.57" x2="1097.82" y2="888.3" fill="none" stroke="#e2e2e2" stroke-miterlimit="10" opacity="0.47"/>

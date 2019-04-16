@@ -50,6 +50,11 @@ io.on('connection', (socket) => {
         io.emit('swipeCM',index);    
     });
 
+    socket.on('switchCCP', (index) => {
+        console.log("Message Received, zoom: " + index);
+        io.emit('swipeCM',index);    
+    });
+
 
 },{reconnection:false});
 

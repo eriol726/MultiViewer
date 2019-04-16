@@ -336,6 +336,13 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       console.log("expand", this.testvar);
     })
     
+    this.display.switchCCP().subscribe(data =>{
+      let mainSvg = this.elRef.nativeElement.querySelector("#chartBackground");
+      console.log("append line: ", mainSvg.contentWindow.document.getElementById("lineAppend"));
+          var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'assets/Screen/Central/m_2_Screen.svg');
+         // mainSvg.contentWindow.document.getElementById("lineAppend").appendCild(newElement);
+      //lineAppend 1320.75
+    })
     // let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
     // this.x.domain(initDates);
     //this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
