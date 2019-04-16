@@ -61,10 +61,17 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   hideChart: boolean;
   expanded1: boolean = false;
   testvar: number = 55; 
-  testEmitter$ = new BehaviorSubject<boolean>(this.expanded1);
+  isExpandedEmitter$ = new BehaviorSubject<boolean>(this.expanded1);
   
+  message1_X: number = 0;
+  message1_Y: number = 0;
+
+  message2_X: number = 0;
+  message2_Y: number = 0;
+
   public expandedCentralSVG: string = "assets/Screen/Central/CentralScreen_noGraph_expanded.svg";
   graphEmitter$ = new BehaviorSubject<string>(this.expandedCentralSVG);
+  chartBackground: any;
 
 
   constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
@@ -256,32 +263,51 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
   loadIframe(){
     setTimeout(() => {
-      console.log( "Layer_2-2:" ,  );
-      let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       
-      chartBackground.contentWindow.document.getElementById("Message_2").style.visibility = "hidden";
-      chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
-      chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
-      chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
-      chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
-      chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
-      chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
-      chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
-      chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
+      this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+      
+      this.message1_X = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().x;
+      this.message1_Y = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().y;
 
-      let x = chartBackground.contentWindow.document.getElementById("Layer_2-2").getBoundingClientRect().x;
-      let width = chartBackground.contentWindow.document.getElementById("Layer_2-2").getBoundingClientRect().width;
+
+      console.log("message elm: ", this.elRef.nativeElement.querySelector("#message_1_elm"));
+      this.elRef.nativeElement.querySelector("#message_1_elm").style.top = this.message1_Y+"px";
+      this.elRef.nativeElement.querySelector("#message_1_elm").style.left = this.message1_X+"px";
+
+      this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "hidden";
+      this.elRef.nativeElement.querySelector("#message_2_elm").style.top = this.message1_Y+"px";
+      this.elRef.nativeElement.querySelector("#message_2_elm").style.left = this.message1_X+"px";
+
+      this.chartBackground.contentWindow.document.getElementById("Message_1").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("Message_2").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
+      this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
+      this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
+      this.chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
+
+      let x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
+      let width = this.chartBackground.contentWindow.document.getElementById("Layer_2-2").getBoundingClientRect().width;
       //this.viewContainerRef._data.renderElement.style.width= width+x+"px";
       // the height of the entire screen
       let height = this.viewContainerRef._data.renderElement.offsetHeight;
-      console.log( "chartBackground: " , height);
+      console.log( "x: " , x);
 
       this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+x+","+height*0.25+"), scale(0.90)" );
 
-    },1);
+    },1000);
   }
 
   ngAfterViewInit(){
+
+    setTimeout(()=>{
+      this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
+      this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
+    },15000)
+    
 
     this.display.moveItem().subscribe(data =>{
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
@@ -377,12 +403,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.zoomed(false,0,0,0);
       if(!this.expanded1){
         this.expanded1 = true;
-        this.testEmitter$.next(this.expanded1);
+        this.isExpandedEmitter$.next(this.expanded1);
 
       }
       else{
         this.expanded1 = false;
-        this.testEmitter$.next(this.expanded1);
+        this.isExpandedEmitter$.next(this.expanded1);
         
       }
       console.log("expand", this.testvar);
