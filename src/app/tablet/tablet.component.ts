@@ -527,9 +527,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         .call(this.zoom);
 
     this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
-
-    //let brushT = {"k": 4.365853658536583, "x": -1405.939024390243, "y": 0};
-    //this.socket.sendZoom(true, TEMPERATURES[0].values[249],TEMPERATURES[0].values[331].date,brushT);
+    
   }
 
 
@@ -587,6 +585,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
+
+    //Send the width of the cell to middle screen
+    let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+
+    this.socket.sendCellWidth(cellOffsetwdith);
+
+    this.elRef.nativeElement.querySelector("#chart1").getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 380 410")
     
     this.focus = d3.select(".focus");
     console.log("cardlist: ", this.cardList);

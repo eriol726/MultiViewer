@@ -220,7 +220,7 @@
                 <g clip-path="url(#clip-path-4)">
                     <path d="M1172.27,549.3h24v24h-24Z" fill="none"/>
                 </g>
-                <g opacity="0.3" style="isolation:isolate">
+                <g id="history-layer" opacity="0.0" style="isolation:isolate">
                     <g clip-path="url(#clip-path-5)">
                         <rect x="3.73" y="124.72" width="544.74" height="805.06" fill="#e2e2e2"/>
                     </g>

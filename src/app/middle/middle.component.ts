@@ -163,19 +163,23 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     //this.x.domain(t.rescaleX(this.x2).domain());
     //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
     if(!this.allreadySet){
-      console.log("brushTransform.x :", brushTransform.x );
-      let transX = brushTransform.x*-1;
-      let scaleX = 0.230;
+      console.log("brushTransform :", brushTransform );
+      // 1.440194609928951
+      // x: -169.35306437219242
+      // y: -76.41712120340367
+      let transY = 76.41712120340367;
+      let transX = 4150.35306437219242;//brushTransform.x*-1;
+      let scaleX = 0.3;
 
-    
-      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      
+      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
 
-      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
+      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
       this.focus.select("#hash4_6").attr('patternTransform', "rotate(80) scale(1.3)");
     }
 
@@ -265,18 +269,34 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       
       this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+      let chart = this.elRef.nativeElement.querySelector(".mainChart");
       
       this.message1_X = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().x;
       this.message1_Y = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().y;
+      let message1_height = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().height;
+      let message1_width = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().width;
+      let historyLayerWidth = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().width;
+      let historyLayerHeight = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().height;
+      let historyLayer = this.chartBackground.contentWindow.document.getElementById("history-layer");
+      historyLayer.style.opacity = 0.3;
+
+      console.log("historyLayerWidth: ", historyLayerWidth);
+      //historyLayer.style.width = historyLayerWidth;
+      //historyLayer.style.height = historyLayerHeight;
+
+      chart.append(historyLayer);
 
 
-      console.log("message elm: ", this.elRef.nativeElement.querySelector("#message_1_elm"));
+      console.log("message ah: ", message1_height);
       this.elRef.nativeElement.querySelector("#message_1_elm").style.top = this.message1_Y+"px";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.left = this.message1_X+"px";
+      this.elRef.nativeElement.querySelector("#message_1_elm").style.width = message1_width+"px";
+      this.elRef.nativeElement.querySelector("#message_1_elm").style.height = message1_height+"px";
 
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "hidden";
       this.elRef.nativeElement.querySelector("#message_2_elm").style.top = this.message1_Y+"px";
       this.elRef.nativeElement.querySelector("#message_2_elm").style.left = this.message1_X+"px";
+      this.elRef.nativeElement.querySelector("#message_2_elm").style.width = message1_width+"px";
 
       this.chartBackground.contentWindow.document.getElementById("Message_1").style.visibility = "hidden";
       this.chartBackground.contentWindow.document.getElementById("Message_2").style.visibility = "hidden";
@@ -296,7 +316,17 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let height = this.viewContainerRef._data.renderElement.offsetHeight;
       console.log( "x: " , x);
 
-      this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+x+","+height*0.25+"), scale(0.90)" );
+      let screenWidth = window.innerWidth;
+      let screenHeight = window.innerHeight;
+
+      console.log("screenWidth: ", screenWidth);
+      console.log("screenHeight: ", screenHeight);
+      console.log("aspect ratio: ", screenWidth/screenHeight);
+
+      x=1350;
+      let scale = 1;
+
+      //this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+screenWidth+","+screenHeight*0.25+"), scale("+scale+",1)" );
 
     },1000);
   }
@@ -331,22 +361,21 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     this.display.expandItem().subscribe(data =>{
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
-      console.log("data: ", data);
       if(data.state == -1){
         console.log("hidden: ");
-        chartBackground.contentWindow.document.getElementById("CM1_Bar").firstChild.style.fill = "rgba(255,235,0,0.9)";
+        chartBackground.contentWindow.document.getElementById("CM1_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
         chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
       }else{
         if(data.closedIndex == 0){
-          chartBackground.contentWindow.document.getElementById("CM1_Bar").firstChild.style.fill = "rgba(255,235,0,0.9)";
+          chartBackground.contentWindow.document.getElementById("CM1_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
           chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "visible";
           chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "visible";
         }
         if(data.closedIndex == 3){
-          chartBackground.contentWindow.document.getElementById("CM2_Bar").firstChild.style.fill = "rgba(255,235,0,0.9)";
+          chartBackground.contentWindow.document.getElementById("CM2_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
           chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "visible";
           chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "visible";
         }
@@ -376,7 +405,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         }
       }
         
-
+      console.log("zoomChart() data: ", data);
       let minDate = new Date(data.xDomainMin);
       let maxDate = new Date(data.xDomainMax);
       this.zoomFromTablet = true;
@@ -384,9 +413,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.initZoomMax = data.xDomainMax;
       this.initZoomMax = data.xDomainMin;
 
-      //console.log("data.brushTransform: ",data.brushTransform );
-
-      this.zoomed(true,minDate,maxDate,data.brushTransform);
+      //adjusting zoom from tablet
+      //this.zoomed(true,minDate,maxDate,data.brushTransform);
     })
     //this.viewContainerRef._data.renderElement.firstChild.style.height = "";
     //this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
@@ -420,6 +448,18 @@ export class MiddleComponent implements OnInit, AfterViewInit {
           //var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'assets/Screen/Central/m_2_Screen.svg');
          // mainSvg.contentWindow.document.getElementById("lineAppend").appendCild(newElement);
       //lineAppend 1320.75
+    })
+
+    this.display.getANumber().subscribe(cellWidth =>{
+      console.log("getAnumber: ", cellWidth);
+      let screenWidth = window.innerWidth;
+      let screenHeight = window.innerHeight;
+      let scale = cellWidth/screenWidth;
+      console.log("scale: ", scale);
+      console.log("screenWidth: ", screenWidth);
+      let x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
+      console.log("x: ", x);
+      this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+x+","+screenHeight*0.25+"), scale("+scale+",1)" );
     })
     // let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
     // this.x.domain(initDates);

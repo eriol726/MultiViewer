@@ -52,7 +52,12 @@ io.on('connection', (socket) => {
 
     socket.on('switchCCP', (index) => {
         console.log("Message Received, zoom: " + index);
-        io.emit('swipeCM',index);    
+        io.emit('switchCCP',index);    
+    });
+
+    socket.on('getANumber', (index) => {
+        console.log("Message Received, zoom: " + index);
+        io.emit('getANumber',index);    
     });
 
 

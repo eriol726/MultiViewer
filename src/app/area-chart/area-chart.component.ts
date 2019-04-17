@@ -581,9 +581,9 @@ export class AreaChartComponent implements OnInit {
 
 
     this.focus.select('.axis--x').call(this.xAxis);
-    this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
-        .scale(this.width / (s[1] - s[0]))
-        .translate(-s[0], 0));
+    // this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
+    //     .scale(this.width / (s[1] - s[0]))
+    //     .translate(-s[0], 0));
   }
 
   private zoomed(maximized) {
