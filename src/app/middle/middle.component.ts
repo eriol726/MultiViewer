@@ -72,12 +72,24 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   public expandedCentralSVG: string = "assets/Screen/Central/CentralScreen_noGraph_expanded.svg";
   graphEmitter$ = new BehaviorSubject<string>(this.expandedCentralSVG);
   chartBackground: any;
-
+  graphScale: number = 0;
+  tabletCellWidth: number;
+  outerUpperArea2: d3.Area<[number, number]>;
+  innerArea: d3.Area<[number, number]>;
 
   constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
 
   ngOnInit() {
+    this.initSvg();
+    console.log("areInner: ", this.innerArea);
     
+    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
+      this.x.domain([new Date(2018,1,1,0,0,0), new Date(2018,1,1,23,52,0)]);
+    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+    
+    this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
+      .scale(0.1)
+      .translate(-100, 0));
       
   }
 
@@ -118,6 +130,16 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         .on('zoom', function() { 
           this.zoomed(false);
         }.bind(this));
+
+      this.innerArea = d3.area()
+        .curve(d3.curveBasis)
+        .x(function(d: any){
+          console.log("d.date: ", d.date);
+          return this.x(d.date)
+        } )
+        .y0((d: any) => this.y(d.temperature ))
+        .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
+
       
     // this.svg.append('defs').append('clipPath')
     //     .attr('id', 'clip')
@@ -127,7 +149,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     
     this.focus = d3.select(".focus");
     this.focus.attr("transform", "translate(0, 20 )");
-    console.log("this.focus: ", d3.select(".focus"));
+    console.log("this.focus: ",this.focus);
     
 
     // this.focus = this.svg.append('g')
@@ -137,6 +159,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     // this.context = this.svg.append('g')
     //     .attr('class', 'context')
     //     .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
+
+    this.svg.call(this.zoom);
   }
 
   private brushed(dragFromTablet,xDomainMin,xDomainMax,brushTransform) {
@@ -160,9 +184,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     console.log("brushTransform.x :", brushTransform.x );
     
     
-    //this.x.domain(t.rescaleX(this.x2).domain());
+    this.x.domain([xDomainMin,xDomainMax]);
     //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    if(!this.allreadySet){
+    if(true){
       console.log("brushTransform :", brushTransform );
       // 1.440194609928951
       // x: -169.35306437219242
@@ -172,22 +196,16 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let scaleX = 0.3;
 
       
-      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-
-      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select("#hash4_6").attr('patternTransform', "rotate(80) scale(1.3)");
+      
     }
 
     if(!zoomFromTablet){
       let transX = 10;
       let scaleX = 1;
 
-    
+      console.log("areaInner3: ", this.focus.select(".areaInner").attr('d', this.outerUpperArea2 ));
+      this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
+      this.x.domain([new Date(2018,1,1,0,0,0), new Date(2018,1,1,23,52,0)]);
       this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
       this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
       this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
@@ -323,9 +341,30 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       console.log("screenHeight: ", screenHeight);
       console.log("aspect ratio: ", screenWidth/screenHeight);
 
-      x=1350;
-      let scale = 1;
+      let translatX=0;
+      console.log("this.tabletCellWidth: ", this.tabletCellWidth);
+      this.graphScale=1;
 
+      //s=(1.4,1)
+      //t=(150,300)
+
+      let scaleX = 0.1;
+      let transX = 150;
+      let transY = 300;
+
+      console.log("x: ", x);
+      //this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+150+","+300+"), scale("+1.4+",1)" );
+
+      console.log("this.focus: ", this.focus);
+      this.focus.attr("transform", "translate("+150+","+300+"), scale("+1.4+",1)" );
+      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+
+      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
       //this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+screenWidth+","+screenHeight*0.25+"), scale("+scale+",1)" );
 
     },1000);
@@ -419,11 +458,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     //this.viewContainerRef._data.renderElement.firstChild.style.height = "";
     //this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
     console.log("this.viewContainerRef._data.renderElement: ", this.viewContainerRef._data.renderElement.querySelector('.focus'));
+    console.log("this.focus: ", this.focus);
     //this.placeholder.nativeElement.firstChild.style.paddingTop = "150px";
 
     
 
-    this.initSvg();
+    
 
     //this.drawChart(TEMPERATURES);
 
@@ -451,19 +491,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     })
 
     this.display.getANumber().subscribe(cellWidth =>{
-      console.log("getAnumber: ", cellWidth);
-      let screenWidth = window.innerWidth;
-      let screenHeight = window.innerHeight;
-      let scale = cellWidth/screenWidth;
-      console.log("scale: ", scale);
-      console.log("screenWidth: ", screenWidth);
-      let x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
-      console.log("x: ", x);
-      this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+x+","+screenHeight*0.25+"), scale("+scale+",1)" );
+      this.tabletCellWidth = cellWidth;
     })
-    // let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
-    // this.x.domain(initDates);
-    //this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
+    let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
+    this.x.domain(initDates);
+    this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
+
   }
 
 }

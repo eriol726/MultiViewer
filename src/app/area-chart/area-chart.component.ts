@@ -351,6 +351,9 @@ export class AreaChartComponent implements OnInit {
     this.height = +500;// - this.margin.top - this.margin.bottom;
     this.height2 = +500 -this.margin2.top - this.margin2.bottom;
 
+    // this.x is a function, not a variable
+    // this.x are bind to all area graph element
+    // when we change the x domain all area elements will change
     this.x = d3.scaleTime().range([0, this.width]);
     this.x2 = d3.scaleTime().range([0, this.width]);
     this.x4 = d3.scaleLinear().range([0, 1]);
@@ -424,7 +427,10 @@ export class AreaChartComponent implements OnInit {
 
     this.innerArea = d3.area()
       .curve(d3.curveBasis)
-      .x((d: any) => this.x(d.date))
+      .x(function(d: any){ 
+        //console.log("d.date: ", this.x(d.date));  
+        return this.x(d.date);
+      }.bind(this))
       .y0((d: any) => this.y(d.temperature ))
       .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
 
@@ -579,11 +585,11 @@ export class AreaChartComponent implements OnInit {
     // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
-
+    console.log("s: ", s);
     this.focus.select('.axis--x').call(this.xAxis);
-    // this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
-    //     .scale(this.width / (s[1] - s[0]))
-    //     .translate(-s[0], 0));
+    this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
+        .scale(this.width / (s[1] - s[0]))
+        .translate(-s[0], 0));
   }
 
   private zoomed(maximized) {
@@ -595,7 +601,7 @@ export class AreaChartComponent implements OnInit {
     this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
     this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
 
-    console.log("this.zoomDate1: ", this.zoomDate1);
+    console.log("this.zoomDate1: ", t.rescaleX(this.x2).domain());
 
     // actual zoom function
     this.x.domain(t.rescaleX(this.x2).domain());
@@ -772,6 +778,7 @@ export class AreaChartComponent implements OnInit {
 
 
 
+    
     this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
 
 
@@ -824,6 +831,7 @@ export class AreaChartComponent implements OnInit {
      // this.context.select(".brush").call(this.brush.move, d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
       this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
     })
+
   }
 
   public getContent(): void{

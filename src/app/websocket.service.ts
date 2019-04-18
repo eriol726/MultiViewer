@@ -148,7 +148,7 @@ export class WebsocketService {
     this.socket.emit('switchCCP',data);
   }
 
-  sendCellWidth(data){
+  sendANumber(data){
     this.socket.emit('getANumber',data);
   }
 }

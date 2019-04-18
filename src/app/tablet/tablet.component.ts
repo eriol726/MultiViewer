@@ -589,7 +589,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //Send the width of the cell to middle screen
     let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
 
-    this.socket.sendCellWidth(cellOffsetwdith);
+    this.socket.sendANumber(cellOffsetwdith);
 
     this.elRef.nativeElement.querySelector("#chart1").getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 380 410")
     

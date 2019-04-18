@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('getANumber', (index) => {
-        console.log("Message Received, zoom: " + index);
+        console.log("getANumber: " + index);
         io.emit('getANumber',index);    
     });
 
