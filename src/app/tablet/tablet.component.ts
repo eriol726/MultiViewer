@@ -60,10 +60,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
+  @ViewChildren('chart1') chart1: ElementRef;
   @ViewChild('appCompButton') appCompButton;
   @ViewChild('chart') mainChart: ElementRef;
 
   @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
+  chartBackground: any;
 
   @ViewChild('contentPlaceholder') set content(content: any) {
     this.otherContent = content;
@@ -585,15 +587,27 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
+    setTimeout(()=>{
+      console.log("chart1: ", this.elRef.nativeElement.querySelector("#chart1"));
+    },1000)
+
+    this.svg = d3.select('svg');
+    this.focus = d3.select(".focus");
+    this.context = d3.select(".context");
+    
+    //this.initSvg();
+    console.log();
+    this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
+    //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
 
     //Send the width of the cell to middle screen
     let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+    let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
 
     this.socket.sendANumber(cellOffsetwdith);
-
-    this.elRef.nativeElement.querySelector("#chart1").getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 380 410")
     
-    this.focus = d3.select(".focus");
+    this.elRef.nativeElement.querySelector("#chart1").getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
+    
     console.log("cardlist: ", this.cardList);
     console.log("switch: ", this.elRef.nativeElement.querySelector(".swiper-container"));
     console.log("switch: ", this.elRef.nativeElement.querySelector(".svgCM"));
@@ -609,7 +623,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("offsetHeight nativeElement: ", this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight);
       this.initPanelItemHeight =  initPanelHeightNmbr+"px";
       this.panelItemHeight = this.initPanelItemHeight;
-    }, 1000);
+      let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+      let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
+    
+      this.elRef.nativeElement.querySelector("#chart1").getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
+
+      this.focus = d3.select(".focus");
+      this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
+    }, 100);
     
   }
 
@@ -628,17 +649,52 @@ export class TabletComponent implements OnInit, AfterViewInit {
     console.log("click");
   }
 
+  loadIframe2(){
+    this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+      console.log("this.chartBackground: ", this.chartBackground.contentWindow.document.getElementById("scaleY50"));
+
+      let screenWidth = window.innerWidth;
+      let screenHeight = window.innerHeight;
+
+      
+      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY50").getBoundingClientRect().y;
+      
+      let focusHeight = this.elRef.nativeElement.querySelector(".focus").getBoundingClientRect().height;
+
+      let scaleGraphY = 0.5;
+
+      let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
+
+      this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
+
+      //put the graph on it's right position
+      this.elRef.nativeElement.querySelector(".focus").setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
+
+      this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
+  }
+
   resize(){
     
 
     if(!this.hideTabletPanels){
       this.hideTabletPanels = true;
       this.changeDetector.detectChanges();
-
+      console.log();
+      
       this.socket.sendMaximized(true);
-      this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "15%";
+
     }
     else{
+      console.log("scale back graph", this.focus);
+      console.log("chart1: ", this.viewContainerRef._data.renderElement.querySelector(".focus")); 
+      console.log("mainChart: ", this.viewContainerRef); 
+      //let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+      //let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
+
+      
+      this.viewContainerRef._data.renderElement.getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 "+336+" "+422);
+      this.focus = d3.select(".focus");
+      this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
       this.hideTabletPanels = false;
       this.socket.sendMaximized(false);
     }

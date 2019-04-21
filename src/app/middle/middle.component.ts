@@ -75,26 +75,22 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   graphScale: number = 0;
   tabletCellWidth: number;
   outerUpperArea2: d3.Area<[number, number]>;
-  innerArea: d3.Area<[number, number]>;
+  innerArea: any;
+
+  zoomKey: boolean = false;
+  zoom2: any;
+  gElem: any;
+  chartPaddingRgiht: number;
 
   constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
 
   ngOnInit() {
-    this.initSvg();
-    console.log("areInner: ", this.innerArea);
     
-    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
-      this.x.domain([new Date(2018,1,1,0,0,0), new Date(2018,1,1,23,52,0)]);
-    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    
-    this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
-      .scale(0.1)
-      .translate(-100, 0));
       
   }
 
   private initSvg() {
-    this.svg = d3.select('svg');
+    //this.svg = d3.select('svg');
     this.margin = {top: 20, right: 20, bottom: 110, left: 40};
     this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
     this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
@@ -106,206 +102,33 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.width = bounds.width - this.margin.left - this.margin.right,
     this.height = bounds.height - this.margin.top - this.margin.bottom;
 
-    this.x = d3.scaleTime().range([0, this.width]);
-    this.x2 = d3.scaleTime().range([0, this.width]);
-    this.y = d3.scaleLinear().range([this.height, 0]);
-    this.y2 = d3.scaleLinear().range([this.height2, 0]);
-
-    this.xAxis = d3.axisBottom(this.x).tickFormat(d3.timeFormat('%H:%M'));
-    this.xAxis2 = d3.axisBottom(this.x2);
-    this.yAxis = d3.axisLeft(this.y);
-
-    this.brush = d3Brush.brushX()
-        .extent([[0, 0], [this.width, this.height2]])
-        .on('brush end', this.brushed.bind(this));
-    
-    this.brush2 = d3Brush.brushX()
-    .extent([[0, 0], [this.width, 500]])
-    .on('brush end', this.brushed.bind(this));
-
-    this.zoom = d3Zoom.zoom()
-        .scaleExtent([1, Infinity])
-        .translateExtent([[0, 0], [this.width, this.height]])
-        .extent([[0, 0], [this.width, this.height]])
-        .on('zoom', function() { 
-          this.zoomed(false);
-        }.bind(this));
-
-      this.innerArea = d3.area()
-        .curve(d3.curveBasis)
-        .x(function(d: any){
-          console.log("d.date: ", d.date);
-          return this.x(d.date)
-        } )
-        .y0((d: any) => this.y(d.temperature ))
-        .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
-
-      
-    // this.svg.append('defs').append('clipPath')
-    //     .attr('id', 'clip')
-    //     .append('rect')
-    //     .attr('width', this.width)
-    //     .attr('height', this.height);
-    
-    this.focus = d3.select(".focus");
-    this.focus.attr("transform", "translate(0, 20 )");
-    console.log("this.focus: ",this.focus);
-    
-
-    // this.focus = this.svg.append('g')
-    //     .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
-    //     .attr('class', 'focus');
-
-    // this.context = this.svg.append('g')
-    //     .attr('class', 'context')
-    //     .attr('transform', 'translate(' + this.margin2.left + ',' + this.margin2.top + ')');
-
-    this.svg.call(this.zoom);
-  }
-
-  private brushed(dragFromTablet,xDomainMin,xDomainMax,brushTransform) {
-    
-    if(!dragFromTablet){
-
-      if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
-
-      let s = d3.event.selection || this.x2.range();
-    }
-
-    this.focus.select('.axis--x').call(this.xAxis);
-
-  }
-
-  private zoomed(zoomFromTablet, xDomainMin, xDomainMax, brushTransform) {
-    //var t = d3.event.transform;
-
-    // this.zoomDate1 = t.rescaleX(this.x2).domain()[0];
-    // this.zoomDate2 = t.rescaleX(this.x2).domain()[1];
-    console.log("brushTransform.x :", brushTransform.x );
-    
-    
-    this.x.domain([xDomainMin,xDomainMax]);
-    //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    if(true){
-      console.log("brushTransform :", brushTransform );
-      // 1.440194609928951
-      // x: -169.35306437219242
-      // y: -76.41712120340367
-      let transY = 76.41712120340367;
-      let transX = 4150.35306437219242;//brushTransform.x*-1;
-      let scaleX = 0.3;
-
-      
-      
-    }
-
-    if(!zoomFromTablet){
-      let transX = 10;
-      let scaleX = 1;
-
-      console.log("areaInner3: ", this.focus.select(".areaInner").attr('d', this.outerUpperArea2 ));
-      this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
-      this.x.domain([new Date(2018,1,1,0,0,0), new Date(2018,1,1,23,52,0)]);
-      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-
-      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", 100 )");
-      this.focus.select("#hash4_6").attr('patternTransform', "rotate(80) scale(1.3)");
-    }
-    
-
-    this.allreadySet = true;
-    
-   // this.focus.select(".clip-above1").attr("transform", "scale(0.2,1) translate(7400, 100 )");
-
-    // if(!zoomFromTablet){
-    //   if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
-    //   var t = d3.event.transform;
-    // }
-    
-    // this moves the brush in the middleDisplay via the tablet component
-    // it's not zooming!
-    this.focus.select(".brush").call(this.brush2.move, [xDomainMin, xDomainMax].map(this.x2));
-
   }
 
 
-  ngOnChanges() {
-  }
 
 
-  private drawChart(data) {
-
-    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    this.y.domain([0, 150]);
-    this.x2.domain(this.x.domain());
-    this.y2.domain(this.y.domain());
-    
-    console.log("this.focus: ", this.focus);
-    // append history line
-    // this.focus.append('g')
-    // .attr('class', 'axis axis--x')
-    // .attr('transform', 'translate(0,' + this.height + ')')
-    // .call(this.xAxis)
-    // .append("rect")
-    // .attr("x", (d) => {
-    //   let date = new Date(2018,1,1,6,0,0);
-    //   return this.x(date);
-    // })
-    // .attr("y", -500)
-    // .attr("width", 2)
-    // .attr("height", 600 )
-    // .attr("fill", "black")
-
-    
-    // this.focus.append('g')
-    // .attr('class', 'axis axis--y')
-    // .call(this.yAxis);
-
-    //append brush
-    // this.focus.append('g')
-    //     .attr('class', 'brush top') 
-    //     .call(this.brush2)
-    //     .call(this.brush2.move, this.x2.range());
-
-    // this.svg.append('rect')
-    //     .attr('class', 'zoom')
-    //     .attr('width', this.width)
-    //     .attr('height', this.height)
-    //     .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
-    //     .call(this.zoom);
-
-       // this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
-
-  }
 
   loadIframe(){
     setTimeout(() => {
       
       this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
-      let chart = this.elRef.nativeElement.querySelector(".mainChart");
       
       this.message1_X = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().x;
       this.message1_Y = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().y;
       let message1_height = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().height;
       let message1_width = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().width;
+      let historyLayerX = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().x;
+      let historyLayerY = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().y;
       let historyLayerWidth = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().width;
       let historyLayerHeight = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().height;
       let historyLayer = this.chartBackground.contentWindow.document.getElementById("history-layer");
-      historyLayer.style.opacity = 0.3;
+      historyLayer.style.opacity = 0.0;
 
-      console.log("historyLayerWidth: ", historyLayerWidth);
-      //historyLayer.style.width = historyLayerWidth;
-      //historyLayer.style.height = historyLayerHeight;
+      this.elRef.nativeElement.querySelector("#history_layer_2").style.top = historyLayerY+"px";
+      this.elRef.nativeElement.querySelector("#history_layer_2").style.left = historyLayerX+"px";
+      this.elRef.nativeElement.querySelector("#history_layer_2").style.width = historyLayerWidth+"px";
+      this.elRef.nativeElement.querySelector("#history_layer_2").style.height = historyLayerHeight+"px";
 
-      chart.append(historyLayer);
-
-
-      console.log("message ah: ", message1_height);
       this.elRef.nativeElement.querySelector("#message_1_elm").style.top = this.message1_Y+"px";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.left = this.message1_X+"px";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.width = message1_width+"px";
@@ -327,51 +150,33 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
       this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
 
-      let x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
-      let width = this.chartBackground.contentWindow.document.getElementById("Layer_2-2").getBoundingClientRect().width;
-      //this.viewContainerRef._data.renderElement.style.width= width+x+"px";
-      // the height of the entire screen
-      let height = this.viewContainerRef._data.renderElement.offsetHeight;
-      console.log( "x: " , x);
-
       let screenWidth = window.innerWidth;
       let screenHeight = window.innerHeight;
 
-      console.log("screenWidth: ", screenWidth);
-      console.log("screenHeight: ", screenHeight);
-      console.log("aspect ratio: ", screenWidth/screenHeight);
+      this.x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
+      let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
+      this.chartPaddingRgiht = screenWidth - (layer6Boundings.width + layer6Boundings.x);
 
-      let translatX=0;
-      console.log("this.tabletCellWidth: ", this.tabletCellWidth);
-      this.graphScale=1;
+      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY50").getBoundingClientRect().y;
+      
+      let focusHeight = this.elRef.nativeElement.querySelector(".focus").getBoundingClientRect().height;
 
-      //s=(1.4,1)
-      //t=(150,300)
+      let scaleGraphY = 1.2;
 
-      let scaleX = 0.1;
-      let transX = 150;
-      let transY = 300;
+      let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
-      console.log("x: ", x);
-      //this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+150+","+300+"), scale("+1.4+",1)" );
+      this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
-      console.log("this.focus: ", this.focus);
-      this.focus.attr("transform", "translate("+150+","+300+"), scale("+1.4+",1)" );
-      this.focus.select(".areaInner").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterUpper").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterLower").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
+      this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
 
-      this.focus.select(".areaInner2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterUpper2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select(".areaOuterLower2").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      this.focus.select("#hash4_5").attr("transform", "scale("+scaleX+",1) translate("+transX+", "+transY+" )");
-      //this.viewContainerRef._data.renderElement.querySelector('.focus').setAttribute("transform", "translate("+screenWidth+","+screenHeight*0.25+"), scale("+scale+",1)" );
+      //put the graph on it's right position
+      this.elRef.nativeElement.querySelector(".focus").setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
 
     },1000);
   }
 
   ngAfterViewInit(){
-
+    console.log("chart2", this.elRef.nativeElement.querySelector("#chart2"));
     setTimeout(()=>{
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
@@ -452,29 +257,22 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.initZoomMax = data.xDomainMax;
       this.initZoomMax = data.xDomainMin;
 
-      //adjusting zoom from tablet
-      //this.zoomed(true,minDate,maxDate,data.brushTransform);
+
     })
-    //this.viewContainerRef._data.renderElement.firstChild.style.height = "";
-    //this.viewContainerRef._data.renderElement.firstChild.style.paddingTop = "150px";
-    console.log("this.viewContainerRef._data.renderElement: ", this.viewContainerRef._data.renderElement.querySelector('.focus'));
-    console.log("this.focus: ", this.focus);
-    //this.placeholder.nativeElement.firstChild.style.paddingTop = "150px";
 
-    
-
-    
-
-    //this.drawChart(TEMPERATURES);
 
     this.display.maximizeChart().subscribe(data=>{
-      this.zoomed(false,0,0,0);
+      this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground2");
       if(!this.expanded1){
+        console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
+        this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
+        this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
         this.expanded1 = true;
         this.isExpandedEmitter$.next(this.expanded1);
 
       }
       else{
+        this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
         this.expanded1 = false;
         this.isExpandedEmitter$.next(this.expanded1);
         
@@ -493,10 +291,13 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.getANumber().subscribe(cellWidth =>{
       this.tabletCellWidth = cellWidth;
     })
-    let initDates = d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })
-    this.x.domain(initDates);
-    this.zoomed(true,initDates[0],initDates[1],{k: 1, x: 0, y: 0});
+
 
   }
+
+  @HostListener('window:scroll', ['$event']) // for window scroll events
+    onScroll(event) {
+      console.log("scrolling")
+    }
 
 }

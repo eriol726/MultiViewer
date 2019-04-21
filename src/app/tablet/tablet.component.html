@@ -23,13 +23,13 @@
             </div>
 
             <div class="cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >
-              <app-area-chart id="chart1" style="width: 100%"></app-area-chart>
-              <iframe src="assets/Tablet/Central/CentralFrame_noGraph.svg" style="position: absolute; bottom: 0px; width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
+              <app-area-chart id="chart1" style="width: 100%" #contentPlaceholder></app-area-chart>
+              <!-- <iframe src="assets/Tablet/Central/CentralFrame_noGraph.svg" style="position: absolute; bottom: 0px; width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe> -->
             </div>
 
             <div class="cell" style="border-top: 5px solid red; background-color: #fff ">
               <div  class="swiper-container" [swiper]="config" (indexChange)="CCP_activation($event)" >
-                <div class="swiper-wrapper" (dblclick)="resize()">
+                <div class="swiper-wrapper" (click)="resize()">
                   <div class="swiper-slide" >
                     <iframe src="assets/Tablet/Central/m_1_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
                     <div class="iframeOverlay"></div>
@@ -110,10 +110,9 @@
           </div> <!-- column -->
       </div>
       <ng-template #other_content >
-         
-        <iframe src="assets/Expanded_View_CentralScreen_noGraph.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
+        <iframe src="assets/Screen/Central/CentralScreen_noGraph_w_Scale.svg" id="chartBackground"  (load)="loadIframe2()" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
         <app-area-chart id="chart2" style="width: 100%; height: 100%;; position: absolute; top: 0px; left: 0px " #contentPlaceholder></app-area-chart>
-        <div (dblclick)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; background-color: red; "></div>
+        <div (click)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; background-color: red; "></div>
       </ng-template> 
 
     </div>
