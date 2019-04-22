@@ -113,6 +113,13 @@ export class AreaChartComponent implements OnInit {
                       {"locked": false, "graphFactor": 15},
                       {"locked": false, "graphFactor": 0},
                       {"locked": false, "graphFactor": 2}];
+  collisionEnd = 330;
+  collisionStart = 210;
+  collisionFadeEndStart = 320;
+  collisionFadeFrontStop = 250;
+
+  curveFadeFrontStop;
+  curveFadeEndStop = 345;
 
   public isExpanded: number  = -1;
   public fade = 0;
@@ -206,18 +213,17 @@ export class AreaChartComponent implements OnInit {
           this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
           this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
           this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
-        
 
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-            if(i> 200 && i < 350  ){
+            if(i> this.collisionStart && i < this.collisionEnd  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }
             else{
               return this.y(TEMPERATURES[0].values[i].temperature);
             }
           }));
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          //this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
 
         break;
       }
@@ -229,14 +235,14 @@ export class AreaChartComponent implements OnInit {
 
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-            if(i> 200 && i < 350  ){
+            if(i> this.collisionStart && i < this.collisionEnd  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }
             else{
-              return this.y(TEMPERATURES[7].values[i].temperature);
+              return this.y(TEMPERATURES[0].values[i].temperature);
             }
           }));
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          //this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
 
         break;
       }
@@ -248,14 +254,14 @@ export class AreaChartComponent implements OnInit {
 
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-            if(i> 200 && i < 350  ){
+            if(i> this.collisionStart && i < this.collisionEnd  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }
             else{
-              return this.y(TEMPERATURES[7].values[i].temperature);
+              return this.y(TEMPERATURES[0].values[i].temperature);
             }
           }));
-          this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+          //this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
         break;
       }
       case 3:{
@@ -267,14 +273,14 @@ export class AreaChartComponent implements OnInit {
         // updating collition pattern
         this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-          if(i> 200 && i < 350  ){
+          if(i> this.collisionStart && i < this.collisionEnd  ){
             return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
           }
           else{
-            return this.y(TEMPERATURES[7].values[i].temperature);
+            return this.y(TEMPERATURES[0].values[i].temperature);
           }
         }));
-        this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
+        //this.focus.select('#hash4_5').attr('d', this.collisionArea.y1((d:any, i:number) => this.y(TEMPERATURES[0].values[i].temperature)).bind(this));
         break;
       }
       case 4:{
@@ -314,7 +320,7 @@ export class AreaChartComponent implements OnInit {
   }
 
   private createFadeFront(curveFactor){
-    let size = 250 -200;
+    let size = this.collisionFadeFrontStop+1 -this.collisionStart;
     const a: number[] = [];
     this.numbers = [];
     let step = curveFactor/size;
@@ -327,7 +333,7 @@ export class AreaChartComponent implements OnInit {
   }
 
   private createFadeEnd(curveFactor){
-    let size = 20;
+    let size = 21;
     const a: number[] = [];
     this.fadeEndNumbers = [];
     let step = curveFactor/size;
@@ -388,33 +394,27 @@ export class AreaChartComponent implements OnInit {
       .curve(d3.curveBasis)
       .x((d:any) => this.x(d.date))
       .y0((d:any, i:number) => {
-        if(i> 330  && i < 350 ){
-          console.log("collisionFadeEnd: ", collisionFadeEnd[i-330]);
-          return this.y(TEMPERATURES[7].values[i].temperature - (15-collisionFadeEnd[i-330]));
+        if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){
+          console.log("collisionFadeEnd: ", collisionFadeEnd[i-this.collisionFadeEndStart]);
+          return this.y(TEMPERATURES[7].values[i].temperature - (15-collisionFadeEnd[i-this.collisionFadeEndStart]));
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(TEMPERATURES[7].values[i].temperature + collisionFadeFront[i-200]);
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+          return this.y(TEMPERATURES[7].values[i].temperature + collisionFadeFront[i-this.collisionStart]);
         }
-        else if(i> 249 && i < 331 && this.panelOpenState){
+        else if(i> this.collisionFadeFrontStop-1 && i < this.collisionFadeEndStart+1 && this.panelOpenState){
           return this.y(TEMPERATURES[7].values[i].temperature);
-          
-        }else if (i <= 249 || i >= 331){
-          return this.y(TEMPERATURES[7].values[i].temperature);
-        }
-        else{
-          return this.y(TEMPERATURES[7].values[i].temperature);
+        }else{
+          return this.y(TEMPERATURES[0].values[i].temperature);
         }
       })
       .y1((d:any, i:number) => {
-        if(i> 330  && i < 350 ){
-          return this.y(TEMPERATURES[0].values[i].temperature - (15-collisionFadeEnd[i-330]));
+        if(i> this.collisionFadeEndStart  && i < this.collisionEnd+1 ){
+          return this.y(TEMPERATURES[0].values[i].temperature - (15-collisionFadeEnd[i-this.collisionFadeEndStart]));
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(TEMPERATURES[7].values[i].temperature + collisionFadeFront[i-200]);
+        else if(i> this.collisionStart-1 && i < this.collisionFadeFrontStop  ){
+          return this.y(TEMPERATURES[7].values[i].temperature + collisionFadeFront[i-this.collisionStart]);
         }
-        else if(i> 249 && i < 331 && this.panelOpenState){
-          return this.y(TEMPERATURES[0].values[i].temperature);
-        }else if (i<= 200 || i >= 345){
+        else if(i> this.collisionFadeFrontStop-1  && i < this.collisionFadeEndStart+1 && this.panelOpenState){
           return this.y(TEMPERATURES[0].values[i].temperature);
         }else{
           return this.y(TEMPERATURES[0].values[i].temperature);
@@ -452,13 +452,13 @@ export class AreaChartComponent implements OnInit {
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
 
-        if(i> 330  && i < 345 ){
-          return this.y(d.temperature + this.fadeEndNumbers[i-330]);
+        if(i> this.collisionEnd  && i < this.curveFadeEndStop ){
+          return this.y(d.temperature + this.fadeEndNumbers[i-this.collisionEnd]);
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(d.temperature + this.numbers[i-200]);
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+          return this.y(d.temperature + this.numbers[i-this.collisionStart]);
         }
-        else if(i> 249 && i < 331  ){
+        else if(i> this.collisionFadeFrontStop-1 && i < this.collisionEnd+1  ){
           return this.y(d.temperature+this.curveFactor);
         }else{
           return this.y(d.temperature);
@@ -466,14 +466,14 @@ export class AreaChartComponent implements OnInit {
         
       })
       .y1((d: any, i:number) => {
-        if(i> 330  && i < 345 ){
-          return this.y(TEMPERATURES[5].values[i].temperature+ this.fadeEndNumbers[i-330]);
+        if(i> this.collisionEnd  && i < this.curveFadeEndStop ){
+          return this.y(TEMPERATURES[5].values[i].temperature+ this.fadeEndNumbers[i-this.collisionEnd]);
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(TEMPERATURES[5].values[i].temperature+this.numbers[i-200]);
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+          return this.y(TEMPERATURES[5].values[i].temperature+this.numbers[i-this.collisionStart]);
         }
 
-        else if(i> 249 && i < 331  ){
+        else if(i> this.collisionFadeFrontStop-1 && i < this.collisionEnd+1  ){
           return this.y(TEMPERATURES[5].values[i].temperature+this.curveFactor);
         }else{
           return this.y(TEMPERATURES[5].values[i].temperature);
@@ -484,26 +484,26 @@ export class AreaChartComponent implements OnInit {
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date))
       .y0((d: any, i:number) => {
-        if(i> 330  && i < 345 ){
-          return this.y(d.temperature + this.fadeEndNumbers[i-330]);
+        if(i> this.collisionEnd  && i < this.curveFadeEndStop ){
+          return this.y(d.temperature + this.fadeEndNumbers[i-this.collisionEnd]);
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(d.temperature + this.numbers[i-200]);
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+          return this.y(d.temperature + this.numbers[i-this.collisionStart]);
         }
-        else if(i> 249 && i < 331  ){
+        else if(i> this.collisionFadeFrontStop-1 && i < this.collisionEnd+1  ){
           return this.y(d.temperature+this.curveFactor);
         }else{
           return this.y(d.temperature);
         }
       })
       .y1((d: any, i:number) => {
-        if(i> 330  && i < 345 ){
-          return this.y(TEMPERATURES[6].values[i].temperature + this.fadeEndNumbers[i-330]);
+        if(i> this.collisionEnd  && i < this.curveFadeEndStop ){
+          return this.y(TEMPERATURES[6].values[i].temperature + this.fadeEndNumbers[i-this.collisionEnd]);
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(TEMPERATURES[6].values[i].temperature+this.numbers[i-200]);
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+          return this.y(TEMPERATURES[6].values[i].temperature+this.numbers[i-this.collisionStart]);
         }
-        else if(i> 249 && i < 331  ){
+        else if(i> this.collisionFadeFrontStop-1 && i < this.collisionEnd+1  ){
           return this.y(TEMPERATURES[6].values[i].temperature+this.curveFactor);
         }else{
           return this.y(TEMPERATURES[6].values[i].temperature);
@@ -514,26 +514,26 @@ export class AreaChartComponent implements OnInit {
       .curve(d3.curveBasis)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
-        if(i> 330  && i < 345 ){
-          return this.y(TEMPERATURES[6].values[i].temperature + this.fadeEndNumbers[i-330]);
+        if(i> this.collisionEnd  && i < this.curveFadeEndStop ){
+          return this.y(TEMPERATURES[6].values[i].temperature + this.fadeEndNumbers[i-this.collisionEnd]);
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(TEMPERATURES[6].values[i].temperature + this.numbers[i-200]);
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+          return this.y(TEMPERATURES[6].values[i].temperature + this.numbers[i-this.collisionStart]);
         }
-        else if(i> 249 && i < 331  ){
+        else if(i> this.collisionFadeFrontStop-1 && i < this.collisionEnd+1  ){
           return this.y(TEMPERATURES[6].values[i].temperature+this.curveFactor);
         }else{
           return this.y(TEMPERATURES[6].values[i].temperature);
         }
       })
       .y1((d: any, i:number) => {
-        if(i> 330  && i < 345 ){
-          return this.y(d.temperature + this.fadeEndNumbers[i-330]);
+        if(i> this.collisionEnd  && i < this.curveFadeEndStop ){
+          return this.y(d.temperature + this.fadeEndNumbers[i-this.collisionEnd]);
         }
-        else if(i> 200 && i < 250  ){
-          return this.y(d.temperature+this.numbers[i-200]);
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+          return this.y(d.temperature+this.numbers[i-this.collisionStart]);
         }
-        else if(i> 249 && i < 331  ){
+        else if(i> this.collisionFadeFrontStop-1 && i < this.collisionEnd+1  ){
           return this.y(d.temperature+this.curveFactor);
         }else{
           return this.y(d.temperature);
@@ -625,7 +625,7 @@ export class AreaChartComponent implements OnInit {
     
     if(this.panelOpenState || this.lockedCM[0]){
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-        if(i> 200 && i < 350 ){
+        if(i> this.collisionStart && i < this.collisionEnd ){
           return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
         }
         else{
@@ -734,15 +734,15 @@ export class AreaChartComponent implements OnInit {
       .attr("transform", "translate(0,0)")
       .attr("fill", "#000")
 
-    // this.focus.append("path")
-    //   .datum(TEMPERATURES[0].values)
-    //   .attr('id', 'hash4_5')
-    //   .attr("x", 0)
-    //   .attr("width", "100%")
-    //   .attr("height", "100%")
-    //   .attr("fill", "url(#hash4_6)")
-    //   .attr("clip-path", "url(#clip-above)")
-    //   .attr("d", this.collisionArea)
+    this.focus.append("path")
+      .datum(TEMPERATURES[0].values)
+      .attr('id', 'hash4_5')
+      .attr("x", 0)
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("fill", "url(#hash4_6)")
+      .attr("clip-path", "url(#clip-above)")
+      .attr("d", this.collisionArea)
 
     // axis
     // this.focus.append('g')
@@ -783,7 +783,22 @@ export class AreaChartComponent implements OnInit {
 
     this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
 
+    if(this.panelOpenState || this.lockedCM[0]){
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+        if(i> this.collisionStart && i < this.collisionEnd ){
+          return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+        }
+        else{
+          return this.y(TEMPERATURES[0].values[i].temperature);
+        }
+      }));
+    }else{
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+    }
 
+
+    this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
+    this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
 
     //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[0].date,TEMPERATURES[0].values[358].date].map(this.x));
 

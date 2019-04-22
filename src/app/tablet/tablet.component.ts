@@ -19,6 +19,7 @@ export interface Margin {
 }
 
 type MyType = {
+  id: string;
   text: string;
   color: string;
   startDate: Date;
@@ -82,6 +83,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private svgPath = "../../assets/";
   tasks: MyType[];
 
+  // we need to create a struct/type to point to the variable members from action service
   done: MyType[];
 
   
@@ -159,6 +161,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public panelItemHeight: string = "21px";
  
   public thePanel;
+
+  public cmText: string = "Tap on a countermeasure to preview the effects";
   intersectionColor: d3.Area<[number, number]>;
   tasks2: any[];
   curveFactorLocked: number = 0;
@@ -196,7 +200,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           let taskIndex = el.id.toString()[el.id.toString().length-1];
           
           // if moved element exsist in this.done, dont copy it
-          if (this.done.some((x,i) => x.text == taskIndex) ){
+          if (this.done.some((x,i) => x.id == taskIndex) ){
             isCopyAble = false;
           }
           return isCopyAble;
@@ -207,7 +211,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           
           // if CM is not in action plan push
           let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
-          if (!this.done.some((x,i) => x.text == taskIndex) ){
+          if (!this.done.some((x,i) => x.id == taskIndex) ){
             
             this.done.push(this.tasks[taskIndex]);
             this.isExpanded = -1;//parseInt(el.id);
@@ -276,12 +280,19 @@ export class TabletComponent implements OnInit, AfterViewInit {
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
 
+    
+
     let iframeEl = this.elRef.nativeElement.querySelector("#main_svg_"+(index));
     console.log("iframeEl: ", iframeEl, " i: ", index);
     console.log("card: ", iframeEl.contentWindow.document.getElementsByClassName("arrow"));
     
     console.log("this.initPanelItemHeight: ", this.initPanelItemHeight);
     if(this.panelOpenState){
+      // set the central info text
+      
+      this.elRef.nativeElement.querySelector(".applied-box").style.backgroundColor = "yellow";
+      
+      this.cmText = this.tasks[index].text;
 
       this.panelItemHeight = this.initPanelItemHeight;
       this.isExpanded = index;
@@ -316,7 +327,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
       
     }
     else{
-      
+      // set the central info text
+      this.cmText = "Tap on a countermeasure to preview the effects";
+      this.elRef.nativeElement.querySelector(".applied-box").style.backgroundColor = "#e3f0fc";
+
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
@@ -594,6 +608,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.svg = d3.select('svg');
     this.focus = d3.select(".focus");
     this.context = d3.select(".context");
+
+    this.focus.select("#hash4_6").attr("width", "1")
+    this.focus.select("#hash4_6").attr("height", "1")
+    this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
+    this.focus.select("#diagonalRect").attr("width", "1");
+    this.focus.select("#diagonalRect").attr("height", "0.5");
     
     //this.initSvg();
     console.log();
@@ -630,6 +650,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
+
+      this.focus.select("#hash4_6").attr("width", "1")
+      this.focus.select("#hash4_6").attr("height", "1")
+      this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
+      this.focus.select("#diagonalRect").attr("width", "1");
+      this.focus.select("#diagonalRect").attr("height", "0.5");
     }, 100);
     
   }
