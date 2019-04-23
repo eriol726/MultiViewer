@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { TEMPERATURES } from '../../data/temperatures';
 import { DragulaService } from 'ng2-dragula';
 import { DomSanitizer } from '@angular/platform-browser';
+import { BehaviorSubject } from 'rxjs';
 
 export interface Margin {
   top: number;
@@ -158,7 +159,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public isExpanded: number  = -1;
     
   private initPanelItemHeight: string = "0px";
-  public panelItemHeight: string = "21px";
+  public panelItemHeight: string = "22px";
+  panelItemHeightEmitter$ = new BehaviorSubject<string>(this.panelItemHeight);
  
   public thePanel;
 
@@ -188,6 +190,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         copy: (el, source) => { 
           console.log("source.id: ", source.id);
           console.log("el: ", el);
+          
           return source.id === 'right';
         },
         accepts: (el, target, source, sibling) => {
@@ -214,14 +217,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
           if (!this.done.some((x,i) => x.id == taskIndex) ){
             
             this.done.push(this.tasks[taskIndex]);
-            this.isExpanded = -1;//parseInt(el.id);
+            //this.isExpanded = -1;
             this.socket.sendMove("change",0,taskIndex,this.tasks[taskIndex]);
    
             // we must change the name of the copied elements so we now which background color we will change
             el.id = "panel_item_copy_"+taskIndex;
-
+            console.log("el: ", el);
+            el.querySelector('.mat-expansion-panel-header').style.height = this.panelItemHeight;
             // gray out when CM is chosen
-            //this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "#d9d9d9";
             
             el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
             this.elRef.nativeElement.querySelector('#iframeOverlay_'+taskIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
@@ -241,18 +244,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
           }
 
+          // resize all right panel items when a expanded panel item is droped
           for (let i = 0; i < this.tasks.length; i++) {
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
             this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
             this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "1";
-            //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
           }
           let mainSvg = this.elRef.nativeElement.querySelector("#main_svg_"+(taskIndex));
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
           //mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
-          
+          this.elRef.nativeElement.querySelector('.applied-box').style.backgroundColor = "#40bd73";
         }
           
       }.bind(this));
@@ -264,8 +267,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     let index = parseInt(elementRef.id[elementRef.id.length-1]);
     
     for (let index = 0; index < this.done.length; index++) {
-      this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.height = "0px";
-      this.elRef.nativeElement.querySelector('.example-list').children[index].children[1].style.visibility = "hidden";
+      this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.height = "0px";
+      this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.visibility = "hidden";
       
     }
     // let expandedPanelItem = this.elRef.nativeElement.querySelector("#panel_item_copy_"+index);
@@ -280,21 +283,20 @@ export class TabletComponent implements OnInit, AfterViewInit {
   expandTaskPanel(index){
     //this.tabletComp.handleLeftPanel(0);
 
-    
+    // if(index > 0){
+    //   this.elRef.nativeElement.querySelector('#panel_item_'+(index+1)).style.height = "auto";
+    //   this.elRef.nativeElement.querySelector('#panel_item_'+(index+1)).style.flex = "1";
+    // }
+
+    console.log("clicked index: ", index);
 
     let iframeEl = this.elRef.nativeElement.querySelector("#main_svg_"+(index));
-    console.log("iframeEl: ", iframeEl, " i: ", index);
-    console.log("card: ", iframeEl.contentWindow.document.getElementsByClassName("arrow"));
-    
-    console.log("this.initPanelItemHeight: ", this.initPanelItemHeight);
+
     if(this.panelOpenState){
-      // set the central info text
-      
+      // set the central info text and color
+      this.cmText = this.tasks[index].text;
       this.elRef.nativeElement.querySelector(".applied-box").style.backgroundColor = "yellow";
       
-      this.cmText = this.tasks[index].text;
-
-      this.panelItemHeight = this.initPanelItemHeight;
       this.isExpanded = index;
       this.socket.sendExpand("task",index,index);
       console.log("switch: ", iframeEl.contentWindow.document.getElementById("switch"));
@@ -306,6 +308,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < this.tasks.length; i++) {
         // remove all exept from the opened
         if(i != index ){
+          console.log("set to 0px, i:", i );
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
 
@@ -316,13 +319,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
         }
         //show the panel item under clicked item
         if(i == index+1){
+          console.log("#panel_item_+i).style.height = auto");
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0 0 16%";
         }
-        // if last panel item is expanded show panel item above
-        if(index == this.tasks.length-1){
-          this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.height = "auto";
-        }
+      }
+      // if last panel item is expanded show panel item above
+      if(index == this.tasks.length-1){
+        this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.height = "auto";
+        this.elRef.nativeElement.querySelector('#panel_item_'+(this.tasks.length-2)).style.flex = "0 0 16%";
       }
       
     }
@@ -334,16 +339,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
-      //iframeEl.contentWindow.document.getElementsByTagName("mat-expansion-panel-header")[0].style.backgroundColor = "#f4f4f4";
-      this.elRef.nativeElement.querySelector("#panel_item_0").style.height = "auto";
+
       this.socket.sendExpand("task",-1,index);
 
       for (let i = 0; i < this.tasks.length; i++) {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
-        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
+        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
         this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
-          this.elRef.nativeElement.querySelector('#panel_item_5').style.flex = "1";
-        //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+
       }
     }
 
@@ -643,6 +646,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("offsetHeight nativeElement: ", this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight);
       this.initPanelItemHeight =  initPanelHeightNmbr+"px";
       this.panelItemHeight = this.initPanelItemHeight;
+      this.panelItemHeightEmitter$.next(this.panelItemHeight);
       let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
       let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
     
