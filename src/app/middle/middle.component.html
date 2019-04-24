@@ -1,15 +1,13 @@
 <!-- <plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot> -->
 <div class="row" #row>
-        <div [hidden]="isExpandedEmitter$ | async" style="height:100%; width: 100%">
+        <div style="height:100%; width: 100%">
                 <iframe src="assets/Screen/Central/CentralScreen_noGraph_w_Scale.svg" (load)="loadIframe()" id="chartBackground" style="width: 100%; height: 100%;  border: 0px; z-index: 1; padding: 0px 0px; position: relative" ></iframe>
-                
-                <iframe src="assets/Screen/Central/m_1_Screen.svg" id="message_1_elm" style=" border: 0px; z-index: 3; padding: 0px 0px; position: absolute" [style.left.px]="messageX" [style.top.px]="messageY"></iframe>
-                <iframe src="assets/Screen/Central/m_2_Screen.svg" id="message_2_elm" style=" border: 0px; z-index:4; padding: 0px 0px; position: absolute" [style.left.px]="messageX" [style.top.px]="messageY"></iframe>
                 <iframe src="assets/Screen/Central/history_layer.svg" id="history_layer_2" style=" border: 0px; z-index:4; padding: 0px 0px; position: absolute" ></iframe>
         </div>
         <app-area-chart id="chart2" style="width: 100%; height: 100%; position: absolute; top: 0px; z-index: 2; left: 0px; " ></app-area-chart>
-        <div [hidden]="!expanded1" style="height:100%; width: 100%">
-
+        <iframe src="assets/Screen/Central/m_1_Screen.svg" id="message_1_elm" style=" border: 0px; z-index: 3; padding: 0px 0px; position: absolute" [style.left.px]="messageX" [style.top.px]="messageY"></iframe>
+        <iframe src="assets/Screen/Central/m_2_Screen.svg" id="message_2_elm" style=" border: 0px; z-index:4; padding: 0px 0px; position: absolute" [style.left.px]="messageX" [style.top.px]="messageY"></iframe>
+        <!-- <div [hidden]="!expanded1" style="height:100%; width: 100%">
                 <iframe src="assets/Screen/Central/CentralScreen_noGraph_w_Scale.svg"  id="chartBackground2" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
-        </div>
+        </div> -->
 </div>

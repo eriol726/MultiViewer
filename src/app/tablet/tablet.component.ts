@@ -298,7 +298,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector(".applied-box").style.backgroundColor = "yellow";
       
       this.isExpanded = index;
-      this.socket.sendExpand("task",index,index);
+      
+      this.socket.sendExpand("task",index,index,this.lockedCM[index].locked);
       console.log("switch: ", iframeEl.contentWindow.document.getElementById("switch"));
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
@@ -340,7 +341,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
 
-      this.socket.sendExpand("task",-1,index);
+      this.socket.sendExpand("task",-1,index,this.lockedCM[index].locked);
 
       for (let i = 0; i < this.tasks.length; i++) {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
@@ -357,7 +358,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   expandDonePanel(index){
     //this.tabletComp.handleLeftPanel(0);
-    this.socket.sendExpand("done",index,index);
+    this.socket.sendExpand("done",index,index,this.lockedCM[index].locked);
   }
 
   
@@ -671,8 +672,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   CCP_activation(index: number) {
     console.log('Swiper index: ' + index);
-    this.socket.sendExpand("task",index+4,0);
-    this.socket.sendCCP(1);
+    this.socket.sendExpand("task",index+4,0,this.lockedCM[index].locked);
+    //this.socket.sendCCP(1);
   }
 
   middleSwipe(){

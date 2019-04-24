@@ -38,6 +38,8 @@ export class LeftComponent implements OnInit, AfterViewInit {
   x;
   y;
 
+  public cm = 0;
+
   data2: MyType[] = [];
   barHeigt: number;
   xLinear: d3.ScaleLinear<number, number>;
@@ -52,7 +54,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
  
 // https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
-  constructor(private actionService : ActionService, private display : WebsocketService) {
+  constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
 
   }
 
@@ -101,25 +103,22 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.xTime = d3.scaleTime();
     this.y = d3.scaleBand().padding(0.1);
 
-    this.g = this.svg.append("g")
-      .attr("transform", "translate(" + 0 + "," + 0 + ")")
-      .attr("class", "CMhistory");
-  
-
-    
+    // this.g = this.svg.append("g")
+    //   .attr("transform", "translate(" + 0 + "," + 0 + ")")
+    //   .attr("class", "CMhistory");
 
     // add the x Axis
-    this.g.append("g").
-    attr("class", "axis axis--x");
+    // this.g.append("g").
+    // attr("class", "axis axis--x");
 
     // append history line
-    this.g.select(".axis--x").append("rect")
-    .attr("class", "historyLine")
-    .attr("width", 2)
-    .attr("height", "100%" )
-    .attr("fill", "black")
+    // this.g.select(".axis--x").append("rect")
+    // .attr("class", "historyLine")
+    // .attr("width", 2)
+    // .attr("height", "100%" )
+    // .attr("fill", "black")
 
-    this.draw();
+    //this.draw();
 
     //this.update(this.data2);
 
@@ -153,11 +152,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
     let x = this.xTime(date);
 
     this.g.select(".historyLine")
-    .attr("transform", "translate(" + x +"," + -this.height + ")");
-
-    console.log("bar: ", this.g.select(".bar"));
-    
-    
+    .attr("transform", "translate(" + x +"," + -this.height + ")"); 
     
   }
 
@@ -215,19 +210,51 @@ export class LeftComponent implements OnInit, AfterViewInit {
       .attr("fill", "white");
   }
 
+  iframeLoad(){
+    
+  }
+
   ngAfterViewInit(){
 
     this.display.expandItem().subscribe(data=>{
-      if(data.type === "task"){
+      if(data.state != -1){
+        console.log("expanded");
+        this.cm = data.closedIndex+1;
+      }
+      else{
+        this.cm = 0;
       }
     });
 
     this.display.moveItem().subscribe(data=>{
+      let APbackground = this.elRef.nativeElement.querySelector("#actionPlanBackground");
+      switch (data.currentIndex) {
+        case 0:
+          this.cm = 1;
+          
+          setTimeout(() => {
+            APbackground.contentWindow.document.getElementById("CM1_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
+          },100)
+          
+          
+          break;
+        case 3:
+          this.cm = 4;
+          setTimeout(() => {
+            APbackground.contentWindow.document.getElementById("CM4_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
+          },100)
+          break;
+      
+        default:
+          break;
+      }
       if(data.type === "change"){
+        console.log("data: ", data.currentIndex);
         
+    
         console.log("data.containerData: ", data.containerData);
         this.data2.push(data.containerData);
-        this.update(this.data2);
+        //this.update(this.data2);
         
         
         

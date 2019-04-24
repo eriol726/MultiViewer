@@ -287,9 +287,31 @@ export class AreaChartComponent implements OnInit {
         this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
         this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
         this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+
+        this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+
+          if(i> this.collisionStart && i < this.collisionEnd  ){
+            return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+          }
+          else{
+            return this.y(TEMPERATURES[0].values[i].temperature);
+          }
+        }));
       }
       case 5:{
+        this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
         this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
+        this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+
+        this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+
+          if(i> this.collisionStart && i < this.collisionEnd  ){
+            return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
+          }
+          else{
+            return this.y(TEMPERATURES[0].values[i].temperature);
+          }
+        }));
       }
       default: {
         break;

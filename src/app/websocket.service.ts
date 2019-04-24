@@ -25,7 +25,7 @@ export class WebsocketService {
   
 
   expandItem() {
-    let observable = new Observable<{type:String, state:number, closedIndex:number}>(observer => {
+    let observable = new Observable<{type:String, state:number, closedIndex:number, locked:boolean}>(observer => {
         this.socket.on('expandItem', (data) => {
           observer.next(data);
         });
@@ -120,8 +120,8 @@ export class WebsocketService {
     return observable;
   }
 
-  sendExpand(data, data1, data2){
-    this.socket.emit('expandItem', data, data1, data2 );
+  sendExpand(data, data1, data2, data3){
+    this.socket.emit('expandItem', data, data1, data2, data3 );
   }
 
   sendLock(data, data1){
