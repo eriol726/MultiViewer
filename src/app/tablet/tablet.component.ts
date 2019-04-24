@@ -68,6 +68,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
   chartBackground: any;
+  swiperIndexCentral: number = 0;
 
   @ViewChild('contentPlaceholder') set content(content: any) {
     this.otherContent = content;
@@ -385,6 +386,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
     //this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
+
     tasksObservable.subscribe(tasksData => {
 
       this.tasks = tasksData;
@@ -637,6 +639,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     console.log("switch: ", this.elRef.nativeElement.querySelector(".svgCM"));
     console.log("switch: ", this.elRef.nativeElement.querySelector(".cell"));
     console.log("switch: ", d3.select('.switch'));
+
+    this.socket.switchCCP().subscribe(data =>{
+      console.log("swipe central");
+      this.swiperIndexCentral = data.swiperIndex;
+    })
     
     
   }
@@ -672,7 +679,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   CCP_activation(index: number) {
     console.log('Swiper index: ' + index);
-    this.socket.sendExpand("task",index+4,0,this.lockedCM[index].locked);
+    //this.socket.sendExpand("task",index+4,0,this.lockedCM[index].locked);
     //this.socket.sendCCP(1);
   }
 

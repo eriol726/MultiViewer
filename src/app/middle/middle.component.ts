@@ -7,12 +7,21 @@ import { HttpClient } from '@angular/common/http';
 import { WebsocketService } from '../websocket.service';
 import { BehaviorSubject } from 'rxjs';
 import { DisplayContainerComponent } from 'igniteui-angular/lib/directives/for-of/display.container';
+import { ActionService } from '../action.service';
 
 export interface Margin {
   top: number;
   right: number;
   bottom: number;
   left: number;
+}
+
+type MyType = {
+  id: string;
+  text: string;
+  color: string;
+  startDate: Date;
+  endDate: Date;
 }
 
 @Component({
@@ -53,6 +62,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
   private focus: any;
 
+  CMs: MyType[];
+
   initZoomMax: Date;
   zoomFromTablet: boolean;
   zoomDate1: any;
@@ -82,10 +93,15 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   gElem: any;
   chartPaddingRgiht: number;
 
-  constructor(private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
+  constructor(private actionService : ActionService, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
 
   ngOnInit() {
+    const tasksObservable = this.actionService.getActions();
     
+    tasksObservable.subscribe(tasksData => {
+
+      this.CMs = tasksData;
+    })
       
   }
 
@@ -179,7 +195,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
     console.log("chart2", this.elRef.nativeElement.querySelector("#chart2"));
     setTimeout(()=>{
-      this.display.sendCCP(5);
+      this.display.sendCCP(5,1);
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
     },15000)
@@ -187,46 +203,38 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     this.display.moveItem().subscribe(data =>{
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
-      switch (data.currentIndex) {
-        case 0:
-          chartBackground.contentWindow.document.getElementById("CM0_Bar").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
-          chartBackground.contentWindow.document.getElementById("CM0_Icon").style.visibility = "visible";
-          chartBackground.contentWindow.document.getElementById("CM0_Bar").style.visibility = "visible";
-        break;
 
-        case 3:
-          chartBackground.contentWindow.document.getElementById("CM3_Bar").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
-          chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "visible";
-          chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "visible";
-        break;
-      
-        default:
-          break;
-      }
+          chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
+          chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Icon").style.visibility = "visible";
+          chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").style.visibility = "visible";
+          chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
+          chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "rgb(64, 189, 115)";
+          chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.currentIndex].text;
     });
 
     this.display.expandItem().subscribe(data =>{
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
-      data.locked
+      chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
       if(data.state == -1 && !data.locked){
         console.log("hidden: ", chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar"));
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "hidden";
-      }else{
-        if(data.closedIndex == 0){
-          chartBackground.contentWindow.document.getElementById("CM0_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
-          chartBackground.contentWindow.document.getElementById("CM0_Icon").style.visibility = "visible";
-          chartBackground.contentWindow.document.getElementById("CM0_Bar").style.visibility = "visible";
-        }
-        if(data.closedIndex == 3){
-          chartBackground.contentWindow.document.getElementById("CM3_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
-          chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "visible";
-          chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "visible";
-        }
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
+      else{
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
+        console.log("text : ", chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML);
+        console.log("CMs", this.CMs[0].text);
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text;
+        console.log("CMs", chartBackground.contentWindow.document.getElementById("Preview_Bar"));
+      }
+
       
-    })
+    });
     
     this.display.zoomChart().subscribe(data =>{
       if(this.expanded1){

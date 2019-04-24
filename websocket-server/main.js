@@ -50,9 +50,9 @@ io.on('connection', (socket) => {
         io.emit('swipeCM',index);    
     });
 
-    socket.on('switchCCP', (index) => {
+    socket.on('switchCCP', (index, index2) => {
         console.log("Message Received, zoom: " + index);
-        io.emit('switchCCP',index);    
+        io.emit('switchCCP',{graphFactorIndex: index, swiperIndex: index2});    
     });
 
     socket.on('getANumber', (index) => {

@@ -885,7 +885,7 @@ export class AreaChartComponent implements OnInit {
     this.socket.switchCCP().subscribe(data=>{
       console.log("switch ccp: ", data);
       this.panelOpenState = true;
-      this.expandTaskPanel(data);
+      this.expandTaskPanel(data.graphFactorIndex);
     })
 
     this.socket.maximizeChart().subscribe(data=>{

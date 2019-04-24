@@ -21,7 +21,7 @@ export class WebsocketService {
     console.log("this.socket: ", this.socket);
   }
 
-  private socket = io('http://172.19.201.106:3000');
+  private socket = io('http://localhost:3000');
   
 
   expandItem() {
@@ -97,7 +97,7 @@ export class WebsocketService {
   }
 
   switchCCP(){
-    let observable = new Observable<number>(observer => {
+    let observable = new Observable<{graphFactorIndex:number, swiperIndex:number}>(observer => {
       this.socket.on('switchCCP', (data) => {
         observer.next(data);
       });
@@ -144,8 +144,8 @@ export class WebsocketService {
     this.socket.emit('swipeCM',data);
   }
 
-  sendCCP(data){
-    this.socket.emit('switchCCP',data);
+  sendCCP(data, data1){
+    this.socket.emit('switchCCP',data, data1);
   }
 
   sendANumber(data){
