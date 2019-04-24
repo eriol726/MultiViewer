@@ -162,7 +162,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       
       let focusHeight = this.elRef.nativeElement.querySelector(".focus").getBoundingClientRect().height;
 
-      let scaleGraphY = 1.2;
+      let scaleGraphY = 0.8;
 
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
@@ -179,7 +179,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
     console.log("chart2", this.elRef.nativeElement.querySelector("#chart2"));
     setTimeout(()=>{
-      this.display.sendExpand("task",5,-1,false);
+      this.display.sendCCP(5);
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
     },15000)

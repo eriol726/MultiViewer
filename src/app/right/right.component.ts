@@ -78,7 +78,6 @@ export class RightComponent implements OnInit, AfterViewInit {
     
     this.display.expandItem().subscribe(data=>{
       
-      
       // this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').style.height = "216px";
       
       this.isExpanded = data.state;
@@ -93,7 +92,7 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.panelOpenState = true;
         
         // set the first card background to gray
-        this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.firstChild.style.background = "#f4f4f4";
+        //this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.children[0].style.background = "#f4f4f4";
         
         
         

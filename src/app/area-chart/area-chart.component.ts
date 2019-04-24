@@ -882,6 +882,12 @@ export class AreaChartComponent implements OnInit {
       this.selectCard(data.state);
     })
 
+    this.socket.switchCCP().subscribe(data=>{
+      console.log("switch ccp: ", data);
+      this.panelOpenState = true;
+      this.expandTaskPanel(data);
+    })
+
     this.socket.maximizeChart().subscribe(data=>{
       console.log("maximized");
       //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
