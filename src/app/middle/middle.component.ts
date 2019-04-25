@@ -202,8 +202,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
     //hack to append a DOM element that has not been rendered
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");
-    console.log("this.areaChart: ", this.areaChart.svg._groups[0][0]);
-    //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
+    console.log("this.areaChart: ", this.areaChart);
+    
 
     console.log("chart2", this.elRef.nativeElement.querySelector("#chart2"));
     setTimeout(()=>{
@@ -285,6 +285,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.maximizeChart().subscribe(data=>{
       
       if(!this.expanded1){
+        this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
         console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";

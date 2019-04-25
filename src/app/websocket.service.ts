@@ -21,7 +21,7 @@ export class WebsocketService {
     console.log("this.socket: ", this.socket);
   }
 
-  private socket = io('http://192.168.2.227:3000');
+  private socket = io('http://localhost:3000');
   
 
   expandItem() {

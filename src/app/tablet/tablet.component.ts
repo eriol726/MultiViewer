@@ -66,7 +66,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild('appCompButton') appCompButton;
   @ViewChild('chart') mainChart: ElementRef;
 
-  @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
+  @ViewChild('chart1', {read: ViewContainerRef}) viewContainerRef;
   chartBackground: any;
   swiperIndexCentral: number = 0;
 
@@ -734,7 +734,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       //let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
 
       
-      this.viewContainerRef._data.renderElement.getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 "+336+" "+422);
+      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+336+" "+422);
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
       this.hideTabletPanels = false;

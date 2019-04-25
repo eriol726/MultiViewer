@@ -811,9 +811,9 @@ export class AreaChartComponent implements OnInit {
 
     let svg = document.createElement('svg'); 
     this.svg = d3.select("svg");
-    console.log("this.mainChart.nativeElement: ", this.svg);
+    console.log("this.mainChart.nativeElement: ", this.elRef.nativeElement.querySelector("#chart"));
     //hack to append a DOM element that has not been rendered
-    this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
+    //this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
 
     if(this.panelOpenState || this.lockedCM[0]){
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
@@ -872,7 +872,6 @@ export class AreaChartComponent implements OnInit {
 
     //this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
-    console.log("viewbox: ", this.elRef.nativeElement.querySelector("svg"));
 
 
     this.socket.expandItem().subscribe(data=>{
