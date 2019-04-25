@@ -207,6 +207,14 @@ export class AreaChartComponent implements OnInit {
     this.createFadeFront(this.curveFactor);
     this.createFadeEnd(this.curveFactor);
 
+    // set plane icons to green
+    if(this.curveFactor > 17){
+      this.socket.sendPlaneIcon(true);
+    }
+    else{
+      this.socket.sendPlaneIcon(false);
+    }
+
     switch(index){
       case 0: {
           

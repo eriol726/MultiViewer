@@ -60,6 +60,11 @@ io.on('connection', (socket) => {
         io.emit('getANumber',index);    
     });
 
+    socket.on('setPlaneIcons', (index) => {
+        console.log("setPlaneIcons: " + index);
+        io.emit('setPlaneIcons',index);    
+    });
+
 
 },{reconnection:false});
 

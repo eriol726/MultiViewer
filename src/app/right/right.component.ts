@@ -92,7 +92,7 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.panelOpenState = true;
         
         // set the first card background to gray
-        //this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.children[0].style.background = "#f4f4f4";
+        this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.children[0].style.background = "#f4f4f4";
         
         
         

@@ -120,6 +120,18 @@ export class WebsocketService {
     return observable;
   }
 
+  setPlaneIcons(){
+    let observable = new Observable<boolean>(observer => {
+      this.socket.on('setPlaneIcons', (data) => {
+        observer.next(data);
+      });
+      return () => {
+        this.socket.disconnect();
+      }
+    });
+    return observable;
+  }
+
   sendExpand(data, data1, data2, data3){
     this.socket.emit('expandItem', data, data1, data2, data3 );
   }
@@ -150,5 +162,9 @@ export class WebsocketService {
 
   sendANumber(data){
     this.socket.emit('getANumber',data);
+  }
+
+  sendPlaneIcon(data){
+    this.socket.emit('setPlaneIcons',data);
   }
 }

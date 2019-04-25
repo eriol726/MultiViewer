@@ -269,9 +269,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     })
 
-
+    this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
     this.display.maximizeChart().subscribe(data=>{
-      this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+      
       if(!this.expanded1){
         console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
@@ -305,6 +305,20 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     this.display.getANumber().subscribe(cellWidth =>{
       this.tabletCellWidth = cellWidth;
+    })
+
+    this.display.setPlaneIcons().subscribe(planeIcons =>{
+      console.log("planeIcons: ", planeIcons);
+      if(planeIcons){
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "green";
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "green";
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "green";
+      }
+      else{
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
+      }
     })
 
 
