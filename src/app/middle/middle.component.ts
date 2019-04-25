@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone, Renderer2  } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
@@ -32,7 +32,7 @@ type MyType = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MiddleComponent implements OnInit, AfterViewInit {
-  @ViewChild('chart') private chartContainer: ElementRef;
+  @ViewChild('areaChart') private areaChart: any;
   @ViewChild('row') private rowContainer: ElementRef;
   @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
   @Input() private data: Array<any>;
@@ -93,7 +93,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   gElem: any;
   chartPaddingRgiht: number;
 
-  constructor(private actionService : ActionService, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
+  constructor(private actionService : ActionService, private renderer:Renderer2, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
 
   ngOnInit() {
     const tasksObservable = this.actionService.getActions();
@@ -102,6 +102,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       this.CMs = tasksData;
     })
+
+    
       
   }
 
@@ -176,7 +178,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY50").getBoundingClientRect().y;
       
-      let focusHeight = this.elRef.nativeElement.querySelector(".focus").getBoundingClientRect().height;
+      
+      // we cant use querySelector(.focus) because int is not rendered. Use a decorator instead
+      let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
       let scaleGraphY = 0.8;
 
@@ -186,13 +190,19 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
 
+      
       //put the graph on it's right position
-      this.elRef.nativeElement.querySelector(".focus").setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
+      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
 
     },1000);
   }
 
   ngAfterViewInit(){
+    //hack to append a DOM element that has not been rendered
+    let chart2  = this.elRef.nativeElement.querySelector("#chart2");
+    console.log("this.areaChart: ", this.areaChart.svg._groups[0][0]);
+    //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
+
     console.log("chart2", this.elRef.nativeElement.querySelector("#chart2"));
     setTimeout(()=>{
       this.display.sendCCP(5,1);
@@ -275,9 +285,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       if(!this.expanded1){
         console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
-        this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("blueHistoryLine").style.visibility = "hidden";
-        this.elRef.nativeElement.querySelector("#history_layer_2").style.visibility = "hidden";
+        //this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
+        //this.chartBackground.contentWindow.document.getElementById("blueHistoryLine").style.visibility = "hidden";
+        //this.elRef.nativeElement.querySelector("#history_layer_2").style.visibility = "hidden";
         this.expanded1 = true;
         this.isExpandedEmitter$.next(this.expanded1);
         

@@ -1,6 +1,6 @@
 
     <div class="box" >      
-      <div *ngIf="!hideTabletPanels; else other_content"  style="display: flex; height: 100%">
+      <div [hidden]="hideTabletPanels"  style="display: flex; height: 100%">
           <div class="column">
             <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
               <p style="font-family: Titillium; margin: 0px !important">ACTION PLAN</p>
@@ -23,7 +23,7 @@
             </div>
 
             <div class="cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >
-              <app-area-chart id="chart1" style="width: 100%" #contentPlaceholder></app-area-chart>
+              <app-area-chart id="chart1" style="width: 100%" #chart1></app-area-chart>
               <!-- <iframe src="assets/Tablet/Central/CentralFrame_noGraph.svg" style="position: absolute; bottom: 0px; width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe> -->
             </div>
 
@@ -109,12 +109,12 @@
             </div> <!-- cell -->
           </div> <!-- column -->
       </div>
-      <ng-template #other_content >
-          <!-- <app-middle style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative"></app-middle> -->
-        <iframe src="assets/Screen/Central/CentralScreen_noGraph_w_Scale.svg" id="chartBackground"  (load)="loadIframe2()" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
-        <app-area-chart id="chart2" style="width: 100%; height: 100%;; position: absolute; top: 0px; left: 0px " #contentPlaceholder></app-area-chart>
-        <div (click)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; background-color: red; "></div>
-      </ng-template> 
+      <div [hidden]=!hideTabletPanels >
+        <app-middle style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative"></app-middle>
+        <!-- <iframe src="assets/Screen/Central/CentralScreen_noGraph_w_Scale.svg" id="chartBackground"  (load)="loadIframe2()" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe> -->
+        <!-- <app-area-chart id="chart2" style="width: 100%; height: 100%;; position: absolute; top: 0px; left: 0px " #contentPlaceholder></app-area-chart> -->
+        <div (click)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; z-index: 5; background-color: red; "></div>
+      </div> 
 
     </div>
     

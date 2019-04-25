@@ -35,7 +35,7 @@ export class AreaChartComponent implements OnInit {
   graphDataImproved  = 0;
   
 
-  @ViewChild('chart') private mainChart: ElementRef;
+  @ViewChild('mainChart') private mainChart: ElementRef;
 
   @ViewChild('chart') private chartContainer: ElementRef;
 
@@ -811,6 +811,8 @@ export class AreaChartComponent implements OnInit {
 
     let svg = document.createElement('svg'); 
 
+    console.log("this.svg: ", this.svg);
+    //hack to append a DOM element that has not been rendered
     this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
 
     if(this.panelOpenState || this.lockedCM[0]){

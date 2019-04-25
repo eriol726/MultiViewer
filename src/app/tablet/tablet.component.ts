@@ -62,7 +62,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
-  @ViewChildren('chart1') chart1: ElementRef;
+  @ViewChildren('chart1') chart1: any;
   @ViewChild('appCompButton') appCompButton;
   @ViewChild('chart') mainChart: ElementRef;
 
@@ -632,7 +632,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.socket.sendANumber(cellOffsetwdith);
     
-    this.elRef.nativeElement.querySelector("#chart1").getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
+    console.log("chart1 ", this.chart1._results[0].mainChart.nativeElement);
+    this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
     
     console.log("cardlist: ", this.cardList);
     console.log("switch: ", this.elRef.nativeElement.querySelector(".swiper-container"));
@@ -658,7 +659,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
       let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
     
-      this.elRef.nativeElement.querySelector("#chart1").getElementsByClassName("mainChart")[0].setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
+      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
 
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
@@ -724,6 +725,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     }
     else{
       console.log("scale back graph", this.focus);
+      console.log("chart1", this.elRef.nativeElement.querySelector("#chart1"));
       console.log("chart1: ", this.viewContainerRef._data.renderElement.querySelector(".focus")); 
       console.log("mainChart: ", this.viewContainerRef); 
       //let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
