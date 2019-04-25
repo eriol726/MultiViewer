@@ -256,6 +256,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
           //mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
+          
+          this.cmText = this.tasks[taskIndex].text + " APPLIED";
           this.elRef.nativeElement.querySelector('.applied-box').style.backgroundColor = "#40bd73";
         }
           
@@ -295,7 +297,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     if(this.panelOpenState){
       // set the central info text and color
-      this.cmText = this.tasks[index].text;
+      this.cmText = this.tasks[index].text + " PREVIEW";
       this.elRef.nativeElement.querySelector(".applied-box").style.backgroundColor = "yellow";
       
       this.isExpanded = index;

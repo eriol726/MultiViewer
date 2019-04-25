@@ -176,10 +176,11 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
       this.chartPaddingRgiht = screenWidth - (layer6Boundings.width + layer6Boundings.x);
 
-      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY50").getBoundingClientRect().y;
+      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY0").getBoundingClientRect().y;
       
       
       // we cant use querySelector(.focus) because int is not rendered. Use a decorator instead
+      console.log(this.areaChart);
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
       let scaleGraphY = 0.8;
@@ -188,6 +189,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
+      this.x=0;
       this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
 
       
@@ -219,7 +221,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
           chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").style.visibility = "visible";
           chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
           chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "rgb(64, 189, 115)";
-          chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.currentIndex].text;
+          chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.currentIndex].text + " APPLIED";
     });
 
     this.display.expandItem().subscribe(data =>{
@@ -239,7 +241,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
         console.log("text : ", chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML);
         console.log("CMs", this.CMs[0].text);
-        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text;
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
         console.log("CMs", chartBackground.contentWindow.document.getElementById("Preview_Bar"));
       }
 
@@ -285,7 +287,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       if(!this.expanded1){
         console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
-        //this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
+        this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
         //this.chartBackground.contentWindow.document.getElementById("blueHistoryLine").style.visibility = "hidden";
         //this.elRef.nativeElement.querySelector("#history_layer_2").style.visibility = "hidden";
         this.expanded1 = true;

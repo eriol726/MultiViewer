@@ -109,8 +109,8 @@ export class AreaChartComponent implements OnInit {
   private selectedCM = [false,false,false,false];
   private lockedCM = [{"locked": false, "graphFactor": 5},
                       {"locked": false, "graphFactor": 20},
+                      {"locked": false, "graphFactor": 8},
                       {"locked": false, "graphFactor": 10},
-                      {"locked": false, "graphFactor": 15},
                       {"locked": false, "graphFactor": 0},
                       {"locked": false, "graphFactor": 2}];
   collisionEnd = 330;
@@ -810,8 +810,8 @@ export class AreaChartComponent implements OnInit {
         .call(this.zoom);
 
     let svg = document.createElement('svg'); 
-
-    console.log("this.svg: ", this.svg);
+    this.svg = d3.select("svg");
+    console.log("this.mainChart.nativeElement: ", this.svg);
     //hack to append a DOM element that has not been rendered
     this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
 
