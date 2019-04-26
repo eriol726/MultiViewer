@@ -173,6 +173,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   hideTabletPanels = false;
 
+  messageNumber_1 = 1;
+  messageNumber_0 = 0;
+
   constructor(private actionService : ActionService, 
               private socket : WebsocketService, 
               private http: HttpClient, 
@@ -645,7 +648,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.socket.switchCCP().subscribe(data =>{
       console.log("swipe central");
-      this.swiperIndexCentral = data.swiperIndex;
+      this.messageNumber_1 = 2;
+      this.messageNumber_0 = 1;
+      //this.swiperIndexCentral = data.swiperIndex;
     })
     
     

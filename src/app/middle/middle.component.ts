@@ -164,20 +164,20 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
-      this.chartBackground.contentWindow.document.getElementById("CM0_Icon").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("CM0_Bar").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM4_Icon").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM4_Bar").style.visibility = "hidden";
       this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
 
       let screenWidth = window.innerWidth;
       let screenHeight = window.innerHeight;
 
-      this.x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
+      //this.x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
       let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
       this.chartPaddingRgiht = screenWidth - (layer6Boundings.width + layer6Boundings.x);
 
-      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY0").getBoundingClientRect().y;
+      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("YScale_100").getBoundingClientRect().y;
       
       
       // we cant use querySelector(.focus) because int is not rendered. Use a decorator instead

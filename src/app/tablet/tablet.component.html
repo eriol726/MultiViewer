@@ -33,8 +33,12 @@
                   
 
                    
-                        <div class="swiper-slide" *ngFor="let message of createRange(2); let i=index">
-                          <iframe id="message_{{i}}" [src]='"assets/Tablet/Central/m_"+i+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                        <div class="swiper-slide" >
+                          <iframe id="message_0" [src]='"assets/Tablet/Central/m_"+messageNumber_0+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                          <div class="iframeOverlay"></div>
+                        </div>
+                        <div class="swiper-slide" >
+                          <iframe id="message_1" [src]='"assets/Tablet/Central/m_"+messageNumber_1+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
                           <div class="iframeOverlay"></div>
                         </div>
                     
