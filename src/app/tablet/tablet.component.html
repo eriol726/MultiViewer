@@ -109,10 +109,14 @@
             </div> <!-- cell -->
           </div> <!-- column -->
       </div>
-      <div [hidden]=!hideTabletPanels style="width: 100%; height: 100%;">
+      <div [hidden]=!hideTabletPanels style="width: 100%; height: 100%;" id="expandedView">
         <app-middle style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative"></app-middle>
         <!-- <iframe src="assets/Screen/Central/CentralScreen_noGraph_w_Scale.svg" id="chartBackground"  (load)="loadIframe2()" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe> -->
-        <!-- <app-area-chart id="chart2" style="width: 100%; height: 100%;; position: absolute; top: 0px; left: 0px " #contentPlaceholder></app-area-chart> -->
+        
+
+        <!-- <app-area-chart id="chart2" style="width: 100%; height: 100%;; position: absolute; top: 0px; left: 0px " ></app-area-chart> -->
+
+        
         <div (click)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; z-index: 5; background-color: red; "></div>
       </div> 
 

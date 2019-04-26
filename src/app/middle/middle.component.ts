@@ -96,6 +96,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   constructor(private actionService : ActionService, private renderer:Renderer2, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
 
   ngOnInit() {
+    console.log("Middle component ngOninit+++++++++++++++++");
     const tasksObservable = this.actionService.getActions();
     
     tasksObservable.subscribe(tasksData => {
@@ -285,7 +286,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.maximizeChart().subscribe(data=>{
       
       if(!this.expanded1){
-        this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
+        //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
         console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
