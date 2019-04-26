@@ -114,11 +114,11 @@ export class AreaChartComponent implements OnInit {
                       {"locked": false, "graphFactor": 0},
                       {"locked": false, "graphFactor": 2}];
   
-  collisionStart = 240;
-  collisionFadeFrontStop = 250;
+  collisionStart = 250;
+  collisionFadeFrontStop = 260;
 
   collisionFadeEndStart = 310;
-  collisionEnd = 330;
+  collisionEnd = 320;
   
 
   public isExpanded: number  = -1;
@@ -230,7 +230,7 @@ export class AreaChartComponent implements OnInit {
 
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-            if(i> this.collisionStart && i < this.collisionEnd  ){
+            if(i>= this.collisionStart && i <= this.collisionEnd  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }
             else{
@@ -248,7 +248,7 @@ export class AreaChartComponent implements OnInit {
         
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
             console.log("this.curveFactor: ", );
-            if(i> this.collisionStart && i < this.collisionEnd  ){
+            if(i>= this.collisionStart && i <= this.collisionEnd  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }
             else{
@@ -267,7 +267,7 @@ export class AreaChartComponent implements OnInit {
 
           this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-            if(i> this.collisionStart && i < this.collisionEnd  ){
+            if(i>= this.collisionStart && i <= this.collisionEnd  ){
               return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
             }
             else{
@@ -286,7 +286,7 @@ export class AreaChartComponent implements OnInit {
         // updating collition pattern
         this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-          if(i> this.collisionStart && i < this.collisionEnd  ){
+          if(i>= this.collisionStart && i <= this.collisionEnd  ){
             return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
           }
           else{
@@ -303,7 +303,7 @@ export class AreaChartComponent implements OnInit {
 
         this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-          if(i> this.collisionStart && i < this.collisionEnd  ){
+          if(i>= this.collisionStart && i <= this.collisionEnd  ){
             return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
           }
           else{
@@ -318,7 +318,7 @@ export class AreaChartComponent implements OnInit {
 
         this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
-          if(i> this.collisionStart && i < this.collisionEnd  ){
+          if(i>= this.collisionStart && i <= this.collisionEnd  ){
             return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
           }
           else{
@@ -401,36 +401,39 @@ export class AreaChartComponent implements OnInit {
         .extent([[0, 0], [this.width, this.height]])
         .on('zoom', this.zoomed.bind(this));
 
-    let collisionFadeFront = this.createFadeFront(10);
-    let collisionFadeEnd = this.createFadeEnd(15);
+    let frontFadeMax = TEMPERATURES[0].values[this.collisionFadeFrontStop].temperature;
+    let frontFadeMin = TEMPERATURES[7].values[this.collisionFadeFrontStop].temperature;
+    let collisionFadeFront = this.createFadeFront(frontFadeMax-frontFadeMin);
+    let endFadeMax = TEMPERATURES[0].values[this.collisionFadeEndStart].temperature;
+    let endFadeMin = TEMPERATURES[7].values[this.collisionFadeEndStart].temperature;
+    let collisionFadeEnd = this.createFadeEnd(endFadeMax-endFadeMin);
 
     this.collisionArea = d3.area()
       .curve(d3.curveBasis)
       .x((d:any) => this.x(d.date))
       .y0((d:any, i:number) => {
-        if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+        if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
           return this.y(TEMPERATURES[7].values[i].temperature - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
         }
         else if(i>= this.collisionFadeFrontStop && i <= this.collisionFadeEndStart && this.panelOpenState){
           return this.y(TEMPERATURES[7].values[i].temperature);
         }
-        else if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){
-          return this.y(TEMPERATURES[7].values[i].temperature - collisionFadeEnd[this.collisionEnd-i-1]);
+        else if(i> this.collisionFadeEndStart  && i <= this.collisionEnd ){
+          return this.y(TEMPERATURES[7].values[i].temperature - collisionFadeEnd[this.collisionEnd-i]);
         }
         else{
           return this.y(TEMPERATURES[0].values[i].temperature);
         }
       })
       .y1((d:any, i:number) => {
-        if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+        if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
           return this.y(TEMPERATURES[0].values[i].temperature - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
         }
         else if(i>= this.collisionFadeFrontStop  && i <= this.collisionFadeEndStart && this.panelOpenState){
           return this.y(TEMPERATURES[0].values[i].temperature);
         }
-        else if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){
-          console.log("collisionFadeEnd[this.collisionEnd-i-1]: ", collisionFadeEnd[this.collisionEnd-i-1]);
-          return this.y(TEMPERATURES[0].values[i].temperature - collisionFadeEnd[this.collisionEnd-i-1] );
+        else if(i> this.collisionFadeEndStart  && i <= this.collisionEnd ){
+          return this.y(TEMPERATURES[0].values[i].temperature - collisionFadeEnd[this.collisionEnd-i] );
         }
         else{
           return this.y(TEMPERATURES[0].values[i].temperature);
@@ -786,7 +789,7 @@ export class AreaChartComponent implements OnInit {
 
     if(this.panelOpenState || this.lockedCM[0]){
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-        if(i> this.collisionStart && i < this.collisionEnd ){
+        if(i>= this.collisionStart && i <= this.collisionEnd ){
           return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
         }
         else{

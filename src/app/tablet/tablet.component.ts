@@ -740,8 +740,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.hideTabletPanels = false;
       this.socket.sendMaximized(false);
     }
-      
+  }
 
+  createRange(number){
+    var items: number[] = [];
+    for(var i = 1; i <= number; i++){
+       items.push(i);
+    }
+    return items;
   }
 
 }

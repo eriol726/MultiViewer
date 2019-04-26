@@ -30,14 +30,23 @@
             <div class="cell" style="border-top: 5px solid red; background-color: #fff ">
               <div  class="swiper-container" [swiper]="config" [(index)]="swiperIndexCentral" (indexChange)="CCP_activation($event)" >
                 <div class="swiper-wrapper" (click)="resize()">
-                  <div class="swiper-slide" >
-                    <iframe src="assets/Tablet/Central/m_1_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
+                  
+
+                   
+                        <div class="swiper-slide" *ngFor="let message of createRange(2); let i=index">
+                          <iframe id="message_{{i}}" [src]='"assets/Tablet/Central/m_"+i+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                          <div class="iframeOverlay"></div>
+                        </div>
+                    
+
+
+                    <!-- <iframe src="assets/Tablet/Central/m_1_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
                     <div class="iframeOverlay"></div>
-                  </div>
-                  <div class="swiper-slide" >
+                    </div>
+                    <div class="swiper-slide" >
                     <iframe  src="assets/Tablet/Central/m_2_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
-                    <div class="iframeOverlay"></div>
-                  </div>
+                    <div class="iframeOverlay"></div> -->
+                  
                 </div>
                 <div class="swiper-pagination"></div>
               </div>
