@@ -9,6 +9,9 @@ import { MiddleComponent } from './middle/middle.component';
 import { ActionService } from './action.service';
 import { WebsocketService } from './websocket.service';
 import { TabletComponent } from './tablet/tablet.component';
+import { Router, NavigationStart } from '@angular/router';
+
+export let browserRefresh = false;
 
 @Component({
   selector: 'app-root',
@@ -23,15 +26,7 @@ export class AppComponent {
   index = 0;
   nr = 0;
 
-  constructor(  ) {
-
-    console.log("app component init");
-    // this._chatService.newMessageReceived()
-    // .subscribe(data=>{
-    //   this.index = data.state
-    // });
-
-
+  constructor(private router: Router, private socket: WebsocketService  ) {
 
   }
 

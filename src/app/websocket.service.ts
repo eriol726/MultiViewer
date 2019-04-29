@@ -132,6 +132,18 @@ export class WebsocketService {
     return observable;
   }
 
+  reloadPage(){
+    let observable = new Observable<boolean>(observer => {
+      this.socket.on('reloadPage', (data) => {
+        observer.next(data);
+      });
+      return () => {
+        this.socket.disconnect();
+      }
+    });
+    return observable;
+  }
+
   sendExpand(data, data1, data2, data3){
     this.socket.emit('expandItem', data, data1, data2, data3 );
   }
@@ -167,4 +179,10 @@ export class WebsocketService {
   sendPlaneIcon(data){
     this.socket.emit('setPlaneIcons',data);
   }
+
+  sendReloadPage(data){
+    this.socket.emit('reloadPage',data);
+  }
+
+
 }

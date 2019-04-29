@@ -57,7 +57,7 @@ export class ActionService {
       setTimeout(() => {
         
         observer.next(this.actions);
-      },1000);
+      },100);
     });
 
     return data;
@@ -67,7 +67,7 @@ export class ActionService {
     const data = new Observable(observer => {
       setTimeout(() => {
         observer.next(this.actions);
-      },1000)
+      },100)
     } )
     return data;
 

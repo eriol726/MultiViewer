@@ -733,7 +733,7 @@ export class AreaChartComponent implements OnInit {
       .attr('patternTransform', "rotate(45)")
       .append("rect")
       .attr("id","diagonalRect")
-      .attr("width","2")
+      .attr("width","0.6")
       .attr("height", "4")
       .attr("transform", "translate(0,0)")
       .attr("fill", "#000")

@@ -6,6 +6,7 @@ import { ActionService } from '../action.service';
 import { WebsocketService } from '../websocket.service';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from "igniteui-angular";
+import { NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-right',
@@ -70,7 +71,13 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    
+    this.display.reloadPage().subscribe(reload =>{
+      console.log("reload");
+      if (event instanceof NavigationStart) {
+        window.location.reload();
+      }
+      
+    })
 
     this.iframes.changes.subscribe(result =>{
       //console.log("result: ", result._results[0].nativeElement)
@@ -169,9 +176,8 @@ export class RightComponent implements OnInit, AfterViewInit {
     })
 
     this.display.swipeCM().subscribe(currentCardIndex =>{
-      
+      // changing background for swiped card
       console.log("swipe index: ", this.done1);
-      console.log("CM: ",this.elRef.nativeElement.querySelector('#card'+this.done1));
 
       for (let cardIndex = 0; cardIndex < this.done1[this.openPanelIndex].cards; cardIndex++) {
         if(currentCardIndex == cardIndex){
@@ -182,30 +188,6 @@ export class RightComponent implements OnInit, AfterViewInit {
         }
         
       }
-
-      
-      // switch (currentCardIndex) {
-      //   case 0:
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "#f4f4f4";
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "";
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "";
-      //     break;
-      //   case 1:
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "#f4f4f4";
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "";
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "";
-      //     break;
-      //   case 2:
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 2).contentWindow.document.firstChild.style.background = "#f4f4f4";
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "";
-      //     this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 1).contentWindow.document.firstChild.style.background = "";
-      //     break;
-      
-      //   default:
-      //     break;
-      // }
-      
-      
  
     })
 

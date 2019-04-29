@@ -65,6 +65,11 @@ io.on('connection', (socket) => {
         io.emit('setPlaneIcons',index);    
     });
 
+    socket.on('reloadPage', (index) => {
+        console.log("reloadPage: " + index);
+        io.emit('reloadPage',index);    
+    });
+
 
 },{reconnection:false});
 

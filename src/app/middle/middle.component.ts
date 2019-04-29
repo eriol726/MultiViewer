@@ -93,7 +93,11 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   gElem: any;
   chartPaddingRgiht: number;
 
-  constructor(private actionService : ActionService, private renderer:Renderer2, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { }
+  constructor(private actionService : ActionService, private renderer:Renderer2, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
+    this.display.reloadPage().subscribe(reload =>{
+      //window.location.reload();
+    })
+  }
 
   ngOnInit() {
     console.log("Middle component ngOninit+++++++++++++++++");
@@ -198,10 +202,11 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       //put the graph on it's right position
       this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
 
-    },1000);
+    },100);
   }
 
   ngAfterViewInit(){
+    
     //hack to append a DOM element that has not been rendered
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");
     console.log("this.areaChart: ", this.areaChart);
@@ -287,7 +292,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.maximizeChart().subscribe(data=>{
       
       if(!this.expanded1){
-        //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
+        this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
         console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";

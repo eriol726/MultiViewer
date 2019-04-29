@@ -6,6 +6,7 @@ import * as d3 from 'd3';
 import { TEMPERATURES } from '../../data/temperatures';
 import { AreaChartComponent } from '../area-chart/area-chart.component';
 import { Subject } from 'rxjs';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 
 type MyType = {
@@ -217,13 +218,19 @@ export class LeftComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
 
     this.display.expandItem().subscribe(data=>{
-      if(data.state != -1){
-        console.log("expanded");
-        this.cm = data.closedIndex+1;
+      console.log("data.closedIndex: ", data.closedIndex, "  ", data.state);
+      switch(data.state){
+        case -1:
+          this.cm = 0;
+          break;
+        case 0:
+          this.cm = 1;
+          break;
+        case 3:
+          this.cm = 4;
+          break;
       }
-      else{
-        this.cm = 0;
-      }
+    
     });
 
     this.display.moveItem().subscribe(data=>{
@@ -231,7 +238,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
       switch (data.currentIndex) {
         case 0:
           this.cm = 1;
-          
           setTimeout(() => {
             APbackground.contentWindow.document.getElementById("CM1_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
           },100)

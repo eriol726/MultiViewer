@@ -11,6 +11,7 @@ import { TEMPERATURES } from '../../data/temperatures';
 import { DragulaService } from 'ng2-dragula';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
+import { NavigationStart, Router } from '@angular/router';
 
 export interface Margin {
   top: number;
@@ -182,9 +183,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private elRef:ElementRef,
               private dragulaService: DragulaService,
               public sanitizer: DomSanitizer,
+              private router: Router,
               private changeDetector : ChangeDetectorRef) { 
 
-       
+        router.events.subscribe((event) => {
+          if (event instanceof NavigationStart) {
+            //browserRefresh = !router.navigated;
+            console.log("reload page");
+            
+          }
+        });
+        socket.sendReloadPage(true);
+        console.log("reload page");
         // mySwiper = new Swiper('.swiper-container', {
         //   speed: 400,
         //   spaceBetween: 100
@@ -675,7 +685,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.focus.select("#hash4_6").attr("height", "1")
       this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
       this.focus.select("#diagonalRect").attr("width", "1");
-      this.focus.select("#diagonalRect").attr("height", "0.5");
+      this.focus.select("#diagonalRect").attr("height", "0.2");
     }, 100);
     
   }
@@ -738,8 +748,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       //let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
       //let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
 
-      
-      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+336+" "+422);
+      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+468+" "+487);
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
       this.hideTabletPanels = false;
