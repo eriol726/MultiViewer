@@ -1,11 +1,7 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 611.4 902.0">
-    <g style="isolation:isolate">
-        <g id="history-layer-2" opacity="0.6" style="isolation:isolate">
-            <g clip-path="url(#clip-path-5)">
-                <rect x="0" y="0" width="100%" height="100%" fill="#e2e2e2"/>
-            </g>
-        </g>
-    </g>
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" >
+
+            <rect id="history-layer-2" opacity="0.6" x="0" y="0" width="100%" height="100%" fill="#e2e2e2"/>
+
 </svg>

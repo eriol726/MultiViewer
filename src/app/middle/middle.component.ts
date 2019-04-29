@@ -145,7 +145,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       this.elRef.nativeElement.querySelector("#history_layer_2").style.top = historyLayerY+"px";
       this.elRef.nativeElement.querySelector("#history_layer_2").style.left = historyLayerX+"px";
-      this.elRef.nativeElement.querySelector("#history_layer_2").style.width = historyLayerWidth+"px";
+      this.elRef.nativeElement.querySelector("#history_layer_2").style.width = historyLayerWidth-3+"px";
       this.elRef.nativeElement.querySelector("#history_layer_2").style.height = historyLayerHeight+"px";
 
       this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "visible";
@@ -164,10 +164,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
-      this.chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("CM4_Icon").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("CM4_Bar").style.visibility = "hidden";
+
+      for (let index = 0; index < this.CMs.length; index++) {
+        this.chartBackground.contentWindow.document.getElementById("CM"+index+"_Icon").style.visibility = "hidden";
+        this.chartBackground.contentWindow.document.getElementById("CM"+index+"_Bar").style.visibility = "hidden";  
+      }
+      
       this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
 
       let screenWidth = window.innerWidth;
@@ -180,8 +182,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("YScale_100").getBoundingClientRect().y;
       
       
-      // we cant use querySelector(.focus) because int is not rendered. Use a decorator instead
-      console.log(this.areaChart);
+      // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
       let scaleGraphY = 0.8;
@@ -236,7 +237,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
       else{
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").children[0].style.fill = "rgba(255,235,0,0.9)";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
@@ -301,7 +302,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#history_layer_2").style.visibility = "visible";
-        this.chartBackground.contentWindow.document.getElementById("blueHistoryLine").style.visibility = "visible";
+        //this.chartBackground.contentWindow.document.getElementById("blueHistoryLine").style.visibility = "visible";
         this.expanded1 = false;
         this.isExpandedEmitter$.next(this.expanded1);
         
