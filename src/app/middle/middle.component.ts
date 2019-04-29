@@ -100,14 +100,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log("Middle component ngOninit+++++++++++++++++");
     const tasksObservable = this.actionService.getActions();
     
     tasksObservable.subscribe(tasksData => {
 
       this.CMs = tasksData;
     })
-
     
       
   }
@@ -126,10 +124,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.height = bounds.height - this.margin.top - this.margin.bottom;
 
   }
-
-
-
-
 
   loadIframe(){
     setTimeout(() => {
@@ -197,7 +191,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       this.x=0;
       this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
-
       
       //put the graph on it's right position
       this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
@@ -209,10 +202,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     
     //hack to append a DOM element that has not been rendered
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");
-    console.log("this.areaChart: ", this.areaChart);
-    
 
-    console.log("chart2", this.elRef.nativeElement.querySelector("#chart2"));
     setTimeout(()=>{
       this.display.sendCCP(5,1);
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
@@ -235,21 +225,18 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
       if(data.state == -1 && !data.locked){
-        console.log("hidden: ", chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar"));
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
+        //chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
       else{
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").children[0].style.fill = "rgba(255,235,0,0.9)";
+        //chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").children[0].style.fill = "rgba(255,235,0,0.9)";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
-        console.log("text : ", chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML);
-        console.log("CMs", this.CMs[0].text);
+
         chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
-        console.log("CMs", chartBackground.contentWindow.document.getElementById("Preview_Bar"));
       }
 
       
@@ -292,7 +279,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.maximizeChart().subscribe(data=>{
       
       if(!this.expanded1){
-        this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
+        //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
         console.log("Scale: ", this.chartBackground.contentWindow.document.getElementById("Scale"));
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
@@ -307,7 +294,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#history_layer_2").style.visibility = "visible";
-        //this.chartBackground.contentWindow.document.getElementById("blueHistoryLine").style.visibility = "visible";
         this.expanded1 = false;
         this.isExpandedEmitter$.next(this.expanded1);
         
@@ -317,10 +303,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     
     this.display.switchCCP().subscribe(data =>{
       let mainSvg = this.elRef.nativeElement.querySelector("#chartBackground");
-      console.log("append line: ", mainSvg.contentWindow.document.getElementById("lineAppend"));
-          //var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'assets/Screen/Central/m_2_Screen.svg');
-         // mainSvg.contentWindow.document.getElementById("lineAppend").appendCild(newElement);
-      //lineAppend 1320.75
     })
 
     this.display.getANumber().subscribe(cellWidth =>{
@@ -328,7 +310,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     })
 
     this.display.setPlaneIcons().subscribe(planeIcons =>{
-      console.log("planeIcons: ", planeIcons);
       if(planeIcons){
         this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "green";
         this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "green";
