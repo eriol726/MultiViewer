@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation, ElementRef, ViewChild, QueryList, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation, ElementRef, ViewChild, QueryList, ChangeDetectorRef, AfterContentChecked, Inject } from '@angular/core';
 import { AppComponent} from "../app.component";
 import { Injectable } from '@angular/core';
 import { LeftComponent } from "../left/left.component";
@@ -7,6 +7,7 @@ import { WebsocketService } from '../websocket.service';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from "igniteui-angular";
 import { NavigationStart } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-right',
@@ -34,8 +35,9 @@ export class RightComponent implements OnInit, AfterViewInit {
   public hidePanel: boolean = false;
   public panelHeight2: string =  "0px";
   private initPanelItemHeight: string = "0px";
+  elem;
 
-  constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
+  constructor(@Inject(DOCUMENT) private document:any, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
   }
 
   show(index){
@@ -204,14 +206,14 @@ export class RightComponent implements OnInit, AfterViewInit {
     })
 
     
+
+    
       
     
   }
 
   expandTaskPanel(index){
 
-
-    
   }
 
   ngAfterViewChecked()
@@ -220,7 +222,8 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(){
-
+    this.elem = document.documentElement;
+    this.openFullscreen();
     const CMmeasures = this.actionService.getCountermeasures();
     CMmeasures.subscribe(doneData => {
       this.done1 = doneData;
@@ -228,6 +231,10 @@ export class RightComponent implements OnInit, AfterViewInit {
     })
     
     
+  }
+
+  openFullscreen() {
+
   }
 
   createRange(number){

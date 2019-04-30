@@ -667,12 +667,6 @@ export class AreaChartComponent implements OnInit {
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
 
-    let data1 = TEMPERATURES[0].values;
-
-    data1.forEach(function(d,i) {
-      d["aboveData"] = d.temperature;
-      d["belowData"] = TEMPERATURES[7].values[i].temperature;
-    }.bind(this));
 
     // first curve
     this.focus.append('path')

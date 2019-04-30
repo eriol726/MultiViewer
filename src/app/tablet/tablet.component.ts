@@ -756,6 +756,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     }
   }
 
+  reload(){
+    window.location.reload();
+    this.socket.sendReloadPage(true);
+  }
+
   createRange(number){
     var items: number[] = [];
     for(var i = 1; i <= number; i++){
