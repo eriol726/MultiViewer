@@ -114,11 +114,15 @@ export class AreaChartComponent implements OnInit {
                       {"locked": false, "graphFactor": 0},
                       {"locked": false, "graphFactor": 2}];
   
-  collisionStart = 250;
-  collisionFadeFrontStop = 260;
+  collisionStart = 200+0;
+  collisionFadeFrontStop = 220;
 
-  collisionFadeEndStart = 310;
-  collisionEnd = 320;
+  collisionFadeEndStart = 330+0;
+  collisionEnd = 340+0;
+
+ 
+
+
   
 
   public isExpanded: number  = -1;
@@ -132,6 +136,8 @@ export class AreaChartComponent implements OnInit {
   curveFactorLocked: number = 0;
   svgMain: any;
 
+  interpolationMethod= d3.curveLinear;
+
   private numbers = new Array();
   private fadeEndNumbers = new Array();
 
@@ -142,7 +148,7 @@ export class AreaChartComponent implements OnInit {
   
   ngOnInit(){
 
-    this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
+    //this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
 
     const tasksObservable = this.actionService.getActions();
     tasksObservable.subscribe(tasksData => {
@@ -408,9 +414,10 @@ export class AreaChartComponent implements OnInit {
     let endFadeMin = TEMPERATURES[7].values[this.collisionFadeEndStart].temperature;
     let collisionFadeEnd = this.createFadeEnd(endFadeMax-endFadeMin);
 
+
     this.collisionArea = d3.area()
-      .curve(d3.curveBasis)
-      .x((d:any) => this.x(d.date))
+      .curve(this.interpolationMethod)
+      .x((d:any) => this.x(d.date)-0)
       .y0((d:any, i:number) => {
         if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
           return this.y(TEMPERATURES[7].values[i].temperature - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
@@ -445,29 +452,36 @@ export class AreaChartComponent implements OnInit {
 
     // first curve
     this.outerUpperArea = d3.area()
-    .curve(d3.curveBasis)
+    .curve(this.interpolationMethod)
     .x((d: any) => this.x(d.date))
     .y0((d: any, i: number) => this.y(d.temperature))
-    .y1((d: any, i: number) => this.y(TEMPERATURES[1].values[i].temperature))
+    .y1((d: any, i: number) => this.y(TEMPERATURES[1].values[i].temperature));
 
     this.innerArea = d3.area()
-      .curve(d3.curveBasis)
+      .curve(this.interpolationMethod)
       .x(function(d: any){ 
         //console.log("d.date: ", this.x(d.date));  
         return this.x(d.date);
       }.bind(this))
-      .y0((d: any) => this.y(d.temperature ))
+      .y0((d: any, i:number) => {
+        if(i < 86){
+          return this.y(d.temperature)+7;
+        }
+        else{
+          return this.y(d.temperature );
+        }
+      })
       .y1((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature));
 
     this.outerLowerArea = d3.area()
-      .curve(d3.curveBasis)
+      .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => this.y(TEMPERATURES[2].values[i].temperature))
       .y1((d: any, i:number) => this.y(d.temperature));
 
     //second curve
     this.outerUpperArea2 = d3.area()
-      .curve(d3.curveBasis)
+      .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
         if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
@@ -500,10 +514,13 @@ export class AreaChartComponent implements OnInit {
       });
 
     this.innerArea2 = d3.area()
-      .curve(d3.curveBasis)
+      .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date))
       .y0((d: any, i:number) => {
-        if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
+        if(i < 86){
+          return this.y(d.temperature)+7;
+        }
+        else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
           return this.y(d.temperature + this.numbers[i-this.collisionStart]);
         }
         else if(i>= this.collisionFadeFrontStop && i <= this.collisionFadeEndStart  ){
@@ -532,7 +549,7 @@ export class AreaChartComponent implements OnInit {
       });
     
     this.outerLowerArea2 = d3.area()
-      .curve(d3.curveBasis)
+      .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
         if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
@@ -565,7 +582,7 @@ export class AreaChartComponent implements OnInit {
 
     // brush area
      this.area2 = d3Shape.area()
-      .curve(d3.curveBasis)
+      .curve(this.interpolationMethod)
       .x((d: any) => this.x2(d.date))
       .y0((d: any) => this.y2(d.temperature)+5)
       .y1((d: any) => this.y2(d.temperature));
@@ -782,6 +799,7 @@ export class AreaChartComponent implements OnInit {
     //this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
 
     if(this.panelOpenState || this.lockedCM[0]){
+      console.log("init somthing open");
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
         if(i>= this.collisionStart && i <= this.collisionEnd ){
           return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactor);
@@ -791,6 +809,7 @@ export class AreaChartComponent implements OnInit {
         }
       }));
     }else{
+      console.log("init nothing open");
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
     }
 

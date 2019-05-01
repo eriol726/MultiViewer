@@ -8,6 +8,7 @@ import { WebsocketService } from '../websocket.service';
 import { BehaviorSubject } from 'rxjs';
 import { DisplayContainerComponent } from 'igniteui-angular/lib/directives/for-of/display.container';
 import { ActionService } from '../action.service';
+import { NavigationStart } from '@angular/router';
 
 export interface Margin {
   top: number;
@@ -93,6 +94,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   gElem: any;
   chartPaddingRgiht: number;
 
+  reloaded:boolean =  false;
+
   constructor(private actionService : ActionService, private renderer:Renderer2, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
     this.display.reloadPage().subscribe(reload =>{
       //window.location.reload();
@@ -173,23 +176,24 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let screenWidth = window.innerWidth;
       let screenHeight = window.innerHeight;
 
-      //this.x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
+      this.x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
       let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
       this.chartPaddingRgiht = screenWidth - (layer6Boundings.width + layer6Boundings.x);
 
-      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("YScale_100").getBoundingClientRect().y;
+      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("buttom-line").getBoundingClientRect().y;
       
       
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
-      let scaleGraphY = 0.8;
+      let scaleGraphY = 1.0;
 
+      console.log();
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
       this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
-      this.x=0;
+      
       this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
       
       //put the graph on it's right position
@@ -199,6 +203,15 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+    this.display.reloadPage().subscribe(reload =>{
+      console.log("reload", reload);
+      this.reloaded= reload;
+      if (this.reloaded) {
+        window.location.reload();
+        this.reloaded=false;
+      }
+      
+    })
     
     //hack to append a DOM element that has not been rendered
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");

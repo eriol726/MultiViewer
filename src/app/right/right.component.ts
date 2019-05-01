@@ -36,6 +36,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   public panelHeight2: string =  "0px";
   private initPanelItemHeight: string = "0px";
   elem;
+  reloaded: boolean;
 
   constructor(@Inject(DOCUMENT) private document:any, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
   }
@@ -74,9 +75,10 @@ export class RightComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(){
     this.display.reloadPage().subscribe(reload =>{
-      console.log("reload");
-      if (event instanceof NavigationStart) {
+      this.reloaded= reload;
+      if (this.reloaded) {
         window.location.reload();
+        this.reloaded=false;
       }
       
     })

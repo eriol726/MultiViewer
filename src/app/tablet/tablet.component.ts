@@ -186,15 +186,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private router: Router,
               private changeDetector : ChangeDetectorRef) { 
 
-        router.events.subscribe((event) => {
-          if (event instanceof NavigationStart) {
-            //browserRefresh = !router.navigated;
-            console.log("reload page");
-            
-          }
-        });
-        socket.sendReloadPage(true);
-        console.log("reload page");
+        
+     
         // mySwiper = new Swiper('.swiper-container', {
         //   speed: 400,
         //   spaceBetween: 100
@@ -398,7 +391,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   ngOnInit(){
     this.generateData();
 
-    this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
+    //this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
     //this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
 
@@ -466,8 +459,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private async drawChart(data) {
 
-    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
+    //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
+    //this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
 
@@ -757,8 +750,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   reload(){
-    window.location.reload();
     this.socket.sendReloadPage(true);
+    window.location.reload();
+    
   }
 
   createRange(number){

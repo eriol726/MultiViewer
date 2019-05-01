@@ -52,6 +52,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   hideChart: boolean = true;
   hideCM: boolean= false;
   testVar: number =55;
+  reloaded: boolean;
 
  
 // https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
@@ -138,7 +139,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
     let index = -1;
     let startDate = new Date(2018,1,1,11,14,0);
     let endDate = new Date(2018,1,1,14,47,0);
-    let filteredObj = TEMPERATURES[0].values.findIndex(item => item.date === startDate);
+    //let filteredObj = TEMPERATURES[0].values.findIndex(item => item.date === startDate);
 
 
     this.xTime.domain([startDate,endDate]);
@@ -216,6 +217,14 @@ export class LeftComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+    this.display.reloadPage().subscribe(reload =>{
+      this.reloaded= reload;
+      if (this.reloaded) {
+        window.location.reload();
+        this.reloaded=false;
+      }
+      
+    })
 
     this.display.expandItem().subscribe(data=>{
       console.log("data.closedIndex: ", data.closedIndex, "  ", data.state);

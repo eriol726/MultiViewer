@@ -62,7 +62,7 @@
             <rect x="0.69" y="935.33" width="1919.79" height="119.77" fill="#fff"/>
         </g>
         <g id="Layer_6" data-name="Layer 6">
-            <rect x="0.69" y="798.84" width="1919.79" height="131.09" fill="#f2a120" opacity="0.03"/>
+            <rect id="buttom-line" x="0.69" y="798.84" width="1919.79" height="131.09" fill="#f2a120" opacity="0.03"/>
             <rect x="0.69" y="123.91" width="1919.79" height="106.18" fill="#e3f0fc" opacity="0.16"/>
         </g>
         <g id="Preview_Bar">
@@ -127,7 +127,7 @@
                     <rect x="1800.76" y="218.35" width="120.03" height="14.37" fill="#8dc5f2"/>
                 </g>
             </g>
-            <line x1="77.14" y1="124.37" x2="77.14" y2="903.11" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
+            <line id="first-line" x1="77.14" y1="124.37" x2="77.14" y2="903.11" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
             <line x1="231.73" y1="124.37" x2="231.73" y2="903.11" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
             <line x1="386.32" y1="124.37" x2="386.32" y2="903.11" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
             <line x1="540.91" y1="124.37" x2="540.91" y2="903.11" fill="none" stroke="#c4c4c4" stroke-miterlimit="10"/>
@@ -738,7 +738,7 @@
         <g id="Scale">
             <g id="YScale">
                 <g clip-path="url(#clip-path-7)">
-                    <g style="isolation:isolate">
+                    <g id="YScale_0" style="isolation:isolate">
                         <g clip-path="url(#clip-path-8)">
                             <g style="isolation:isolate">
                                 <g clip-path="url(#clip-path-8)">
