@@ -1,29 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MiddleComponent } from './middle.component';
+import { TabletComponent } from './tablet.component';
 import { ElementRef } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
 
 class MockElementRef implements ElementRef {
   nativeElement = {};
 }
 
-describe('MiddleComponent', () => {
-  let component: MiddleComponent;
-  let fixture: ComponentFixture<MiddleComponent>;
-
-  // beforeEach(() => {
-  //   providers: [
-  //     { provide: ElementRef, useClass: MockElementRef }
-  //   ]
-  // });
+describe('Tablet\tabletComponent', () => {
+  let component: TabletComponent;
+  let fixture: ComponentFixture<TabletComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MiddleComponent ],
-      imports: [
-        RouterTestingModule
-      ],
+      declarations: [ TabletComponent ],
       providers: [
         { provide: ElementRef, useClass: MockElementRef }
       ]
@@ -32,7 +22,7 @@ describe('MiddleComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MiddleComponent);
+    fixture = TestBed.createComponent(TabletComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

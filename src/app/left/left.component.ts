@@ -230,13 +230,13 @@ export class LeftComponent implements OnInit, AfterViewInit {
       console.log("data.closedIndex: ", data.closedIndex, "  ", data.state);
       switch(data.state){
         case -1:
-          this.cm = 0;
+          //this.cm = 0;
           break;
         case 0:
-          this.cm = 1;
+         //this.cm = 1;
           break;
         case 3:
-          this.cm = 4;
+         // this.cm = 4;
           break;
       }
     

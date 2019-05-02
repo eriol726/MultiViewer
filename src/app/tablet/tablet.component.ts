@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, TemplateRef, ContentChild, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, TemplateRef, ContentChild, ChangeDetectorRef, ViewContainerRef, Injectable, Output, EventEmitter } from '@angular/core';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
@@ -35,7 +35,9 @@ declare var require: any;
   templateUrl: './tablet.component.html',
   styleUrls: ['./tablet.component.css']
 })
+
 export class TabletComponent implements OnInit, AfterViewInit {
+  @Output() myEvent = new EventEmitter();
 
   config: any = {
     pagination: {
@@ -60,7 +62,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('panelLeft') panelLeft;
   @ViewChild(RightComponent) rightPanel: RightComponent;
   @ViewChild(LeftComponent) leftPanel: LeftComponent;
-  @ViewChild(MiddleComponent) middlePanel: MiddleComponent;
+  @ViewChild(MiddleComponent) middleComponent: MiddleComponent;
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
   @ViewChildren('chart1') chart1: any;
@@ -82,6 +84,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private myTemplate: any = "";
   @Input() url: string = "app/right.display.component.html";
   @Input() ID: string;
+  
 
   private svgPath = "../../assets/";
   tasks: MyType[];
@@ -631,7 +634,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     //this.initSvg();
     console.log();
-    this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
+    this.focus.attr('transform', 'translate(' + (-2800) + ',' + 50 + ') scale(5,1)');
     //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
 
     //Send the width of the cell to middle screen
@@ -672,7 +675,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
 
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
+      this.focus.attr('transform', 'translate(' + (-2800) + ',' + 50 + ') scale(5,1)');
 
       this.focus.select("#hash4_6").attr("width", "1")
       this.focus.select("#hash4_6").attr("height", "1")
@@ -753,6 +756,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.socket.sendReloadPage(true);
     window.location.reload();
     
+  }
+
+  goToCCP(){
+   // this.myEvent.emit(null);
+    //this.middleComponent.goToCCP();
+    this.socket.sendCCP(5,1);
   }
 
   createRange(number){

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone, Renderer2  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone, Renderer2, Injectable, RendererFactory2  } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
@@ -9,6 +9,15 @@ import { BehaviorSubject } from 'rxjs';
 import { DisplayContainerComponent } from 'igniteui-angular/lib/directives/for-of/display.container';
 import { ActionService } from '../action.service';
 import { NavigationStart } from '@angular/router';
+
+@Injectable()
+class Service {
+    private renderer: Renderer2;
+
+    constructor(rendererFactory: RendererFactory2) {
+        this.renderer = rendererFactory.createRenderer(null, null);
+    }
+}
 
 export interface Margin {
   top: number;
@@ -32,6 +41,7 @@ type MyType = {
   styleUrls: ['./middle.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class MiddleComponent implements OnInit, AfterViewInit {
   @ViewChild('areaChart') private areaChart: any;
   @ViewChild('row') private rowContainer: ElementRef;
@@ -96,11 +106,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
   reloaded:boolean =  false;
 
-  constructor(private actionService : ActionService, private renderer:Renderer2, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
+  constructor(private actionService : ActionService, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
     this.display.reloadPage().subscribe(reload =>{
       //window.location.reload();
     })
   }
+  
 
   ngOnInit() {
     const tasksObservable = this.actionService.getActions();
@@ -217,12 +228,14 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");
 
     setTimeout(()=>{
-      this.display.sendCCP(5,1);
+      this.goToCCP();
+    },15000)
+
+    this.display.switchCCP().subscribe(data =>{
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
-    },15000)
+    })
     
-
     this.display.moveItem().subscribe(data =>{
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
 
@@ -243,12 +256,26 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
-      else{
-        //chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").children[0].style.fill = "rgba(255,235,0,0.9)";
+      else if(data.state == 0){
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
+      }
+      else{
+        chartBackground.contentWindow.document.getElementById("CM"+(1)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(1)+"_Bar").style.visibility = "hidden";
 
+        chartBackground.contentWindow.document.getElementById("CM"+(2)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(2)+"_Bar").style.visibility = "hidden";
+
+        chartBackground.contentWindow.document.getElementById("CM"+(3)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(3)+"_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
+
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
       }
 
@@ -313,10 +340,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       }
       console.log("expand", this.testvar);
     })
-    
-    this.display.switchCCP().subscribe(data =>{
-      let mainSvg = this.elRef.nativeElement.querySelector("#chartBackground");
-    })
 
     this.display.getANumber().subscribe(cellWidth =>{
       this.tabletCellWidth = cellWidth;
@@ -337,6 +360,15 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
 
   }
+
+  goToCCP(){
+    
+    console.log("goToCCP: ");
+    this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
+    this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
+    this.display.sendCCP(5,1);
+  }
+  
 
   @HostListener('window:scroll', ['$event']) // for window scroll events
     onScroll(event) {

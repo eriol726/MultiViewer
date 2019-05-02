@@ -64,6 +64,7 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
     AppComponent,
     WebsocketService,
     LeftComponent,
+    MiddleComponent,
     TabletComponent,
     ActionService,
     AreaChartComponent,
