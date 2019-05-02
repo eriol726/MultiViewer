@@ -197,7 +197,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
-      let scaleGraphY = 1.0;
+      let scaleGraphY = 0.7;
 
       console.log();
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;

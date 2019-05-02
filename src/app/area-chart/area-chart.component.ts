@@ -107,12 +107,12 @@ export class AreaChartComponent implements OnInit {
   private curveFactor = 0;
 
   private selectedCM = [false,false,false,false];
-  private lockedCM = [{"locked": false, "graphFactor": 5},
+  private lockedCM = [{"locked": false, "graphFactor": 15},
+                      {"locked": false, "graphFactor": 65},
+                      {"locked": false, "graphFactor": 62},
                       {"locked": false, "graphFactor": 20},
-                      {"locked": false, "graphFactor": 8},
                       {"locked": false, "graphFactor": 10},
-                      {"locked": false, "graphFactor": 0},
-                      {"locked": false, "graphFactor": 2}];
+                      {"locked": false, "graphFactor": 12}];
   
   collisionStart = 200+0;
   collisionFadeFrontStop = 220;
@@ -136,7 +136,7 @@ export class AreaChartComponent implements OnInit {
   curveFactorLocked: number = 0;
   svgMain: any;
 
-  interpolationMethod= d3.curveLinear;
+  interpolationMethod= d3.curveCardinal;
 
   private numbers = new Array();
   private fadeEndNumbers = new Array();
@@ -220,7 +220,7 @@ export class AreaChartComponent implements OnInit {
     this.createFadeEnd(this.curveFactor);
 
     // set plane icons to green
-    if(this.curveFactor > 17){
+    if(this.curveFactor > 60){
       this.socket.sendPlaneIcon(true);
     }
     else{
@@ -517,7 +517,7 @@ export class AreaChartComponent implements OnInit {
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date))
       .y0((d: any, i:number) => {
-        if(i < 86){
+        if(i < 90){
           return this.y(d.temperature)+7;
         }
         else if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
@@ -859,6 +859,11 @@ export class AreaChartComponent implements OnInit {
       }
         
     });
+
+    this.socket.moveItem().subscribe(data=>{
+      this.selectCard(data.currentIndex);
+      this.expandTaskPanel(data.currentIndex);
+    })
 
     this.socket.lockItem().subscribe(data=>{
       this.selectCard(data.state);

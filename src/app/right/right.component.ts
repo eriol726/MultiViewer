@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation, ElementRef, ViewChild, QueryList, ChangeDetectorRef, AfterContentChecked, Inject } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation, ElementRef, ViewChild, QueryList, ChangeDetectorRef, AfterContentChecked, Inject, Renderer2 } from '@angular/core';
 import { AppComponent} from "../app.component";
 import { Injectable } from '@angular/core';
 import { LeftComponent } from "../left/left.component";
@@ -38,7 +38,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   elem;
   reloaded: boolean;
 
-  constructor(@Inject(DOCUMENT) private document:any, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
+  constructor(@Inject(DOCUMENT) private document:any, private renderer: Renderer2, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
   }
 
   show(index){
@@ -73,7 +73,22 @@ export class RightComponent implements OnInit, AfterViewInit {
     
   }
 
+  switch(){
+    console.log("heeeeeej");
+  }
+
   ngAfterViewInit(){
+    setTimeout(()=>{
+      let mainSvg = this.elRef.nativeElement.querySelector("#card3_1");
+      let cardSwitch =   mainSvg.contentWindow.document.getElementById("card_1_switch");
+      const p: HTMLDivElement = this.renderer.createElement('div');
+      p.insertAdjacentHTML('beforeend', '<div class="two" (click)="switch()">two</div>');
+      this.renderer.appendChild(cardSwitch, p)
+      console.log("cardSwitch: ", cardSwitch);
+    },1000)
+
+    
+    
     this.display.reloadPage().subscribe(reload =>{
       this.reloaded= reload;
       if (this.reloaded) {
@@ -169,10 +184,15 @@ export class RightComponent implements OnInit, AfterViewInit {
 
     this.display.maximizeChart().subscribe(data=>{
       if(!this.hidePanel){
+        this.elRef.nativeElement.querySelector(".row").style.height = "100vh";
+        this.elRef.nativeElement.querySelector(".row").style.padding = "0px";
+
         this.hideChart = false;
         this.hidePanel = true;
       }
       else{
+        this.elRef.nativeElement.querySelector(".row").style.height = "95vh";
+        this.elRef.nativeElement.querySelector(".row").style.padding = "2px 10px 5px 10px";
         this.hideChart = true;
         this.hidePanel = false;
       }

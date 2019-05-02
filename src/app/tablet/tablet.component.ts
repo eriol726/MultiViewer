@@ -66,6 +66,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
   @ViewChildren('chart1') chart1: any;
+  @ViewChildren('cardSwitch_3_1') cardSwitch_3_1: any;
   @ViewChild('appCompButton') appCompButton;
   @ViewChild('chart') mainChart: ElementRef;
 
@@ -180,6 +181,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
   messageNumber_1 = 1;
   messageNumber_0 = 0;
 
+  cardSwitchFunction: any;
+  switchTop;
+  switchLeft;
+
   constructor(private actionService : ActionService, 
               private socket : WebsocketService, 
               private http: HttpClient, 
@@ -273,6 +278,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       }.bind(this));
     
   }
+
+  switch(){
+    console.log("heeeeeej");
+  }
+
 
   closeLeftPanel(elementRef){
     console.log("index: ", parseInt(elementRef.id[elementRef.id.length-1]));
@@ -616,11 +626,32 @@ export class TabletComponent implements OnInit, AfterViewInit {
     // ] } }, 2000); 
   }
 
+  loadCardIframe(){
+    setTimeout(()=>{
+      let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
+      let cardSwitch =   mainSvg.contentWindow.document.getElementById("card_3_1_switch");
+      
+      this.cardSwitchFunction = this.elRef.nativeElement.querySelector("#switchFunction");
+      console.log("cardSwitchFunction: ", this.cardSwitchFunction);
+      this.cardSwitchFunction.style.left=cardSwitch.getBoundingClientRect().x+"px";
+      this.cardSwitchFunction.style.top=cardSwitch.getBoundingClientRect().y+"px";
+      this.cardSwitchFunction.setAttribute("transform" , "translate(0,0)");
+
+      this.cardSwitch_3_1._results[0].nativeElement.style.top="50px";
+      this.switchLeft = cardSwitch.getBoundingClientRect().x;
+      this.switchTop = cardSwitch.getBoundingClientRect().y;
+      console.log("cardSwitch: ", this.cardSwitchFunction);
+      console.log("this.cardSwitch_3_1._results[0]: ", this.cardSwitch_3_1._results[0].nativeElement);
+    },1000)
+  }
+
 
   ngAfterViewInit() {
-    setTimeout(()=>{
-      console.log("chart1: ", this.elRef.nativeElement.querySelector("#chart1"));
-    },1000)
+
+
+
+
+    
 
     this.svg = d3.select('svg');
     this.focus = d3.select(".focus");
@@ -634,7 +665,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     //this.initSvg();
     console.log();
-    this.focus.attr('transform', 'translate(' + (-2800) + ',' + 50 + ') scale(5,1)');
+    this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(5,1)');
     //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
 
     //Send the width of the cell to middle screen
@@ -675,13 +706,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
 
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(' + (-2800) + ',' + 50 + ') scale(5,1)');
+      this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
 
       this.focus.select("#hash4_6").attr("width", "1")
       this.focus.select("#hash4_6").attr("height", "1")
       this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
       this.focus.select("#diagonalRect").attr("width", "1");
       this.focus.select("#diagonalRect").attr("height", "0.2");
+
+      
     }, 100);
     
   }
@@ -717,6 +750,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
+
       this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
       //put the graph on it's right position
@@ -746,7 +780,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+468+" "+487);
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(' + (-1130) + ',' + 50 + ') scale(5,1)');
+      this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
       this.hideTabletPanels = false;
       this.socket.sendMaximized(false);
     }

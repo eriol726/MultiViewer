@@ -218,6 +218,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(){
     this.display.reloadPage().subscribe(reload =>{
+      console.log("reload " , reload )
       this.reloaded= reload;
       if (this.reloaded) {
         window.location.reload();
