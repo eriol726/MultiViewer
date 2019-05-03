@@ -70,6 +70,16 @@ io.on('connection', (socket) => {
         io.emit('reloadPage',index);    
     });
 
+    socket.on('prioritize', (index) => {
+        console.log("prioritize: " + index);
+        io.emit('prioritize',index);    
+    });
+
+    socket.on('fullscreen', (index) => {
+        console.log("fullscreen: " + index);
+        io.emit('fullscreen',index);    
+    });
+
 
 },{reconnection:false});
 

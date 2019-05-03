@@ -144,6 +144,30 @@ export class WebsocketService {
     return observable;
   }
 
+  prioritize(){
+    let observable = new Observable<boolean>(observer => {
+      this.socket.on('prioritize', (data) => {
+        observer.next(data);
+      });
+      return () => {
+        this.socket.disconnect();
+      }
+    });
+    return observable;
+  }
+
+  fullScreen(){
+    let observable = new Observable<boolean>(observer => {
+      this.socket.on('fullscreen', (data) => {
+        observer.next(data);
+      });
+      return () => {
+        this.socket.disconnect();
+      }
+    });
+    return observable;
+  }
+
   sendExpand(data, data1, data2, data3){
     this.socket.emit('expandItem', data, data1, data2, data3 );
   }
@@ -182,6 +206,14 @@ export class WebsocketService {
 
   sendReloadPage(data){
     this.socket.emit('reloadPage',data);
+  }
+
+  sendPriorotize(data){
+    this.socket.emit('prioritize',data);
+  }
+
+  sendFullscreen(data){
+    this.socket.emit('fullscreen',data);
   }
 
 

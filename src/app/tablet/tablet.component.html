@@ -9,7 +9,8 @@
             <div class="cell" style="flex: 0 0 95%;">
               <div dragula="COPYABLE" id="left" class="example-list-left" (click)="closeLeftPanel($event.target)"> </div>
               <img src="assets/reload_icon.png" height="42" width="42" style="position: absolute; bottom: 0px;" (click)="reload()">
-              <img src="assets/long-arrow-right.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 42px" (click)="goToCCP()">
+              <img src="assets/fullscreen_icon.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 42px" (click)="isFullScreen == false ? openFullscreen() : closeFullscreen()">
+              <img src="assets/long-arrow-right.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 84px" (click)="goToCCP()">
             </div>
             
           </div>
@@ -92,8 +93,10 @@
                             <div class="swiper-slide" >
                                 
                                 <iframe id="card_{{i}}_1" class="card"  [src]='"assets/Tablet/Right/r_"+ i +"_B_Tablet.svg" | safe' (load)="loadCardIframe()" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                                <div class="iframeOverlay"></div>
-                                <div id="switchFunction"  (dblclick)="switch()" style="width:50px; height: 60px; z-index:10; position:absolute; background: red;" [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
+                                <div class="iframeOverlay">
+                                    <div id="switchFunction"  (click)="switch()" style="width:50px; height: 20px; position:absolute; " [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
+                                </div>
+                                
                             </div>
                             <div class="swiper-slide" >
                                 <iframe id="card_{{i}}_2" class="card" [src]='"assets/Tablet/Right/r_"+ i +"_C_Tablet.svg" | safe' style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>

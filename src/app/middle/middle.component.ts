@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone, Renderer2, Injectable, RendererFactory2  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, ɵConsole, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone, Renderer2, Injectable, RendererFactory2, Inject  } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DisplayContainerComponent } from 'igniteui-angular/lib/directives/for-of/display.container';
 import { ActionService } from '../action.service';
 import { NavigationStart } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 class Service {
@@ -47,6 +48,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   @ViewChild('row') private rowContainer: ElementRef;
   @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
   @Input() private data: Array<any>;
+
+  elem;
 
   private margin: Margin;
   private margin2: Margin;
@@ -106,7 +109,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
   reloaded:boolean =  false;
 
-  constructor(private actionService : ActionService, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
+  constructor(@Inject(DOCUMENT) private document: any, private actionService : ActionService, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
     this.display.reloadPage().subscribe(reload =>{
       //window.location.reload();
     })
@@ -114,6 +117,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   
 
   ngOnInit() {
+    this.elem = document.documentElement;
     const tasksObservable = this.actionService.getActions();
     
     tasksObservable.subscribe(tasksData => {
@@ -214,6 +218,16 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+    this.display.fullScreen().subscribe(data =>{
+      console.log("fullscreen: ", data);
+      if(data){
+        this.openFullscreen();
+      }
+      else{
+        this.closeFullscreen();
+      }
+    })
+
     this.display.reloadPage().subscribe(reload =>{
       console.log("reload", reload);
       this.reloaded= reload;
@@ -239,12 +253,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.moveItem().subscribe(data =>{
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
 
-          chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
-          chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Icon").style.visibility = "visible";
-          chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").style.visibility = "visible";
-          chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
-          chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "rgb(64, 189, 115)";
-          chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.currentIndex].text + " APPLIED";
+      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
+      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Icon").style.visibility = "visible";
+      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").style.visibility = "visible";
+      chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
+      chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "rgb(64, 189, 115)";
+      chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.currentIndex].text + " APPLIED";
     });
 
     this.display.expandItem().subscribe(data =>{
@@ -367,6 +381,37 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
     this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
     this.display.sendCCP(5,1);
+  }
+
+  openFullscreen() {
+    if (this.elem.requestFullscreen) {
+      this.elem.requestFullscreen();
+    } else if (this.elem.mozRequestFullScreen) {
+      /* Firefox */
+      this.elem.mozRequestFullScreen();
+    } else if (this.elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.elem.webkitRequestFullscreen();
+    } else if (this.elem.msRequestFullscreen) {
+      /* IE/Edge */
+      this.elem.msRequestFullscreen();
+    }
+  }
+
+  /* Close fullscreen */
+  closeFullscreen() {
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+    } else if (this.document.mozCancelFullScreen) {
+      /* Firefox */
+      this.document.mozCancelFullScreen();
+    } else if (this.document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.document.webkitExitFullscreen();
+    } else if (this.document.msExitFullscreen) {
+      /* IE/Edge */
+      this.document.msExitFullscreen();
+    }
   }
   
 

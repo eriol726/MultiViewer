@@ -7,7 +7,7 @@ import { TEMPERATURES } from '../../data/temperatures';
 import { AreaChartComponent } from '../area-chart/area-chart.component';
 import { Subject } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
-
+import { DOCUMENT } from '@angular/common';
 
 type MyType = {
   text: string;
@@ -30,7 +30,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   @ViewChildren('panel') panel;
   @ViewChild('chart') mainChart: ElementRef;
 
-
+  elem;
   tasks2: {};
 
   private innerWidth: number;
@@ -53,10 +53,11 @@ export class LeftComponent implements OnInit, AfterViewInit {
   hideCM: boolean= false;
   testVar: number =55;
   reloaded: boolean;
+  prevCm: number = 0;
 
  
 // https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
-  constructor(private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
+  constructor(@Inject(DOCUMENT) private document: any, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
 
   }
 
@@ -90,6 +91,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.elem = document.documentElement;
     console.log("ngInit");
   
     // this.areaChart.renderContent.subscribe(value =>
@@ -217,6 +219,17 @@ export class LeftComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+
+    this.display.fullScreen().subscribe(data =>{
+      console.log("fullscreen: ", data);
+      if(data){
+        this.openFullscreen();
+      }
+      else{
+        this.closeFullscreen();
+      }
+    })
+
     this.display.reloadPage().subscribe(reload =>{
       console.log("reload " , reload )
       this.reloaded= reload;
@@ -264,17 +277,20 @@ export class LeftComponent implements OnInit, AfterViewInit {
         default:
           break;
       }
+      this.prevCm = this.cm;
       if(data.type === "change"){
-        console.log("data: ", data.currentIndex);
-        
-    
-        console.log("data.containerData: ", data.containerData);
+
         this.data2.push(data.containerData);
-        //this.update(this.data2);
-        
-        
-        
       }
+    })
+
+    this.display.prioritize().subscribe(data =>{
+      if(this.cm == 5){
+        this.cm = this.prevCm;
+      }else{
+        this.cm = 5;
+      }
+      
     })
 
     this.display.maximizeChart().subscribe(data=>{
@@ -298,11 +314,42 @@ export class LeftComponent implements OnInit, AfterViewInit {
     console.log("tja");
   }
 
+  openFullscreen() {
+    if (this.elem.requestFullscreen) {
+      this.elem.requestFullscreen();
+    } else if (this.elem.mozRequestFullScreen) {
+      /* Firefox */
+      this.elem.mozRequestFullScreen();
+    } else if (this.elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.elem.webkitRequestFullscreen();
+    } else if (this.elem.msRequestFullscreen) {
+      /* IE/Edge */
+      this.elem.msRequestFullscreen();
+    }
+  }
+
+  /* Close fullscreen */
+  closeFullscreen() {
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+    } else if (this.document.mozCancelFullScreen) {
+      /* Firefox */
+      this.document.mozCancelFullScreen();
+    } else if (this.document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.document.webkitExitFullscreen();
+    } else if (this.document.msExitFullscreen) {
+      /* IE/Edge */
+      this.document.msExitFullscreen();
+    }
+  }
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     
-    this.draw();
+    //this.draw();
     
   }
 

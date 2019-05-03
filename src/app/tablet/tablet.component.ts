@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, TemplateRef, ContentChild, ChangeDetectorRef, ViewContainerRef, Injectable, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, TemplateRef, ContentChild, ChangeDetectorRef, ViewContainerRef, Injectable, Output, EventEmitter, Inject } from '@angular/core';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
@@ -11,6 +11,7 @@ import { TEMPERATURES } from '../../data/temperatures';
 import { DragulaService } from 'ng2-dragula';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
 import { NavigationStart, Router } from '@angular/router';
 
 export interface Margin {
@@ -73,6 +74,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild('chart1', {read: ViewContainerRef}) viewContainerRef;
   chartBackground: any;
   swiperIndexCentral: number = 0;
+  elem;
+  isFullScreen: boolean = false;
 
   @ViewChild('contentPlaceholder') set content(content: any) {
     this.otherContent = content;
@@ -185,7 +188,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
   switchTop;
   switchLeft;
 
-  constructor(private actionService : ActionService, 
+  prioritize: boolean = true;
+
+  constructor(@Inject(DOCUMENT) private document: any,
+              private actionService : ActionService, 
               private socket : WebsocketService, 
               private http: HttpClient, 
               private elRef:ElementRef,
@@ -280,7 +286,20 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   switch(){
-    console.log("heeeeeej");
+    this.socket.sendPriorotize(false);
+    let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
+    let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
+
+    if(this.prioritize){
+      cardSwitch.setAttribute("transform", "translate(30,0)")
+      cardSwitch.setAttribute("fill", "green")
+      this.prioritize = false;
+    }else{
+      cardSwitch.setAttribute("transform", "translate(0,0)")
+      cardSwitch.setAttribute("fill", "#b3b3b3")
+      this.prioritize = true;
+    }
+    
   }
 
 
@@ -402,6 +421,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(){
+    this.elem = document.documentElement;
     this.generateData();
 
     //this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
@@ -629,15 +649,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   loadCardIframe(){
     setTimeout(()=>{
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
-      let cardSwitch =   mainSvg.contentWindow.document.getElementById("card_3_1_switch");
+      let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
       
-      this.cardSwitchFunction = this.elRef.nativeElement.querySelector("#switchFunction");
-      console.log("cardSwitchFunction: ", this.cardSwitchFunction);
-      this.cardSwitchFunction.style.left=cardSwitch.getBoundingClientRect().x+"px";
-      this.cardSwitchFunction.style.top=cardSwitch.getBoundingClientRect().y+"px";
-      this.cardSwitchFunction.setAttribute("transform" , "translate(0,0)");
-
-      this.cardSwitch_3_1._results[0].nativeElement.style.top="50px";
       this.switchLeft = cardSwitch.getBoundingClientRect().x;
       this.switchTop = cardSwitch.getBoundingClientRect().y;
       console.log("cardSwitch: ", this.cardSwitchFunction);
@@ -796,6 +809,42 @@ export class TabletComponent implements OnInit, AfterViewInit {
    // this.myEvent.emit(null);
     //this.middleComponent.goToCCP();
     this.socket.sendCCP(5,1);
+  }
+
+  openFullscreen() {
+    this.isFullScreen = true;
+    console.log("sendFullscreen");
+    this.socket.sendFullscreen(true);
+    if (this.elem.requestFullscreen) {
+      this.elem.requestFullscreen();
+    } else if (this.elem.mozRequestFullScreen) {
+      /* Firefox */
+      this.elem.mozRequestFullScreen();
+    } else if (this.elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.elem.webkitRequestFullscreen();
+    } else if (this.elem.msRequestFullscreen) {
+      /* IE/Edge */
+      this.elem.msRequestFullscreen();
+    }
+  }
+
+  /* Close fullscreen */
+  closeFullscreen() {
+    this.socket.sendFullscreen(false);
+    this.isFullScreen = false;
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+    } else if (this.document.mozCancelFullScreen) {
+      /* Firefox */
+      this.document.mozCancelFullScreen();
+    } else if (this.document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.document.webkitExitFullscreen();
+    } else if (this.document.msExitFullscreen) {
+      /* IE/Edge */
+      this.document.msExitFullscreen();
+    }
   }
 
   createRange(number){
