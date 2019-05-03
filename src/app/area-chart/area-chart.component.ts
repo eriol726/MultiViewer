@@ -103,8 +103,8 @@ export class AreaChartComponent implements OnInit {
   private zoomDate1: any;
   private zoomDate2: any;
 
-  private panelOpenState = false;
-  private curveFactor = 0;
+  private panelOpenState = true;
+  private curveFactor = 62;
 
   private selectedCM = [false,false,false,false];
   private lockedCM = [{"locked": false, "graphFactor": 15},
@@ -447,8 +447,8 @@ export class AreaChartComponent implements OnInit {
         }
       });
 
-    this.createFadeFront(0);
-    this.createFadeEnd(0);
+      this.createFadeFront(this.curveFactor);
+      this.createFadeEnd(this.curveFactor);
 
     // first curve
     this.outerUpperArea = d3.area()
@@ -668,6 +668,7 @@ export class AreaChartComponent implements OnInit {
 
     this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
+
 
     let brushT = {"k": t.k, "x": t.x, "y": t.y};
     //this.socket.sendZoom(true, t.rescaleX(this.x2).domain()[0],t.rescaleX(this.x2).domain()[1],brushT);

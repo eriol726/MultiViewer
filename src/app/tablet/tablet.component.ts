@@ -190,6 +190,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   prioritize: boolean = true;
 
+  loaded:boolean = false;
+
   constructor(@Inject(DOCUMENT) private document: any,
               private actionService : ActionService, 
               private socket : WebsocketService, 
@@ -700,6 +702,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("swipe central");
       this.messageNumber_1 = 2;
       this.messageNumber_0 = 1;
+      this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";
+      this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "visible";
+      this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "visible";
+      this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
+      let iframePanelItem0 = this.elRef.nativeElement.querySelector("#main_svg_0");
+      console.log("new src: ", this.sanitizer.bypassSecurityTrustResourceUrl("assets/r_4_Tablet.svg"));
+      console.log("iframe src: ", this.elRef.nativeElement.querySelector("#main_svg_0").src);
+      iframePanelItem0.src = "assets/r_4_Tablet.svg";
       //this.swiperIndexCentral = data.swiperIndex;
     })
     
@@ -708,15 +718,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   loadIframe(){
     setTimeout(() => {
-      let initPanelHeightNmbr = this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight;
+      if(!this.loaded){
+        let initPanelHeightNmbr = this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight;
       console.log("offsetHeight nativeElement: ", this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight);
       this.initPanelItemHeight =  initPanelHeightNmbr+"px";
       this.panelItemHeight = this.initPanelItemHeight;
       this.panelItemHeightEmitter$.next(this.panelItemHeight);
-      let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
-      let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
+      let cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+      let cellOffsetHeight = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
     
-      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
+      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetWidth+" "+cellOffsetHeight);
 
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
@@ -727,7 +738,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.focus.select("#diagonalRect").attr("width", "1");
       this.focus.select("#diagonalRect").attr("height", "0.2");
 
+      //this.elRef.nativeElement.querySelector("#main_svg_0").src = "assets/Tablet/Right/r_4_Tablet.svg";
       
+      this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
+      this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
+      this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
+      this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
+      }
+      
+      this.loaded = true;
     }, 100);
     
   }

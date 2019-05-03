@@ -1,24 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0) -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg class="svg_nr_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 639 207">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 641 207">
 	<title>
-		Asset 1
+		r_0_Tablet
 	</title>
 	<g style="isolation:isolate">
 		<g id="Layer_2" data-name="Layer 2">
-			<g id="Layer_5" data-name="Layer 5">
-				<rect id="cm_rect_background" x="3.75" y="1.86" width="631.5" height="200.13" fill="rgba(0,0,0,0)" />
-			</g>
-			<g id="Layer_1-2" data-name="Layer 1">
-				<text transform="translate(120.12 40.91)" font-size="21" font-family="Titillium-Regular, Titillium">
-					RESCHEDULING CHARGING
+			<g id="XRay_Tablet_Icon">
+				<rect x="5.53" y="1.47" width="631.5" height="200.13" fill="#fff" />
+				<text transform="translate(121.9 40.51)" font-size="21" font-family="Titillium-Regular, Titillium">
+					X-RAY MAINTENANCE
 				</text>
-				<polyline class="arrow" points="298.58 166.55 318.36 181.53 338.14 166.55" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
-				<text transform="translate(518.21 149.22)" font-size="15.34" font-family="Titillium-Semibold, Titillium" font-weight="600">
-					12:00 - 13:00
+				<polyline points="300.36 166.15 320.14 181.14 339.92 166.15" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+				<text transform="translate(519.98 148.83)" font-size="15.34" font-family="Titillium-Semibold, Titillium" font-weight="600">
+					07:00 - 09:00
 				</text>
-				<text transform="translate(547.35 129.38)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+				<text transform="translate(549.13 128.98)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
 					<tspan letter-spacing="-0.05em">
 						T
 					</tspan>
@@ -32,30 +27,35 @@
 						y
 					</tspan>
 				</text>
-				<text class="preview" transform="translate(25.97 145.65)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">
+				<text transform="translate(27.74 145.26)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">
 					Preview
 				</text>
-				<path d="M85.45,56.65A33.5,33.5,0,1,1,52,23.15a33.5,33.5,0,0,1,33.5,33.5" fill="#e3f0fc" />
-				<path id="switch-background" d="M64.83,179.61H35.31a12,12,0,0,1,0-24H64.83a12,12,0,0,1,0,24" fill="#f2f2f2" />
-				<path id="switch" d="M49.5,167.11a15,15,0,1,1-15-15,15,15,0,0,1,15,15" fill="#b3b3b3" />
-				<text transform="translate(120.12 73.36)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
-					Charging 2 AGVs for 1 hour before this time frame
+				<path d="M87.22,56.26a33.5,33.5,0,1,1-33.5-33.5,33.5,33.5,0,0,1,33.5,33.5" fill="#e3f0fc" />
+				<path d="M66.61,179.21H37.09a12,12,0,0,1,0-24H66.61a12,12,0,0,1,0,24" fill="#f2f2f2" />
+				<path d="M51.28,166.71a15,15,0,1,1-15-15,15,15,0,0,1,15,15" fill="#b3b3b3" />
+				<text transform="translate(121.9 72.97)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Regular maintenance of the X-Ray machine. It enables
 					<tspan x="0" y="25">
-						would enable us to use them at almost full performance
+						us to detect and fix mechanical problems, if any, as well
 					</tspan>
 					<tspan x="0" y="50">
-						and carry 148 more bags.
+						as to prevent the potential issues.
 					</tspan>
 				</text>
-				<text transform="translate(582.43 52.1) scale(1.07 1)" font-size="27.2" fill="#2277d6" font-family="Titillium-Semibold, Titillium" font-weight="600">
-					1h
+				<text transform="translate(584.2 51.7) scale(1.07 1)" font-size="27.2" fill="#2277d6" font-family="Titillium-Semibold, Titillium" font-weight="600">
+					2h
 				</text>
-				<circle class="circle" cx="562.84" cy="76" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4" />
-				<path d="M562.84,59.06A18.16,18.16,0,0,1,581,77.22H562.84Z" fill="#8dc5f2" />
-			</g>
-			<g id="Layer_2-2" data-name="Layer 2">
-				<path d="M61,65.9A6,6,0,0,1,48.88,66l0-6.8,5.89-5.86V45.25a.74.74,0,0,0-.73-.74h-2v-6a1.24,1.24,0,0,0-1.24-1.24h-.23a1.24,1.24,0,0,0-1.23,1.24v6H44v-6a1.23,1.23,0,1,0-2.46,0v6H39.65a.74.74,0,0,0-.74.73l0,8.15,5.92,5.92,0,6.73A10.09,10.09,0,0,0,65,65.9Z" fill="#2277d6" />
+				<circle cx="564.62" cy="75.6" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4" />
+				<path d="M564.62,58.66a18.17,18.17,0,0,1,18.17,18.17H564.62Z" fill="#8dc5f2" />
+				<g id="g3518">
+					<path id="path58241" d="M31.14,65.27a15.48,15.48,0,0,0,.32,3.14h2.42a13.2,13.2,0,0,0,1.57,3.79l-1.71,1.72a15.5,15.5,0,0,0,2,2.42,16.12,16.12,0,0,0,2.43,2l1.71-1.71a13.07,13.07,0,0,0,3.8,1.56v2.43a15.52,15.52,0,0,0,6.27,0V78.2a13,13,0,0,0,3.8-1.56l1.71,1.71a15.64,15.64,0,0,0,2.43-2,16.14,16.14,0,0,0,2-2.42L58.18,72.2a13.2,13.2,0,0,0,1.57-3.79h2.43a16,16,0,0,0,0-6.27H59.75a13.14,13.14,0,0,0-1.57-3.8l1.72-1.72a16.14,16.14,0,0,0-2-2.42,15.09,15.09,0,0,0-2.43-2l-1.71,1.72A13,13,0,0,0,50,52.34V49.91a15.52,15.52,0,0,0-6.27,0v2.43a13.09,13.09,0,0,0-3.8,1.57l-1.71-1.72a16.67,16.67,0,0,0-4.43,4.43l1.71,1.72a13.14,13.14,0,0,0-1.57,3.8H31.46A15.39,15.39,0,0,0,31.14,65.27Zm7.84,0a7.84,7.84,0,1,1,7.84,7.84A7.84,7.84,0,0,1,39,65.27Z" fill="#2277d6" />
+				</g>
+				<g id="g3518-2" data-name="g3518">
+					<path id="path58241-2" data-name="path58241" d="M56.06,40a10.87,10.87,0,0,0-.65,2.18L57,42.8a9.86,9.86,0,0,0,0,3l-1.61.67a11.84,11.84,0,0,0,.67,2.17,11.6,11.6,0,0,0,1.06,2l1.62-.67A9.26,9.26,0,0,0,60.86,52l-.67,1.62a11.59,11.59,0,0,0,2,1.07,11.07,11.07,0,0,0,2.18.65L65,53.76a9.79,9.79,0,0,0,3,0l.67,1.61a10.91,10.91,0,0,0,2.17-.67,11.69,11.69,0,0,0,2-1.06L72.18,52a9.68,9.68,0,0,0,2.09-2.1l1.61.67a11.64,11.64,0,0,0,1.08-2,11.79,11.79,0,0,0,.65-2.18L76,45.74a9.19,9.19,0,0,0,0-3l1.62-.67a10.93,10.93,0,0,0-.68-2.17,11.37,11.37,0,0,0-1.06-2l-1.61.68a9.46,9.46,0,0,0-2.1-2.09l.66-1.62a10.94,10.94,0,0,0-2-1.08,11.35,11.35,0,0,0-2.18-.65L68,34.79a9.86,9.86,0,0,0-3,0l-.67-1.62a11.87,11.87,0,0,0-2.17.68,11.28,11.28,0,0,0-2,1.06l.67,1.62a9.26,9.26,0,0,0-2.09,2.1L57.13,38A11.24,11.24,0,0,0,56.06,40Zm5.22,2.16a5.65,5.65,0,1,1,3.07,7.38A5.65,5.65,0,0,1,61.28,42.12Z" fill="#2277d6" />
+				</g>
 			</g>
 		</g>
 	</g>
 </svg>
+
+

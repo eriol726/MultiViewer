@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Brush from 'd3-brush';
 import { TEMPERATURES } from '../../data/temperatures';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { WebsocketService } from '../websocket.service';
 import { BehaviorSubject } from 'rxjs';
 import { DisplayContainerComponent } from 'igniteui-angular/lib/directives/for-of/display.container';
@@ -108,6 +108,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   chartPaddingRgiht: number;
 
   reloaded:boolean =  false;
+  svgString;
 
   constructor(@Inject(DOCUMENT) private document: any, private actionService : ActionService, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
     this.display.reloadPage().subscribe(reload =>{
@@ -116,7 +117,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   }
   
 
-  ngOnInit() {
+  async ngOnInit() {
     this.elem = document.documentElement;
     const tasksObservable = this.actionService.getActions();
     
@@ -124,6 +125,15 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       this.CMs = tasksData;
     })
+
+    const headers = new HttpHeaders();
+    headers.set('Accept', 'image/svg+xml');
+    this.svgString =
+      await this.http.get(`assets/Screen/Right/r_4_left_Screen.svg`, {headers, responseType: 'text'}).toPromise();
+    console.log("svgString: ", this.svgString);
+    // this.http.get('assets/Screen/Right/r_4_left_Screen.svg').subscribe(data => {
+    //   console.log(data);
+    // })
     
       
   }

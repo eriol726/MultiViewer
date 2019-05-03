@@ -8,6 +8,8 @@ import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from "igniteui-angular";
 import { NavigationStart } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-right',
@@ -18,12 +20,13 @@ import { DOCUMENT } from '@angular/common';
 
 export class RightComponent implements OnInit, AfterViewInit {
   // @Input() tasks: string;
-  @ViewChildren('iframe') iframes: QueryList<any>;
+  @ViewChildren('iframe') iframes;
   openPanelIndex: number;
   @ViewChildren(IgxExpansionPanelComponent) public accordion: QueryList<IgxExpansionPanelComponent>;
 
   @ViewChildren('panel') panel;
   @ViewChild('panelRight') panelRight;
+  @ViewChild('firstItemIframe') firstItemIframe: ElementRef;
   @ViewChildren('panelHeader') panelheader: QueryList<any>;
   open: any = [];
 
@@ -37,9 +40,18 @@ export class RightComponent implements OnInit, AfterViewInit {
   private initPanelItemHeight: string = "0px";
   elem;
   reloaded: boolean;
+  svgString;
 
-  constructor(@Inject(DOCUMENT) private document:any, private renderer: Renderer2, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef, private cdRef:ChangeDetectorRef) {
-  }
+  current_url = ""
+
+  constructor(@Inject(DOCUMENT) private document:any, 
+                                private sanitizer: DomSanitizer, 
+                                private http: HttpClient, 
+                                private renderer: Renderer2, 
+                                private actionService : ActionService, 
+                                private display : WebsocketService, 
+                                private elRef:ElementRef, 
+                                private cdRef:ChangeDetectorRef) {}
 
   show(index){
     if(this.panel._results[index].expanded == false){
@@ -78,6 +90,9 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+
+    
+
     setTimeout(()=>{
       let mainSvg = this.elRef.nativeElement.querySelector("#card3_1");
       let cardSwitch =   mainSvg.contentWindow.document.getElementById("card_1_switch");
@@ -85,6 +100,11 @@ export class RightComponent implements OnInit, AfterViewInit {
       p.insertAdjacentHTML('beforeend', '<div class="two" (click)="switch()">two</div>');
       this.renderer.appendChild(cardSwitch, p)
       console.log("cardSwitch: ", cardSwitch);
+      console.log(this.elRef.nativeElement.querySelector("#tja"));
+      this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+0).style.backgroundColor = "rgba(217,217,217,0.68)";
+      this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility ="hidden";
+      this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility ="hidden";
+      this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility ="hidden";
     },1000)
 
     
@@ -97,6 +117,22 @@ export class RightComponent implements OnInit, AfterViewInit {
       }
       
     })
+
+    this.display.switchCCP().subscribe(data =>{
+      let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
+      let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
+      let doc =  this.iframes._results[0].nativeElement.contentDocument || this.iframes._results[0].nativeElement.contentWindow;
+      //let doc = this.document.getElementById("cm_left_"+0);
+      console.log("closedPanelItemLeft: ", panelItem_0_left.src);
+      //closedPanelItemLeft.src=this.sanitizer.bypassSecurityTrustResourceUrl("assets/Screen/Right/r_4_left_Screen.svg")
+      panelItem_0_left.src="assets/Screen/Right/r_4_left_Screen.svg";
+      panelItem_0_right.src="assets/Screen/Right/r_4_right_Screen.svg";
+
+      this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+0).style.backgroundColor = "";
+      this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility ="visible";
+      this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility ="visible";
+      this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility ="visible";
+    });
 
     this.iframes.changes.subscribe(result =>{
       //console.log("result: ", result._results[0].nativeElement)
@@ -243,7 +279,8 @@ export class RightComponent implements OnInit, AfterViewInit {
     // this.cdRef.detectChanges();
   }
 
-  ngOnInit(){
+  async ngOnInit(){
+    
     this.elem = document.documentElement;
     this.openFullscreen();
     const CMmeasures = this.actionService.getCountermeasures();
@@ -251,7 +288,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.done1 = doneData;
       console.log("this.done: ", this.done1);
     })
-    
+
     
   }
 
