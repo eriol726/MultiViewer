@@ -9,7 +9,7 @@
 				<text transform="translate(121.9 40.51)" font-size="21" font-family="Titillium-Regular, Titillium">
 					X-RAY MAINTENANCE
 				</text>
-				<polyline points="300.36 166.15 320.14 181.14 339.92 166.15" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+				<polyline class="arrow" points="300.36 166.15 320.14 181.14 339.92 166.15" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
 				<text transform="translate(519.98 148.83)" font-size="15.34" font-family="Titillium-Semibold, Titillium" font-weight="600">
 					07:00 - 09:00
 				</text>
@@ -32,7 +32,7 @@
 				</text>
 				<path d="M87.22,56.26a33.5,33.5,0,1,1-33.5-33.5,33.5,33.5,0,0,1,33.5,33.5" fill="#e3f0fc" />
 				<path d="M66.61,179.21H37.09a12,12,0,0,1,0-24H66.61a12,12,0,0,1,0,24" fill="#f2f2f2" />
-				<path d="M51.28,166.71a15,15,0,1,1-15-15,15,15,0,0,1,15,15" fill="#b3b3b3" />
+				<path id="switch" d="M51.28,166.71a15,15,0,1,1-15-15,15,15,0,0,1,15,15" fill="#b3b3b3" />
 				<text transform="translate(121.9 72.97)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
 					Regular maintenance of the X-Ray machine. It enables
 					<tspan x="0" y="25">

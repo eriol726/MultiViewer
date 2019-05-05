@@ -7,7 +7,9 @@
             </div>
 
             <div class="cell" style="flex: 0 0 95%;">
-              <div dragula="COPYABLE" id="left" class="example-list-left" (click)="closeLeftPanel($event.target)"> </div>
+              <div dragula="COPYABLE" id="left" class="example-list-left" (click)="closeLeftPanel($event.target)" > 
+                
+              </div>
               <img src="assets/reload_icon.png" height="42" width="42" style="position: absolute; bottom: 0px;" (click)="reload()">
               <img src="assets/fullscreen_icon.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 42px" (click)="isFullScreen == false ? openFullscreen() : closeFullscreen()">
               <img src="assets/long-arrow-right.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 84px" (click)="goToCCP()">

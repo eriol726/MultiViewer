@@ -22,7 +22,7 @@ export interface Margin {
 }
 
 type MyType = {
-  id: string;
+  id: string ;
   text: string;
   color: string;
   startDate: Date;
@@ -39,6 +39,8 @@ declare var require: any;
 
 export class TabletComponent implements OnInit, AfterViewInit {
   @Output() myEvent = new EventEmitter();
+
+  public many = ['The', 'possibilities', 'are', 'endless!'];
 
   config: any = {
     pagination: {
@@ -70,6 +72,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('cardSwitch_3_1') cardSwitch_3_1: any;
   @ViewChild('appCompButton') appCompButton;
   @ViewChild('chart') mainChart: ElementRef;
+
+  @ViewChild('dropZone', {read: ViewContainerRef}) dropZone: ViewContainerRef;
 
   @ViewChild('chart1', {read: ViewContainerRef}) viewContainerRef;
   chartBackground: any;
@@ -158,6 +162,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   private panelOpenState = false;
   private curveFactor = 0;
+  private nextMessageIndex = 0;
 
   private selectedCM = [false,false,false,false];
   private lockedCM = [{"locked": false, "graphFactor": 5},
@@ -168,14 +173,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public isExpanded: number  = -1;
     
   private initPanelItemHeight: string = "0px";
-  public panelItemHeight: string = "22px";
+  public panelItemHeight: string = "111px";
   panelItemHeightEmitter$ = new BehaviorSubject<string>(this.panelItemHeight);
  
   public thePanel;
 
   public cmText: string = "Tap on a countermeasure to preview the effects";
   intersectionColor: d3.Area<[number, number]>;
-  tasks2: any[];
+
   curveFactorLocked: number = 0;
   isMaximized: boolean = false;
 
@@ -430,12 +435,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     //this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
 
+    this.done = [];
     tasksObservable.subscribe(tasksData => {
 
       this.tasks = tasksData;
+      //this.done.push(this.tasks[0]);
     })
-
-    this.done = [];
     
     //this.initSvg();
     //this.drawChart(TEMPERATURES);
@@ -662,9 +667,22 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
-
-
-
+    setTimeout(()=>{
+      let panelItem = this.elRef.nativeElement.querySelector("#panel_item_0");
+      panelItem.children[1].style.visibility = "visible";
+      panelItem.children[1].style.height = "auto";
+      let dropZone = this.elRef.nativeElement.querySelector("#left");
+      console.log("copy:: ", panelItem.querySelector('#iframeOverlay_0'));
+      
+      var cln = panelItem.cloneNode(true);
+      cln.querySelector('#iframeOverlay_0').id = "iframeOverlay_0_copy";
+      cln.querySelector('#card_0_0').id = "card_0_0_copy";
+      cln.querySelector('#card_0_0_copy').src ="assets/Tablet/Right/r_0_0_Tablet.svg";
+      dropZone.appendChild(cln);
+      console.log("panelItem.children[1]: ", panelItem.children[1]);
+    },50)
+    
+    //this.viewContainer.insert(template);
 
     
 
@@ -699,17 +717,32 @@ export class TabletComponent implements OnInit, AfterViewInit {
     console.log("switch: ", d3.select('.switch'));
 
     this.socket.switchCCP().subscribe(data =>{
-      console.log("swipe central");
-      this.messageNumber_1 = 2;
-      this.messageNumber_0 = 1;
-      this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";
-      this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "visible";
-      this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "visible";
-      this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
-      let iframePanelItem0 = this.elRef.nativeElement.querySelector("#main_svg_0");
-      console.log("new src: ", this.sanitizer.bypassSecurityTrustResourceUrl("assets/r_4_Tablet.svg"));
-      console.log("iframe src: ", this.elRef.nativeElement.querySelector("#main_svg_0").src);
-      iframePanelItem0.src = "assets/r_4_Tablet.svg";
+
+      switch (data.swiperIndex) {
+        case 1:
+          this.elRef.nativeElement.querySelector("#panel_item_0").remove();
+          console.log("swipe central");
+          this.messageNumber_0 = 1;
+          this.messageNumber_1 = 2;
+          this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";
+          this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "visible";
+          this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "visible";
+          this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
+          let iframePanelItem0 = this.elRef.nativeElement.querySelector("#main_svg_0");
+          console.log("new src: ", this.sanitizer.bypassSecurityTrustResourceUrl("assets/r_4_Tablet.svg"));
+          console.log("iframe src: ", this.elRef.nativeElement.querySelector("#main_svg_0").src);
+          iframePanelItem0.src = "assets/r_4_Tablet.svg";
+          break;
+        case 2:
+          this.messageNumber_0 = 2;
+          this.messageNumber_1 = 3;
+          console.log("message 2");
+        break;
+      
+        default:
+          break;
+      }
+      
       //this.swiperIndexCentral = data.swiperIndex;
     })
     
@@ -746,6 +779,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
       }
       
+      //const template = this.panelRight._results[0].createEmbeddedView(null);
+      //this.dropZone.insert(template);
       this.loaded = true;
     }, 100);
     
@@ -827,7 +862,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
   goToCCP(){
    // this.myEvent.emit(null);
     //this.middleComponent.goToCCP();
-    this.socket.sendCCP(5,1);
+    this.nextMessageIndex++;
+    if(this.nextMessageIndex>2){
+      this.nextMessageIndex = 2;
+    }
+    
+    this.socket.sendCCP(5,this.nextMessageIndex);
   }
 
   openFullscreen() {

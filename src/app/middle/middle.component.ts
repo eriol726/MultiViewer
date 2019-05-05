@@ -130,7 +130,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     headers.set('Accept', 'image/svg+xml');
     this.svgString =
       await this.http.get(`assets/Screen/Right/r_4_left_Screen.svg`, {headers, responseType: 'text'}).toPromise();
-    console.log("svgString: ", this.svgString);
+
     // this.http.get('assets/Screen/Right/r_4_left_Screen.svg').subscribe(data => {
     //   console.log(data);
     // })
@@ -191,10 +191,12 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
       this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
 
-      for (let index = 0; index < this.CMs.length; index++) {
+      for (let index = 0; index < this.CMs.length+1; index++) {
         this.chartBackground.contentWindow.document.getElementById("CM"+index+"_Icon").style.visibility = "hidden";
         this.chartBackground.contentWindow.document.getElementById("CM"+index+"_Bar").style.visibility = "hidden";  
       }
+      // first icon will be visible
+      this.chartBackground.contentWindow.document.getElementById("CM"+0+"_Icon").style.visibility = "visible";
       
       this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
 
@@ -251,13 +253,22 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     //hack to append a DOM element that has not been rendered
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");
 
-    setTimeout(()=>{
-      this.goToCCP();
-    },15000)
+    // setTimeout(()=>{
+    //   this.goToCCP();
+    // },55000)
 
     this.display.switchCCP().subscribe(data =>{
+      console.log("switch ccp");
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
+
+      let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+
+      console.log(chartBackground.contentWindow.document.getElementById("Transparent_Frame"));
+      chartBackground.contentWindow.document.getElementById("Transparent_Frame").style.visibility = "visible";
+      chartBackground.contentWindow.document.getElementById("Transparent_Starting").style.visibility = "hidden";
+
+      this.chartBackground.contentWindow.document.getElementById("CM"+0+"_Icon").style.visibility = "hidden";
     })
     
     this.display.moveItem().subscribe(data =>{
@@ -275,30 +286,29 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
       if(data.state == -1 && !data.locked){
-        //chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").childNodes[1].style.fill = "rgba(255,235,0,0.9)";
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "hidden";
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "hidden";
+        // we set data.closedIndex+1 because icon/bar 0 is only visible in the begining
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
       else if(data.state == 0){
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "visible";
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Icon").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
       }
       else{
-        chartBackground.contentWindow.document.getElementById("CM"+(1)+"_Icon").style.visibility = "hidden";
-        chartBackground.contentWindow.document.getElementById("CM"+(1)+"_Bar").style.visibility = "hidden";
-
         chartBackground.contentWindow.document.getElementById("CM"+(2)+"_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM"+(2)+"_Bar").style.visibility = "hidden";
 
         chartBackground.contentWindow.document.getElementById("CM"+(3)+"_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM"+(3)+"_Bar").style.visibility = "hidden";
-        chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
 
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Icon").style.visibility = "visible";
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex)+"_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(4)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(4)+"_Bar").style.visibility = "hidden";
+
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Icon").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
       }
@@ -390,6 +400,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     console.log("goToCCP: ");
     this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
     this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
+
     this.display.sendCCP(5,1);
   }
 
