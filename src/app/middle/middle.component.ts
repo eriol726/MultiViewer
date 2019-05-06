@@ -109,6 +109,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
   reloaded:boolean =  false;
   svgString;
+  switchOn: boolean = false;
 
   constructor(@Inject(DOCUMENT) private document: any, private actionService : ActionService, private http: HttpClient, private display : WebsocketService, private elRef:ElementRef, private ngZone: NgZone) { 
     this.display.reloadPage().subscribe(reload =>{
@@ -225,7 +226,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRgiht+"px 0px "+this.x+"px";
       
       //put the graph on it's right position
-      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
+      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest+45)+") scale(1,"+scaleGraphY+")");
 
     },100);
   }
@@ -249,6 +250,10 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         this.reloaded=false;
       }
       
+    })
+
+    this.display.prioritize().subscribe(data =>{
+      this.switchOn = data;
     })
     
     //hack to append a DOM element that has not been rendered
@@ -309,6 +314,14 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
       chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "rgb(64, 189, 115)";
       chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.currentIndex].text + " APPLIED";
+    
+      if(this.switchOn){
+        console.log("this.switchOn: ", this.switchOn);
+        chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex+1)+"_Bar_B").style.fill = "rgba(141,197,242,0.9)";
+        chartBackground.contentWindow.document.getElementById("CM"+4+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+4+"_Bar").style.visibility = "hidden";
+      }
+    
     });
 
     this.display.expandItem().subscribe(data =>{
@@ -341,6 +354,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
       }
+
+      
 
       
     });
@@ -463,6 +478,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.document.msExitFullscreen();
     }
   }
+
+  
   
 
   @HostListener('window:scroll', ['$event']) // for window scroll events

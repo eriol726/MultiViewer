@@ -293,7 +293,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   switch(){
-    this.socket.sendPriorotize(false);
+    
     let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
     let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
 
@@ -308,7 +308,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.prioritize = false;
       this.socket.sendCCP(5,99);
     }
-    
+    this.socket.sendPriorotize(this.prioritize);
     
   }
 

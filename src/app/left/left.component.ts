@@ -55,6 +55,8 @@ export class LeftComponent implements OnInit, AfterViewInit {
   reloaded: boolean;
   prevCm: number = 0;
 
+  switchOn:boolean = false;
+
  
 // https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
   constructor(@Inject(DOCUMENT) private document: any, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
@@ -287,10 +289,20 @@ export class LeftComponent implements OnInit, AfterViewInit {
           
           break;
         case 3:
-          this.cm = 4;
-          setTimeout(() => {
-            APbackground.contentWindow.document.getElementById("CM4_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
-          },100)
+          
+
+          if(this.switchOn){
+            this.cm = 5;
+          }
+          else{
+            this.cm = 4;
+            setTimeout(() => {
+              APbackground.contentWindow.document.getElementById("CM4_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
+            },100)
+            
+          }
+          
+          
           break;
       
         default:
@@ -304,15 +316,10 @@ export class LeftComponent implements OnInit, AfterViewInit {
     })
 
     this.display.prioritize().subscribe(data =>{
-      console.log("this.cm: ", this.cm);
-      // if(this.cm != 5){
-      //   this.cm = 5;
-      // }else{
-      //   this.cm = 99;
-      // }
-
-      
+      this.switchOn = data;
     })
+
+    
 
     this.display.maximizeChart().subscribe(data=>{
       if(!this.hideChart){
