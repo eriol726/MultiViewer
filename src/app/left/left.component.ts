@@ -240,6 +240,25 @@ export class LeftComponent implements OnInit, AfterViewInit {
       
     })
 
+    this.display.switchCCP().subscribe(CCPindex =>{
+
+      switch (CCPindex.swiperIndex) {
+        case 1:
+        this.cm = 99;
+          break;
+        case 3:
+        this.cm = 5;
+          break;
+        case 99:
+        this.cm = 99;
+          break;
+      
+        default:
+          break;
+      }
+
+    })
+
     this.display.expandItem().subscribe(data=>{
       console.log("data.closedIndex: ", data.closedIndex, "  ", data.state);
       switch(data.state){
@@ -285,11 +304,13 @@ export class LeftComponent implements OnInit, AfterViewInit {
     })
 
     this.display.prioritize().subscribe(data =>{
-      if(this.cm == 5){
-        this.cm = this.prevCm;
-      }else{
-        this.cm = 5;
-      }
+      console.log("this.cm: ", this.cm);
+      // if(this.cm != 5){
+      //   this.cm = 5;
+      // }else{
+      //   this.cm = 99;
+      // }
+
       
     })
 

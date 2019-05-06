@@ -193,7 +193,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   switchTop;
   switchLeft;
 
-  prioritize: boolean = true;
+  prioritize: boolean = false;
 
   loaded:boolean = false;
 
@@ -297,15 +297,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
     let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
     let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
 
-    if(this.prioritize){
+    if(!this.prioritize){
       cardSwitch.setAttribute("transform", "translate(30,0)")
       cardSwitch.setAttribute("fill", "green")
-      this.prioritize = false;
+      this.prioritize = true;
+      this.socket.sendCCP(5,3);
     }else{
       cardSwitch.setAttribute("transform", "translate(0,0)")
       cardSwitch.setAttribute("fill", "#b3b3b3")
-      this.prioritize = true;
+      this.prioritize = false;
+      this.socket.sendCCP(5,99);
     }
+    
     
   }
 

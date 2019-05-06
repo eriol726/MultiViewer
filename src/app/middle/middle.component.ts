@@ -174,7 +174,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector("#history_layer_2").style.width = historyLayerWidth-3+"px";
       this.elRef.nativeElement.querySelector("#history_layer_2").style.height = historyLayerHeight+"px";
 
-      this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "visible";
+      this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.top = this.message1_Y+"px";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.left = this.message1_X+"px";
       this.elRef.nativeElement.querySelector("#message_1_elm").style.width = message1_width+"px";
@@ -187,9 +187,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
       this.chartBackground.contentWindow.document.getElementById("Message_1").style.visibility = "hidden";
       this.chartBackground.contentWindow.document.getElementById("Message_2").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
-      this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
-      this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
+      //this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
+      //this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "red";
+      //this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "red";
 
       for (let index = 0; index < this.CMs.length+1; index++) {
         this.chartBackground.contentWindow.document.getElementById("CM"+index+"_Icon").style.visibility = "hidden";
@@ -197,6 +197,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       }
       // first icon will be visible
       this.chartBackground.contentWindow.document.getElementById("CM"+0+"_Icon").style.visibility = "visible";
+      this.chartBackground.contentWindow.document.getElementById("CM"+0+"_Bar").style.visibility = "visible";  
       
       this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
 
@@ -258,9 +259,23 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     // },55000)
 
     this.display.switchCCP().subscribe(data =>{
-      console.log("switch ccp");
-      this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
-      this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
+      console.log("switch ccp: ", data);
+      //this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
+
+      switch (data.swiperIndex) {
+        case 1:
+          this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "visible";
+          
+          break;
+        case 2:
+          this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
+          this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
+          break;
+      
+        default:
+          break;
+      }
+      
 
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
 
@@ -269,14 +284,28 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       chartBackground.contentWindow.document.getElementById("Transparent_Starting").style.visibility = "hidden";
 
       this.chartBackground.contentWindow.document.getElementById("CM"+0+"_Icon").style.visibility = "hidden";
+      this.chartBackground.contentWindow.document.getElementById("CM"+0+"_Bar").style.visibility = "hidden";
+      
+      let CM4BisVisible = this.chartBackground.contentWindow.document.getElementById("CM"+4+"_Icon_B").style.visibility;
+      console.log("CM4BisVisible: ", CM4BisVisible, "data.swiperIndex: ", data.swiperIndex);
+      if(data.swiperIndex ==3 && CM4BisVisible == "hidden" ){
+        this.chartBackground.contentWindow.document.getElementById("CM"+4+"_Icon").style.visibility = "hidden";
+        this.chartBackground.contentWindow.document.getElementById("CM"+4+"_Bar").style.visibility = "hidden";
+        this.chartBackground.contentWindow.document.getElementById("CM"+4+"_Icon_B").style.visibility = "visible";
+        this.chartBackground.contentWindow.document.getElementById("CM"+4+"_Bar_B").style.visibility = "visible";
+      }
+      else if(data.swiperIndex ==99 && CM4BisVisible == "visible"){
+        this.chartBackground.contentWindow.document.getElementById("CM"+4+"_Icon_B").style.visibility = "hidden";
+        this.chartBackground.contentWindow.document.getElementById("CM"+4+"_Bar_B").style.visibility = "hidden";
+      }
     })
     
     this.display.moveItem().subscribe(data =>{
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
 
-      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
-      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Icon").style.visibility = "visible";
-      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex)+"_Bar").style.visibility = "visible";
+      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex+1)+"_Bar").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
+      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex+1)+"_Icon").style.visibility = "visible";
+      chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex+1)+"_Bar").style.visibility = "visible";
       chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
       chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "rgb(64, 189, 115)";
       chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.currentIndex].text + " APPLIED";

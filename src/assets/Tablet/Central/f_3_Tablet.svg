@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 639 371.38">
+	<defs>
+		<clipPath id="clip-path">
+			<rect x="2.31" width="633.92" height="4.5" fill="#f22020" />
+		</clipPath>
+	</defs>
+	<title>
+		f_3_Tablet
+	</title>
+	<g style="isolation:isolate">
+		<g id="Layer_2" data-name="Layer 2">
+			<g id="Layer_2-2" data-name="Layer 2">
+				<rect x="3.64" y="4.5" width="631.5" height="361.44" fill="#fff" />
+				<text transform="translate(143.69 97.3)" font-size="21" font-family="Titillium-Semibold, Titillium" font-weight="600">
+					CD90
+				</text>
+				<text transform="translate(218.91 42.33)" font-size="21" font-family="Titillium-Regular, Titillium">
+					FLIGHT INFORMATION
+				</text>
+				<text transform="translate(143.69 122.44)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Stockholm - Oslo
+				</text>
+				<text transform="translate(143.69 145.29)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					20:30
+				</text>
+				<text transform="translate(532.69 224.09)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					60/153
+				</text>
+				<text transform="translate(532.69 275.25)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					94/223
+				</text>
+				<path d="M68.24,126.42h34.63v3.64H68.24Zm35.66-17.06a2.72,2.72,0,0,0-3.35-1.93L90.87,110,78.3,98.3l-3.52.93,7.55,13.06-9.06,2.43-3.59-2.81-2.64.71,3.31,5.76,1.41,2.43,2.91-.79,9.68-2.59,7.93-2.11,9.67-2.59A2.76,2.76,0,0,0,103.9,109.36Z" fill="#f2a120" />
+				<path d="M64.52,216.47a6.9,6.9,0,1,0-6.9-6.89A6.89,6.89,0,0,0,64.52,216.47Zm0,3.45c-4.6,0-13.79,2.31-13.79,6.9v3.45H78.31v-3.45C78.31,222.23,69.12,219.92,64.52,219.92Z" fill="#f2a120" />
+				<path d="M76.78,260.59H70.65v-3.06a3.06,3.06,0,0,0-3.07-3.06H61.46a3.06,3.06,0,0,0-3.07,3.06v3.06H52.26a3,3,0,0,0-3,3.07l0,16.85a3.06,3.06,0,0,0,3.06,3.07h24.1a3.48,3.48,0,0,0,3.48-3.48V263.66A3.07,3.07,0,0,0,76.78,260.59Zm-9.2,0H61.46v-3.06h6.12Z" fill="#f2a120" />
+			</g>
+			<g id="Everything_on_Top">
+				<text transform="translate(238.42 193.45)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Current Registrations
+				</text>
+			</g>
+			<g id="Ground_Bars">
+				<rect x="106.19" y="205.7" width="410.25" height="23.57" fill="#f2f2f2" />
+				<rect x="106.19" y="258.9" width="410.25" height="23.57" fill="#f2f2f2" />
+			</g>
+			<g id="Info_Bars">
+				<rect x="107.78" y="205.7" width="175.78" height="23.57" fill="#40bd73" />
+				<rect x="107.78" y="258.9" width="181.92" height="23.57" fill="#40bd73" />
+			</g>
+		</g>
+	</g>
+</svg>
