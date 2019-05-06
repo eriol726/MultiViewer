@@ -110,8 +110,8 @@ export class AreaChartComponent implements OnInit {
 
   private selectedCM = [false,false,false,false];
   private lockedCM = [{"locked": false, "graphFactor": 15},
+                      {"locked": false, "graphFactor": 68},
                       {"locked": false, "graphFactor": 65},
-                      {"locked": false, "graphFactor": 62},
                       {"locked": false, "graphFactor": 60},
                       {"locked": false, "graphFactor": 10},
                       {"locked": false, "graphFactor": 12}];
@@ -968,7 +968,8 @@ export class AreaChartComponent implements OnInit {
     })
 
     this.socket.switchCCP().subscribe(data=>{
-      if(data.swiperIndex != 3 && data.swiperIndex != 99){
+      if(data.swiperIndex ==2 || data.swiperIndex == 1 ){
+        console.log("graphFactorIndex: ", data.graphFactorIndex);
         this.panelOpenState = true;
         this.expandTaskPanel(data.graphFactorIndex);
       }

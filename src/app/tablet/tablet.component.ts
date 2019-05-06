@@ -805,28 +805,28 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   loadIframe2(){
-    this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
-      console.log("this.chartBackground: ", this.chartBackground.contentWindow.document.getElementById("scaleY50"));
+    // this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+    //   console.log("this.chartBackground: ", this.chartBackground.contentWindow.document.getElementById("scaleY50"));
 
-      let screenWidth = window.innerWidth;
-      let screenHeight = window.innerHeight;
+    //   let screenWidth = window.innerWidth;
+    //   let screenHeight = window.innerHeight;
 
       
-      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY50").getBoundingClientRect().y;
+    //   let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY50").getBoundingClientRect().y;
       
-      let focusHeight = this.elRef.nativeElement.querySelector(".focus").getBoundingClientRect().height;
+    //   let focusHeight = this.elRef.nativeElement.querySelector(".focus").getBoundingClientRect().height;
 
-      let scaleGraphY = 0.5;
+    //   let scaleGraphY = 0.5;
 
-      let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
+    //   let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
 
-      this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
+    //   this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
-      //put the graph on it's right position
-      this.elRef.nativeElement.querySelector(".focus").setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
+    //   //put the graph on it's right position
+    //   this.elRef.nativeElement.querySelector(".focus").setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
 
-      this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
+    //   this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
   }
 
   resize(){
@@ -866,11 +866,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
    // this.myEvent.emit(null);
     //this.middleComponent.goToCCP();
     this.nextMessageIndex++;
-    if(this.nextMessageIndex>2){
+    if(this.nextMessageIndex>1){
       this.nextMessageIndex = 2;
+      this.socket.sendCCP(5,this.nextMessageIndex);
+    }
+    else{
+      this.socket.sendCCP(0,this.nextMessageIndex);
     }
     
-    this.socket.sendCCP(5,this.nextMessageIndex);
+    
   }
 
   openFullscreen() {

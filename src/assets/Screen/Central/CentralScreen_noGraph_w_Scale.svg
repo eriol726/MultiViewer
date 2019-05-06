@@ -602,7 +602,7 @@
             <rect x="618.27" y="217.75" width="154.47" height="14.37" fill="#8dc5f2" opacity="0.5"/>
         </g>
         <g id="CM1_Bar">
-            <rect x="1003.52" y="218.35" width="77.87" height="14.37" fill="#8dc5f2" opacity="0.5"/>
+            <rect x="1003.52" y="218.35" width="77.87" height="14.37" fill="#ffeb00" opacity="0.9"/>
         </g>
         <g id="Transparent_Frame" style="visibility: hidden">
             <rect x="1307.75" y="120.44" width="381.65" height="810.83" fill="#009eff" opacity="0.05" style="mix-blend-mode:multiply"/>

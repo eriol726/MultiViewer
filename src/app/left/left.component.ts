@@ -248,9 +248,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
         case 1:
         this.cm = 99;
           break;
-        case 3:
-        this.cm = 5;
-          break;
         case 99:
         this.cm = 99;
           break;
@@ -290,7 +287,6 @@ export class LeftComponent implements OnInit, AfterViewInit {
           break;
         case 3:
           
-
           if(this.switchOn){
             this.cm = 5;
           }
