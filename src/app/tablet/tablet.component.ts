@@ -293,8 +293,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   switch(){
-    
-    let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
+    console.log("switch on")
+    let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
     let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
 
     if(!this.prioritize){
@@ -658,13 +658,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   loadCardIframe(){
     setTimeout(()=>{
-      let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
+      let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
       let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
       
-      this.switchLeft = 0;// cardSwitch.getBoundingClientRect().x;
-      this.switchTop = 0;//cardSwitch.getBoundingClientRect().y;
-      console.log("cardSwitch: ", this.cardSwitchFunction);
-      console.log("this.cardSwitch_3_1._results[0]: ", this.cardSwitch_3_1._results[0].nativeElement);
+      this.switchLeft = cardSwitch.getBoundingClientRect().x;
+      this.switchTop = cardSwitch.getBoundingClientRect().y;
     },1000)
   }
 
@@ -680,7 +678,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       var cln = panelItem.cloneNode(true);
       cln.querySelector('#iframeOverlay_0').id = "iframeOverlay_0_copy";
       cln.querySelector('#card_0_0').id = "card_0_0_copy";
-      cln.querySelector('#card_0_0_copy').src ="assets/Tablet/Right/r_0_0_Tablet.svg";
+      cln.querySelector('#card_0_0_copy').src ="assets/Tablet/Right/r_0_0_Tablet_start.svg";
       dropZone.appendChild(cln);
       console.log("panelItem.children[1]: ", panelItem.children[1]);
     },50)

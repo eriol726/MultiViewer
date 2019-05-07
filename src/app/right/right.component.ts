@@ -153,11 +153,6 @@ export class RightComponent implements OnInit, AfterViewInit {
       if(data.state != -1){
         this.panelOpenState = true;
         
-        // set the first card background to gray
-        this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' +0).contentWindow.document.children[0].style.background = "#f4f4f4";
-        
-        
-        
       
         for (let i = 0; i < this.done1.length; i++) {
           if(i == data.closedIndex){
@@ -237,11 +232,15 @@ export class RightComponent implements OnInit, AfterViewInit {
 
     this.display.swipeCM().subscribe(currentCardIndex =>{
       // changing background for swiped card
-      console.log("swipe index: ", this.done1);
-
+      
+      currentCardIndex = currentCardIndex-1;
+      console.log("swipe index: ", currentCardIndex);
       for (let cardIndex = 0; cardIndex < this.done1[this.openPanelIndex].cards; cardIndex++) {
-        if(currentCardIndex == cardIndex){
+        if(currentCardIndex == cardIndex ){
           this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + currentCardIndex).contentWindow.document.firstChild.style.background = "#f4f4f4";
+        }
+        else if(currentCardIndex == -1){
+          this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + 0).contentWindow.document.firstChild.style.background = "";
         }
         else{
           this.elRef.nativeElement.querySelector('#card'+this.openPanelIndex + '_' + cardIndex).contentWindow.document.firstChild.style.background = "";

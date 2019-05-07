@@ -110,7 +110,7 @@ export class AreaChartComponent implements OnInit {
 
   private selectedCM = [false,false,false,false];
   private lockedCM = [{"locked": false, "graphFactor": 15},
-                      {"locked": false, "graphFactor": 68},
+                      {"locked": false, "graphFactor": 95},
                       {"locked": false, "graphFactor": 65},
                       {"locked": false, "graphFactor": 60},
                       {"locked": false, "graphFactor": 10},
@@ -466,7 +466,6 @@ export class AreaChartComponent implements OnInit {
         return this.y(d.temperature + this.fadeFrontNumbers[i-this.collisionStart]);
       }
       else if(i>= this.collisionFadeFrontStop && i <= this.collisionFadeEndStart  ){
-        console.log("this.curveFactorOrange: ", this.curveFactorOrange);
         return this.y(d.temperature+this.curveFactorOrange);
       }
       else if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){

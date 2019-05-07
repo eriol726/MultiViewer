@@ -317,7 +317,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     
       if(this.switchOn){
         console.log("this.switchOn: ", this.switchOn);
-        chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex+1)+"_Bar_B").style.fill = "rgba(141,197,242,0.9)";
+        console.log("bar color: ", chartBackground.contentWindow.document.getElementById("CM"+(data.currentIndex+1)+"_Bar_B"));
+        chartBackground.contentWindow.document.getElementById("CM"+4+"_Bar_B").childNodes[1].style.fill = "rgba(141,197,242,0.9)";
         chartBackground.contentWindow.document.getElementById("CM"+4+"_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM"+4+"_Bar").style.visibility = "hidden";
       }
