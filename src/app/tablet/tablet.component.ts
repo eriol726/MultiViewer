@@ -661,8 +661,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_1");
       let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
       
-      this.switchLeft = cardSwitch.getBoundingClientRect().x;
-      this.switchTop = cardSwitch.getBoundingClientRect().y;
+      this.switchLeft = 0;// cardSwitch.getBoundingClientRect().x;
+      this.switchTop = 0;//cardSwitch.getBoundingClientRect().y;
       console.log("cardSwitch: ", this.cardSwitchFunction);
       console.log("this.cardSwitch_3_1._results[0]: ", this.cardSwitch_3_1._results[0].nativeElement);
     },1000)

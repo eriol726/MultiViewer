@@ -96,34 +96,20 @@
                     <div class="cardList" (dblclick)="selectCard(i)" >
                         <div  class="swiper-container" [swiper]="config" (indexChange)="onIndexChange($event)" style="height: 100%;" #cardList>
                           <div class="swiper-wrapper" >
-                            <div class="swiper-slide" >
-                                <iframe id="card_{{i}}_0" class="card" [src]='"assets/Tablet/Right/r_"+ i +"_A_Tablet.svg" | safe' style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                                <div class="iframeOverlay" ></div>
-                            </div>
-                            <div class="swiper-slide" >
-                                
-                                <iframe id="card_{{i}}_1" class="card"  [src]='"assets/Tablet/Right/r_"+ i +"_B_Tablet.svg" | safe' (load)="loadCardIframe()" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                                <div class="iframeOverlay">
-                                    <div id="switchFunction"  (click)="switch()" style="width:50px; height: 20px; position:absolute; " [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
-                                </div>
-                                
-                            </div>
-                            <div class="swiper-slide" >
-                                <iframe id="card_{{i}}_2" class="card" [src]='"assets/Tablet/Right/r_"+ i +"_C_Tablet.svg" | safe' style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                                <div class="iframeOverlay"></div>
-                            </div>
-                            <ng-container *ngIf="i % 2 !== 0">
-                              <div class="swiper-slide" >
-                                <iframe id="card_{{i}}_3" class="card" [src]='"assets/Tablet/Right/r_"+ i +"_D_Tablet.svg" | safe' style="width: 100%; height: 100%;  border: 0px;  padding: 0px 10px;  " ></iframe>
-                                <div class="iframeOverlay"></div>
+                              <div class="swiper-slide" *ngFor="let card of createRange(item.cards+1); let n=index" (dblclick)="selectCard(i)">
+                   
+                                  <iframe id="card_{{i}}_{{n}}" class="card" [src]='"assets/Tablet/Right/r_"+i+"_"+n+"_Tablet.svg" | safe' (load)="loadCardIframe()" style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                                    <div class="iframeOverlay">
+                                        <div id="switchFunction"  (click)="switch()" style="width:50px; height: 20px; position:absolute; " [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
+                                    </div>
+                       
                               </div>
-                            </ng-container>
                           </div>
                           <div class="swiper-pagination"></div>
                             <div class="arrowUp">
                               <svg><polyline  points="298.58 166.55 318.36 181.53 338.14 166.55" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
                             </div>
-                        </div>
+                          </div>
                     </div >
                 </mat-expansion-panel>
                 
