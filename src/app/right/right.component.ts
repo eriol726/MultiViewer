@@ -41,6 +41,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   elem;
   reloaded: boolean;
   svgString;
+  isLoaded=false;
 
   current_url = ""
 
@@ -65,8 +66,12 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   loadIframe(index){
-
+    if (!this.isLoaded){
       console.log("i: ", index)
+      let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
+      let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
+      panelItem_0_left.src="assets/Screen/Right/r_0_left_Screen_start.svg";
+      panelItem_0_right.src="assets/Screen/Right/r_0_right_Screen_start.svg";
 
 
       if(document.getElementById('mat-expansion-panel-header-0')){
@@ -74,6 +79,9 @@ export class RightComponent implements OnInit, AfterViewInit {
         console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
         this.initPanelItemHeight =  initPanelHeightNmbr+"px";
       }
+      this.isLoaded =true;
+    }
+      
       
       //let numberOne: number = 1;
       //let CM1 = document.getElementById('1');
@@ -91,6 +99,27 @@ export class RightComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(){
 
+    this.display.prioritize().subscribe(data =>{
+      let card1= this.elRef.nativeElement.querySelector("#card3_1");
+      let card0= this.elRef.nativeElement.querySelector("#card3_0");
+      let cardSwitch_0 =  card0.contentWindow.document.getElementById("card_switch_circle_0");
+      let cardSwitch_1 =  card1.contentWindow.document.getElementById("card_switch_circle_1");
+
+      if(data){
+        cardSwitch_1.setAttribute("transform", "translate(30,0)")
+        cardSwitch_1.setAttribute("fill", "green")
+
+        cardSwitch_0.setAttribute("transform", "translate(-30,0)")
+        cardSwitch_0.setAttribute("fill", "#b3b3b3")
+      }
+      else{
+        cardSwitch_1.setAttribute("transform", "translate(0,0)")
+        cardSwitch_1.setAttribute("fill", "#b3b3b3")
+
+        cardSwitch_0.setAttribute("transform", "translate(0,0)")
+        cardSwitch_0.setAttribute("fill", "green")
+      }
+    })
     
 
     setTimeout(()=>{
@@ -125,8 +154,8 @@ export class RightComponent implements OnInit, AfterViewInit {
       //let doc = this.document.getElementById("cm_left_"+0);
       console.log("closedPanelItemLeft: ", panelItem_0_left.src);
       //closedPanelItemLeft.src=this.sanitizer.bypassSecurityTrustResourceUrl("assets/Screen/Right/r_4_left_Screen.svg")
-      panelItem_0_left.src="assets/Screen/Right/r_4_left_Screen.svg";
-      panelItem_0_right.src="assets/Screen/Right/r_4_right_Screen.svg";
+      panelItem_0_left.src="assets/Screen/Right/r_0_left_Screen.svg";
+      panelItem_0_right.src="assets/Screen/Right/r_0_right_Screen.svg";
 
       this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+0).style.backgroundColor = "";
       this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility ="visible";
@@ -149,6 +178,11 @@ export class RightComponent implements OnInit, AfterViewInit {
       
       
       let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
+      console.log("close index: ", data.closedIndex);
+      if(data.closedIndex == -1){
+        console.log("mainSvg: ", expandedPanelItemLeft);
+        this.openPanelIndex = -1;
+      }
 
       if(data.state != -1){
         this.panelOpenState = true;
@@ -163,6 +197,7 @@ export class RightComponent implements OnInit, AfterViewInit {
           // remove all exept from the opened
           if(i != data.closedIndex ){
             let closedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+i);
+            console.log("closedPanelItemLeft: ", closedPanelItemLeft);
             closedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
@@ -187,6 +222,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       }
       else{
         // get back to normal panel state
+        
         this.panelOpenState = false;
         expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
         for (let i = 0; i < this.done1.length; i++) {
@@ -224,11 +260,48 @@ export class RightComponent implements OnInit, AfterViewInit {
       else{
         this.elRef.nativeElement.querySelector(".row").style.height = "95vh";
         this.elRef.nativeElement.querySelector(".row").style.padding = "2px 10px 5px 10px";
+        
+        setTimeout(()=>{
+          let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
+          if(this.openPanelIndex != -1){
+            for (let i = 0; i < this.done1.length; i++) {
+              if(i == this.openPanelIndex){
+                console.log("mainSvg: ", expandedPanelItemLeft);
+                expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
+              }
+              
+              // remove all exept from the opened
+              if(i != this.openPanelIndex ){
+                let closedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+i);
+                closedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
+                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
+                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+              }
+    
+              //show the item under clicked item
+              if(i == this.openPanelIndex+1){
+                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
+                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
+              }
+    
+              if(this.openPanelIndex == this.done1.length-1){
+                
+                this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.height = "100%";
+                this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.flex = "0.25";
+                this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.setProperty('margin-bottom', '20px', 'important');
+              }
+            }
+          }
+        },2000)
+        
         this.hideChart = true;
         this.hidePanel = false;
       }
       
     })
+
 
     this.display.swipeCM().subscribe(currentCardIndex =>{
       // changing background for swiped card

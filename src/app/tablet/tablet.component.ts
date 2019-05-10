@@ -80,6 +80,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   swiperIndexCentral: number = 0;
   elem;
   isFullScreen: boolean = false;
+  cellOffsetWidth: any;
+  cellOffsetHeight: any;
 
   @ViewChild('contentPlaceholder') set content(content: any) {
     this.otherContent = content;
@@ -758,10 +760,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.initPanelItemHeight =  initPanelHeightNmbr+"px";
       this.panelItemHeight = this.initPanelItemHeight;
       this.panelItemHeightEmitter$.next(this.panelItemHeight);
-      let cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
-      let cellOffsetHeight = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
+      this.cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+      this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
     
-      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetWidth+" "+cellOffsetHeight);
+      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
 
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
@@ -846,7 +848,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       //let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
       //let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
 
-      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+468+" "+487);
+      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
       this.hideTabletPanels = false;

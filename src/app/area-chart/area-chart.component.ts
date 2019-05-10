@@ -114,7 +114,7 @@ export class AreaChartComponent implements OnInit {
                       {"locked": false, "graphFactor": 65},
                       {"locked": false, "graphFactor": 60},
                       {"locked": false, "graphFactor": 10},
-                      {"locked": false, "graphFactor": 12}];
+                      {"locked": false, "graphFactor": 20}];
   
   collisionStart = 200+0;
   collisionFadeFrontStop = 220;

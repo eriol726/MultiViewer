@@ -215,7 +215,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
-      let scaleGraphY = 0.7;
+      let scaleGraphY = 0.6;
 
       console.log();
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
@@ -266,11 +266,11 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.switchCCP().subscribe(data =>{
       console.log("switch ccp: ", data);
       //this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
-
+      let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       switch (data.swiperIndex) {
         case 1:
           this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "visible";
-          
+          chartBackground.contentWindow.document.getElementById("late_passengers").style.visibility = "visible";
           break;
         case 2:
           this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
@@ -282,7 +282,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       }
       
 
-      let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+      
 
       console.log(chartBackground.contentWindow.document.getElementById("Transparent_Frame"));
       chartBackground.contentWindow.document.getElementById("Transparent_Frame").style.visibility = "visible";
@@ -326,6 +326,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     });
 
     this.display.expandItem().subscribe(data =>{
+      this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "hidden";
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
       if(data.state == -1 && !data.locked){
@@ -341,6 +342,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
       }
       else{
+        chartBackground.contentWindow.document.getElementById("CM"+(1)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(1)+"_Bar").style.visibility = "hidden";
+
         chartBackground.contentWindow.document.getElementById("CM"+(2)+"_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM"+(2)+"_Bar").style.visibility = "hidden";
 

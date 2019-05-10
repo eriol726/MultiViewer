@@ -1,24 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0) -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg class="svg_nr_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 639 207">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 639 207">
 	<title>
-		Asset 1
+		Asset 4
 	</title>
 	<g style="isolation:isolate">
 		<g id="Layer_2" data-name="Layer 2">
 			<g id="Layer_5" data-name="Layer 5">
-				<rect id="cm_rect_background" x="3.75" y="1.86" width="631.5" height="200.13" fill="rgba(0,0,0,0)" />
+				<rect id="cm_rect_background" x="3.61" y="1.47" width="631.5" height="200.13" fill="rgba(0,0,0,0)" />
 			</g>
 			<g id="Layer_1-2" data-name="Layer 1">
-				<text transform="translate(120.12 40.91)" font-size="21" font-family="Titillium-Regular, Titillium">
-					RESCHEDULING CHARGING
+				<text transform="translate(121.12 38.91)" font-size="21" font-family="Titillium-Regular, Titillium">
+					PRIORITIZING FLIGHTS
 				</text>
                 <g id="Clock_Layer">
-                    <text transform="translate(518.21 149.22)" font-size="15.34" font-family="Titillium-Semibold, Titillium" font-weight="600">
-                        12:00 - 13:00
+                    <text transform="translate(519.21 132.71)" font-size="15.34" font-family="Titillium-Semibold, Titillium" font-weight="600">
+                        17:00 - 20:00
                     </text>
-                    <text transform="translate(547.35 129.38)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+                    <text transform="translate(548.35 113.87)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
                         <tspan letter-spacing="-0.05em">
                             T
                         </tspan>
@@ -32,26 +29,26 @@
                             y
                         </tspan>
                     </text>
-
-                    <text transform="translate(582.43 52.1) scale(1.07 1)" font-size="27.2" fill="#2277d6" font-family="Titillium-Semibold, Titillium" font-weight="600">
+                    <text transform="translate(583.43 37.61) scale(1.07 1)" font-size="27.2" fill="#2277d6" font-family="Titillium-Semibold, Titillium" font-weight="600">
                         1h
                     </text>
-                    <circle class="circle" cx="562.84" cy="76" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4" />
-                    <path d="M562.84,59.06A18.16,18.16,0,0,1,581,77.22H562.84Z" fill="#8dc5f2" />
+                    <circle cx="563.84" cy="61.51" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4" />
+                    <path d="M563.84,44.57A18.16,18.16,0,0,1,582,62.73H563.84Z" fill="#8dc5f2" />
                 </g>
-				<path d="M85.45,56.65A33.5,33.5,0,1,1,52,23.15a33.5,33.5,0,0,1,33.5,33.5" fill="#e3f0fc" />
-				<text transform="translate(120.12 73.36)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
-					Charging 2 AGVs for 1 hour before this time frame
+				<path d="M90,53a33.5,33.5,0,1,1-33.5-33.5A33.5,33.5,0,0,1,90,53" fill="#e3f0fc" />
+				<text transform="translate(121.12 72.99)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Assigning dedicated check-in desks to certain flights
 					<tspan x="0" y="25">
-						would enable us to use them at almost full performance
+						might distribute the passenger load and may help
 					</tspan>
 					<tspan x="0" y="50">
-						and carry 148 more bags.
+						carrying the bags faster.
 					</tspan>
 				</text>
+				
 			</g>
 			<g id="Layer_2-2" data-name="Layer 2">
-				<path d="M61,65.9A6,6,0,0,1,48.88,66l0-6.8,5.89-5.86V45.25a.74.74,0,0,0-.73-.74h-2v-6a1.24,1.24,0,0,0-1.24-1.24h-.23a1.24,1.24,0,0,0-1.23,1.24v6H44v-6a1.23,1.23,0,1,0-2.46,0v6H39.65a.74.74,0,0,0-.74.73l0,8.15,5.92,5.92,0,6.73A10.09,10.09,0,0,0,65,65.9Z" fill="#2277d6" />
+				<path d="M76.78,51.71a2.78,2.78,0,0,0-3.41-2l-9.81,2.63L50.8,40.49l-3.57.94,7.65,13.26-9.19,2.46L42.05,54.3,39.37,55l3.36,5.85,1.43,2.46,3-.8,9.81-2.62L65,57.76l9.82-2.63A2.81,2.81,0,0,0,76.78,51.71Z" fill="#2277d6" />
 			</g>
 		</g>
 	</g>
