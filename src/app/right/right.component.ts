@@ -36,7 +36,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   public isExpanded: number  = -1;
   public hideChart: boolean = true;
   public hidePanel: boolean = false;
-  public panelHeight2: string =  "0px";
+  public panelHeight2: string =  "100%";
   private initPanelItemHeight: string = "0px";
   elem;
   reloaded: boolean;
@@ -71,15 +71,17 @@ export class RightComponent implements OnInit, AfterViewInit {
       
         let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
         let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
-        console.log("panelItem_0_left: ", panelItem_0_left)
+
         panelItem_0_left.src="assets/Screen/Right/r_0_left_Screen_start.svg";
         panelItem_0_right.src="assets/Screen/Right/r_0_right_Screen_start.svg";
   
   
         if(document.getElementById('mat-expansion-panel-header-0')){
           let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
-          console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
+
           this.initPanelItemHeight =  initPanelHeightNmbr+"px";
+          console.log("this.initPanelItemHeight: ", this.initPanelItemHeight);
+          //this.panelHeight2 = this.initPanelItemHeight;
         }
         this.isLoaded =true;
       }
@@ -130,8 +132,8 @@ export class RightComponent implements OnInit, AfterViewInit {
       const p: HTMLDivElement = this.renderer.createElement('div');
       p.insertAdjacentHTML('beforeend', '<div class="two" (click)="switch()">two</div>');
       this.renderer.appendChild(cardSwitch, p)
-      console.log("cardSwitch: ", cardSwitch);
-      console.log(this.elRef.nativeElement.querySelector("#tja"));
+      
+      this.panelHeight2 = this.initPanelItemHeight;
       this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+0).style.backgroundColor = "rgba(217,217,217,0.68)";
       this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility ="hidden";
       this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility ="hidden";
@@ -153,9 +155,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
       let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
       let doc =  this.iframes._results[0].nativeElement.contentDocument || this.iframes._results[0].nativeElement.contentWindow;
-      //let doc = this.document.getElementById("cm_left_"+0);
-      console.log("closedPanelItemLeft: ", panelItem_0_left.src);
-      //closedPanelItemLeft.src=this.sanitizer.bypassSecurityTrustResourceUrl("assets/Screen/Right/r_4_left_Screen.svg")
+     
       panelItem_0_left.src="assets/Screen/Right/r_0_left_Screen.svg";
       panelItem_0_right.src="assets/Screen/Right/r_0_right_Screen.svg";
 
@@ -174,7 +174,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       // this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').style.height = "216px";
       
       this.panelManager(data);
-  
+      
         
     });
     
@@ -263,7 +263,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   async ngOnInit(){
     
     this.elem = document.documentElement;
-    this.openFullscreen();
+    
     const CMmeasures = this.actionService.getCountermeasures();
     CMmeasures.subscribe(doneData => {
       this.done1 = doneData;
