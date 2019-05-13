@@ -38,6 +38,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   public hidePanel: boolean = false;
   public panelHeight2: string =  "100%";
   private initPanelItemHeight: string = "0px";
+  expandedPanelItemLeft;
   elem;
   reloaded: boolean;
   svgString;
@@ -102,6 +103,8 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+
+    this.expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+0);
 
     this.display.prioritize().subscribe(data =>{
       let card1= this.elRef.nativeElement.querySelector("#card3_1");
@@ -194,8 +197,8 @@ export class RightComponent implements OnInit, AfterViewInit {
 
     this.display.maximizeChart().subscribe(data=>{
       if(!this.hidePanel){
-        this.elRef.nativeElement.querySelector(".row").style.height = "100vh";
-        this.elRef.nativeElement.querySelector(".row").style.padding = "0px";
+        this.elRef.nativeElement.querySelector(".row").style.height = "calc(100vh - 20px)";
+        //this.elRef.nativeElement.querySelector(".row").style.padding = "0px";
 
         this.hideChart = false;
         this.hidePanel = true;
@@ -285,22 +288,24 @@ export class RightComponent implements OnInit, AfterViewInit {
 
     this.panelHeight2 = this.initPanelItemHeight;
     
-    let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
-    console.log("close index: ", data.closedIndex);
-    console.log("close state: ", data.state);
+    console.log("this.openPanelIndex: ", data.closedIndex);
+    console.log("this.state: ", data.state);
+    this.expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
+    
     if(data.closedIndex == -1){
-      console.log("mainSvg: ", expandedPanelItemLeft);
       this.openPanelIndex = -1;
+      this.expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+0);
     }
 
     if(data.state != -1){
+      this.elRef.nativeElement.querySelector("#panel_item_"+data.closedIndex).firstChild.style.marginBottom  = "-25px";
       this.panelOpenState = true;
-      
+      this.elRef.nativeElement.querySelector("#panel_item_"+data.closedIndex)
       
       for (let i = 0; i < this.done1.length; i++) {
         if(i == data.closedIndex){
-          console.log("mainSvg: ", expandedPanelItemLeft);
-          expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
+          console.log("mainSvg: ", this.expandedPanelItemLeft);
+          this.expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
         }
         
         // remove all exept from the opened
@@ -333,8 +338,9 @@ export class RightComponent implements OnInit, AfterViewInit {
       // get back to normal panel state
       
       this.panelOpenState = false;
-      expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+      this.expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
       for (let i = 0; i < this.done1.length; i++) {
+          this.elRef.nativeElement.querySelector("#panel_item_"+i).firstChild.style.marginBottom  = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
