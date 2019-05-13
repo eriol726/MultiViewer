@@ -66,22 +66,24 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   loadIframe(index){
-    if (!this.isLoaded){
-      console.log("i: ", index)
-      let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
-      let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
-      panelItem_0_left.src="assets/Screen/Right/r_0_left_Screen_start.svg";
-      panelItem_0_right.src="assets/Screen/Right/r_0_right_Screen_start.svg";
-
-
-      if(document.getElementById('mat-expansion-panel-header-0')){
-        let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
-        console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
-        this.initPanelItemHeight =  initPanelHeightNmbr+"px";
-      }
-      this.isLoaded =true;
-    }
+    setTimeout(()=>{
+      if (!this.isLoaded){
       
+        let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
+        let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
+        console.log("panelItem_0_left: ", panelItem_0_left)
+        panelItem_0_left.src="assets/Screen/Right/r_0_left_Screen_start.svg";
+        panelItem_0_right.src="assets/Screen/Right/r_0_right_Screen_start.svg";
+  
+  
+        if(document.getElementById('mat-expansion-panel-header-0')){
+          let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
+          console.log("initPanelHeightNmbr: ", initPanelHeightNmbr);
+          this.initPanelItemHeight =  initPanelHeightNmbr+"px";
+        }
+        this.isLoaded =true;
+      }
+    },1000)
       
       //let numberOne: number = 1;
       //let CM1 = document.getElementById('1');
@@ -171,66 +173,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       
       // this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-0').style.height = "216px";
       
-      this.isExpanded = data.state;
-      this.openPanelIndex = data.closedIndex;
-
-      this.panelHeight2 = this.initPanelItemHeight;
-      
-      
-      let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
-      console.log("close index: ", data.closedIndex);
-      if(data.closedIndex == -1){
-        console.log("mainSvg: ", expandedPanelItemLeft);
-        this.openPanelIndex = -1;
-      }
-
-      if(data.state != -1){
-        this.panelOpenState = true;
-        
-      
-        for (let i = 0; i < this.done1.length; i++) {
-          if(i == data.closedIndex){
-            console.log("mainSvg: ", expandedPanelItemLeft);
-            expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
-          }
-          
-          // remove all exept from the opened
-          if(i != data.closedIndex ){
-            let closedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+i);
-            console.log("closedPanelItemLeft: ", closedPanelItemLeft);
-            closedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
-          }
-
-          //show the item under clicked item
-          if(i == data.closedIndex+1){
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
-          }
-
-          if(data.closedIndex == this.done1.length-1){
-            
-            this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.height = "100%";
-            this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.flex = "0.25";
-            this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.setProperty('margin-bottom', '20px', 'important');
-          }
-        }
-
-      }
-      else{
-        // get back to normal panel state
-        
-        this.panelOpenState = false;
-        expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
-        for (let i = 0; i < this.done1.length; i++) {
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
-        }
-      }  
+      this.panelManager(data);
   
         
     });
@@ -258,43 +201,9 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.hidePanel = true;
       }
       else{
-        this.elRef.nativeElement.querySelector(".row").style.height = "95vh";
-        this.elRef.nativeElement.querySelector(".row").style.padding = "2px 10px 5px 10px";
+        let data = {state: this.isExpanded, closedIndex: this.isExpanded};
         
-        setTimeout(()=>{
-          let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
-          if(this.openPanelIndex != -1){
-            for (let i = 0; i < this.done1.length; i++) {
-              if(i == this.openPanelIndex){
-                console.log("mainSvg: ", expandedPanelItemLeft);
-                expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
-              }
-              
-              // remove all exept from the opened
-              if(i != this.openPanelIndex ){
-                let closedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+i);
-                closedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
-                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
-                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
-                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
-              }
-    
-              //show the item under clicked item
-              if(i == this.openPanelIndex+1){
-                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
-                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
-                this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
-              }
-    
-              if(this.openPanelIndex == this.done1.length-1){
-                
-                this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.height = "100%";
-                this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.flex = "0.25";
-                this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.setProperty('margin-bottom', '20px', 'important');
-              }
-            }
-          }
-        },2000)
+        this.panelManager(data);
         
         this.hideChart = true;
         this.hidePanel = false;
@@ -366,6 +275,71 @@ export class RightComponent implements OnInit, AfterViewInit {
 
   openFullscreen() {
 
+  }
+
+  panelManager(data){
+    // -1 when some is closed eighter the index
+    this.isExpanded = data.state;
+    // always the index no matter if closed/open
+    this.openPanelIndex = data.closedIndex;
+
+    this.panelHeight2 = this.initPanelItemHeight;
+    
+    let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
+    console.log("close index: ", data.closedIndex);
+    console.log("close state: ", data.state);
+    if(data.closedIndex == -1){
+      console.log("mainSvg: ", expandedPanelItemLeft);
+      this.openPanelIndex = -1;
+    }
+
+    if(data.state != -1){
+      this.panelOpenState = true;
+      
+      
+      for (let i = 0; i < this.done1.length; i++) {
+        if(i == data.closedIndex){
+          console.log("mainSvg: ", expandedPanelItemLeft);
+          expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "hidden");
+        }
+        
+        // remove all exept from the opened
+        if(i != data.closedIndex ){
+          let closedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+i);
+          console.log("closedPanelItemLeft: ", closedPanelItemLeft);
+          closedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+        }
+
+        //show the item under clicked item
+        if(i == data.closedIndex+1){
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
+        }
+
+        if(data.closedIndex == this.done1.length-1){
+          
+          this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.height = "100%";
+          this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.flex = "0.25";
+          this.elRef.nativeElement.querySelector('#panel_item_'+(this.done1.length-2)).style.setProperty('margin-bottom', '20px', 'important');
+        }
+      }
+
+    }
+    else{
+      // get back to normal panel state
+      
+      this.panelOpenState = false;
+      expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+      for (let i = 0; i < this.done1.length; i++) {
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
+      }
+    }  
   }
 
   createRange(number){
