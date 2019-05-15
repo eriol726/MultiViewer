@@ -215,7 +215,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
-      let scaleGraphY = 0.6;
+      let scaleGraphY = 0.7;
 
       console.log();
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
@@ -235,10 +235,10 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.display.fullScreen().subscribe(data =>{
       console.log("fullscreen: ", data);
       if(data){
-        this.openFullscreen();
+        //this.openFullscreen();
       }
       else{
-        this.closeFullscreen();
+        //this.closeFullscreen();
       }
     })
 

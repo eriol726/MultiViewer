@@ -225,10 +225,10 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.display.fullScreen().subscribe(data =>{
       console.log("fullscreen: ", data);
       if(data){
-        this.openFullscreen();
+        //this.openFullscreen();
       }
       else{
-        this.closeFullscreen();
+        //this.closeFullscreen();
       }
     })
 

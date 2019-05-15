@@ -186,24 +186,28 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+data.currentIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
       this.isExpanded = -1;
       this.panelOpenState = false;
-      let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
-        expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
-        for (let i = 0; i < this.done1.length; i++) {
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
-        }
+      console.log("this.openPanelIndex: ", this.openPanelIndex);
+      // let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
+      // expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+      // for (let i = 0; i < this.done1.length; i++) {
+      //     this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+      //     this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+      //     this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
+      // }
     });
 
     this.display.maximizeChart().subscribe(data=>{
       if(!this.hidePanel){
-        this.elRef.nativeElement.querySelector(".row").style.height = "calc(100vh - 20px)";
+        this.elRef.nativeElement.querySelector(".row").style.height = "calc(100vh)";
+        this.elRef.nativeElement.querySelector(".row").style.padding = "0px";
         //this.elRef.nativeElement.querySelector(".row").style.padding = "0px";
 
         this.hideChart = false;
         this.hidePanel = true;
       }
       else{
+        this.elRef.nativeElement.querySelector(".row").style.height = "calc(100vh - 20px)";
+        this.elRef.nativeElement.querySelector(".row").style.padding = "2px 10px 5px 10px";
         let data = {state: this.isExpanded, closedIndex: this.isExpanded};
         
         this.panelManager(data);
@@ -238,7 +242,7 @@ export class RightComponent implements OnInit, AfterViewInit {
     this.display.lockItem().subscribe(data =>{
       console.log("index: ", data);
       if(data.type){
-        this.elRef.nativeElement.querySelector('#panel_item_'+data.state).style.background = "#dce5ea";
+        this.elRef.nativeElement.querySelector('#panel_item_'+data.state).style.background = "rgba(217,217,217,0.68)";
       }
       else{
         this.elRef.nativeElement.querySelector('#panel_item_'+data.state).style.background = "";

@@ -636,10 +636,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
       console.log("locked: ", this.elRef.nativeElement.querySelectorAll('.card'));
       for (let i = 0; i < cards.length; i++) {
         console.log("card: ", this.elRef.nativeElement.querySelector("#card_"+index+"_"+i));
-        this.elRef.nativeElement.querySelector("#card_"+index+"_"+i).style.backgroundColor = "#dce5ea";
+        this.elRef.nativeElement.querySelector("#card_"+index+"_"+i).style.backgroundColor = "rgba(217,217,217,0.68)";
       }
       //gray
-      this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "#dce5ea";
+      this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "rgba(217,217,217,0.68)";
 
 
       this.lockedCM[index].locked = true
@@ -701,7 +701,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     //this.initSvg();
     console.log();
-    this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(5,1)');
+    this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(4,1)');
     //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
 
     //Send the width of the cell to middle screen
