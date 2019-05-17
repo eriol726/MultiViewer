@@ -110,7 +110,7 @@ export class AreaChartComponent implements OnInit {
 
   private selectedCM = [false,false,false,false];
   private lockedCM = [{"locked": false, "graphFactor": 15},
-                      {"locked": false, "graphFactor": 95},
+                      {"locked": false, "graphFactor": 88},
                       {"locked": false, "graphFactor": 65},
                       {"locked": false, "graphFactor": 60},
                       {"locked": false, "graphFactor": 10},

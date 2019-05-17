@@ -129,8 +129,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     const headers = new HttpHeaders();
     headers.set('Accept', 'image/svg+xml');
-    this.svgString =
-      await this.http.get(`assets/Screen/Right/r_4_left_Screen.svg`, {headers, responseType: 'text'}).toPromise();
+    // this.svgString =
+    //   await this.http.get(`assets/Screen/Right/r_4_left_Screen.svg`, {headers, responseType: 'text'}).toPromise();
 
     // this.http.get('assets/Screen/Right/r_4_left_Screen.svg').subscribe(data => {
     //   console.log(data);

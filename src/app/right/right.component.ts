@@ -114,7 +114,7 @@ export class RightComponent implements OnInit, AfterViewInit {
 
       if(data){
         cardSwitch_1.setAttribute("transform", "translate(30,0)")
-        cardSwitch_1.setAttribute("fill", "green")
+        cardSwitch_1.setAttribute("fill", "rgb(64, 189, 115)")
 
         cardSwitch_0.setAttribute("transform", "translate(-30,0)")
         cardSwitch_0.setAttribute("fill", "#b3b3b3")
@@ -124,7 +124,7 @@ export class RightComponent implements OnInit, AfterViewInit {
         cardSwitch_1.setAttribute("fill", "#b3b3b3")
 
         cardSwitch_0.setAttribute("transform", "translate(0,0)")
-        cardSwitch_0.setAttribute("fill", "green")
+        cardSwitch_0.setAttribute("fill", "rgb(64, 189, 115)")
       }
     })
     
@@ -155,6 +155,7 @@ export class RightComponent implements OnInit, AfterViewInit {
     })
 
     this.display.switchCCP().subscribe(data =>{
+      this.expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+0);
       let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
       let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
       let doc =  this.iframes._results[0].nativeElement.contentDocument || this.iframes._results[0].nativeElement.contentWindow;
@@ -186,14 +187,17 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+data.currentIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
       this.isExpanded = -1;
       this.panelOpenState = false;
-      console.log("this.openPanelIndex: ", this.openPanelIndex);
-      // let expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
-      // expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
-      // for (let i = 0; i < this.done1.length; i++) {
-      //     this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
-      //     this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-      //     this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
-      // }
+      let data2 = {state: this.isExpanded, closedIndex: this.isExpanded};
+
+      // Go back to normal state
+      this.panelOpenState = false;
+      this.expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+      for (let i = 0; i < this.done1.length; i++) {
+          this.elRef.nativeElement.querySelector("#panel_item_"+i).firstChild.style.marginBottom  = "0px";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
+      }
     });
 
     this.display.maximizeChart().subscribe(data=>{

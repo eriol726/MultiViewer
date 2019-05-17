@@ -301,7 +301,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     if(!this.prioritize){
       cardSwitch.setAttribute("transform", "translate(30,0)")
-      cardSwitch.setAttribute("fill", "green")
+      cardSwitch.setAttribute("fill", "rgb(64, 189, 115)")
       this.prioritize = true;
       this.socket.sendCCP(5,3);
     }else{
@@ -354,7 +354,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       
       this.socket.sendExpand("task",index,index,this.lockedCM[index].locked);
       console.log("switch: ", iframeEl.contentWindow.document.getElementById("switch"));
-      iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "green");
+      iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "rgb(64, 189, 115)");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
 
@@ -700,7 +700,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.focus.select("#diagonalRect").attr("height", "0.5");
     
     //this.initSvg();
-    console.log();
     this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(4,1)');
     //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
 
@@ -712,12 +711,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     console.log("chart1 ", this.chart1._results[0].mainChart.nativeElement);
     this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
-    
-    console.log("cardlist: ", this.cardList);
-    console.log("switch: ", this.elRef.nativeElement.querySelector(".swiper-container"));
-    console.log("switch: ", this.elRef.nativeElement.querySelector(".svgCM"));
-    console.log("switch: ", this.elRef.nativeElement.querySelector(".cell"));
-    console.log("switch: ", d3.select('.switch'));
 
     this.socket.switchCCP().subscribe(data =>{
 
@@ -731,6 +724,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
           this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "visible";
           this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "visible";
           this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
+
+          let svg_time_scale = this.elRef.nativeElement.querySelector("#svg_time_scale");
+          console.log(svg_time_scale.contentWindow.document.getElementById("timeText0").innerHTML);
+          svg_time_scale.contentWindow.document.getElementById("timeText0").innerHTML = "17:00";
+          svg_time_scale.contentWindow.document.getElementById("timeText1").innerHTML = "18:00";
+          svg_time_scale.contentWindow.document.getElementById("timeText2").innerHTML = "19:00";
+          svg_time_scale.contentWindow.document.getElementById("timeText3").innerHTML = "20:00";
+          this.focus.attr('transform', 'translate(' + (-1290) + ',' + 100 + ') scale(5,1)');
+
           let iframePanelItem0 = this.elRef.nativeElement.querySelector("#main_svg_0");
           console.log("new src: ", this.sanitizer.bypassSecurityTrustResourceUrl("assets/r_4_Tablet.svg"));
           console.log("iframe src: ", this.elRef.nativeElement.querySelector("#main_svg_0").src);
@@ -766,7 +768,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
 
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
+      this.focus.attr('transform', 'translate(' + (-500) + ',' + 100 + ') scale(5,1)');
 
       this.focus.select("#hash4_6").attr("width", "1")
       this.focus.select("#hash4_6").attr("height", "1")
