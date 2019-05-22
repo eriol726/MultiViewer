@@ -1,18 +1,16 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, TemplateRef, ContentChild, ChangeDetectorRef, ViewContainerRef, Injectable, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, ChangeDetectorRef, ViewContainerRef, Output, EventEmitter, Inject } from '@angular/core';
 import { RightComponent } from '../right/right.component';
 import { LeftComponent } from '../left/left.component';
 import { MiddleComponent } from '../middle/middle.component';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem, CdkDragExit, CdkDragStart } from '@angular/cdk/drag-drop';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
 import { HttpClient } from '@angular/common/http';
-import { TEMPERATURES } from '../../data/temperatures';
 import { DragulaService } from 'ng2-dragula';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-import { NavigationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 export interface Margin {
   top: number;
@@ -76,97 +74,41 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChild('dropZone', {read: ViewContainerRef}) dropZone: ViewContainerRef;
 
   @ViewChild('chart1', {read: ViewContainerRef}) viewContainerRef;
-  chartBackground: any;
-  swiperIndexCentral: number = 0;
-  elem;
-  isFullScreen: boolean = false;
-  cellOffsetWidth: any;
-  cellOffsetHeight: any;
+
+
+  private elem;
+  public isFullScreen: boolean = false;
+  private cellOffsetWidth: number = 0;
+  private cellOffsetHeight: number = 0;
 
   @ViewChild('contentPlaceholder') set content(content: any) {
     this.otherContent = content;
   }
   @ViewChildren('cardList') cardList: ElementRef;
-
   @ViewChild('chart') private chartContainer: ElementRef;
 
   likes: any = 10;
-  private myTemplate: any = "";
   @Input() url: string = "app/right.display.component.html";
   @Input() ID: string;
   
 
-  private svgPath = "../../assets/";
-  tasks: MyType[];
+
+  public tasks: MyType[];
 
   // we need to create a struct/type to point to the variable members from action service
-  done: MyType[];
+  private done: MyType[];
 
-  
-
-  chartData = [];
-  //data = [];
-
-  expand = [false,false,false,false];
-
-  messageState : number = 0;
   panelIndex : number = 0;
   currentState : boolean = false
-
-  data: any;
 
   public hideChart: boolean = true;
   public hidePanel: boolean = false;
   
-  private margin: Margin;
-  private margin2: Margin;
-
-  private width: number = 0;
-  private height: number;
-  private height2: number;
-
-  private svg: any;     // TODO replace all `any` by the right type
-
-  private x: any;
-  private x2: any;
-  private x3: any;
-  private x4: any;
-  private y: any;
-  private y2: any;
-  private y3: any;
-
-  private xAxis: any;
-  private xAxis2: any;
-  private yAxis: any;
-
-  private context: any;
-  private brush: any;
-  private zoom: any;
-
-  private area2: any;
-
-  private collisionArea: any;
-  private collisionArea2: any;
   private focus: any;
+  public panelOpenState = false;
 
-  private outerUpperArea: any;
-  private innerArea: any;
-  private outerLowerArea: any;
-  private outerUpperArea2: any;
-  private outerLowerArea2: any;
-  private innerArea2: any;
-
-  private focusIndexMin: any = 5000;
-  private focusIndexMax: any = -5000;
-
-  private zoomDate1: any;
-  private zoomDate2: any;
-
-  private panelOpenState = false;
-  private curveFactor = 0;
   private nextMessageIndex = 0;
 
-  private selectedCM = [false,false,false,false];
   private lockedCM = [{"locked": false, "graphFactor": 5},
                       {"locked": false, "graphFactor": 20},
                       {"locked": false, "graphFactor": 10},
@@ -175,7 +117,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public isExpanded: number  = -1;
     
   private initPanelItemHeight: string = "0px";
-  public panelItemHeight: string = "111px";
+  public panelItemHeight: string = "auto";
   panelItemHeightEmitter$ = new BehaviorSubject<string>(this.panelItemHeight);
  
   public thePanel;
@@ -186,7 +128,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   curveFactorLocked: number = 0;
   isMaximized: boolean = false;
 
-  hideTabletPanels = false;
+  public hideTabletPanels = false;
 
   messageNumber_1 = 1;
   messageNumber_0 = 0;
@@ -208,13 +150,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
               public sanitizer: DomSanitizer,
               private router: Router,
               private changeDetector : ChangeDetectorRef) { 
-
-        
-     
-        // mySwiper = new Swiper('.swiper-container', {
-        //   speed: 400,
-        //   spaceBetween: 100
-        // });
 
       dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
@@ -252,8 +187,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
    
             // we must change the name of the copied elements so we now which background color we will change
             el.id = "panel_item_copy_"+taskIndex;
-            console.log("el: ", el);
+
             el.querySelector('.mat-expansion-panel-header').style.height = this.panelItemHeight;
+
+            console.log("this.panelItemHeight: " , this.panelItemHeight);
+
+            el.querySelector('#mat-expansion-panel-header-'+(taskIndex+2)).id = 'mat-expansion-panel-header-'+taskIndex+'-copy';
+            el.querySelector('#mat-expansion-panel-header-'+(taskIndex)+'-copy').style.height = this.panelItemHeight;
             // gray out when CM is chosen
             
             el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
@@ -266,12 +206,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
               this.elRef.nativeElement.querySelector('#card_'+taskIndex+"_"+index).style.backgroundColor = "rgba(217,217,217,0.68)";
             }
             
-
-            console.log("card: ", el.querySelectorAll(".card")[0].id);
             el.querySelector('#main_svg_'+taskIndex).id = "main_svg_copy_"+taskIndex;
-
-          
-
           }
 
           // resize all right panel items when a expanded panel item is droped
@@ -284,7 +219,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
           let mainSvg = this.elRef.nativeElement.querySelector("#main_svg_"+(taskIndex));
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
-          //mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
           
           this.cmText = this.tasks[taskIndex].text + " APPLIED";
           this.elRef.nativeElement.querySelector('.applied-box').style.backgroundColor = "#40bd73";
@@ -311,38 +245,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.socket.sendCCP(5,99);
     }
     this.socket.sendPriorotize(this.prioritize);
-    
   }
 
 
   closeLeftPanel(elementRef){
-    console.log("index: ", parseInt(elementRef.id[elementRef.id.length-1]));
-    let index = parseInt(elementRef.id[elementRef.id.length-1]);
-    
     for (let index = 0; index < this.done.length; index++) {
       this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.height = "0px";
       this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.visibility = "hidden";
-      
     }
-    // let expandedPanelItem = this.elRef.nativeElement.querySelector("#panel_item_copy_"+index);
-    // let newClassName = expandedPanelItem.className.replace("mat-expanded", "");
-    // expandedPanelItem.children[0].className = newClassName;
-    // expandedPanelItem.className = newClassName
-   // console.log("newClassName: ", newClassName);
-    
-    
   }
 
   expandTaskPanel(index){
-    //this.tabletComp.handleLeftPanel(0);
-
-    // if(index > 0){
-    //   this.elRef.nativeElement.querySelector('#panel_item_'+(index+1)).style.height = "auto";
-    //   this.elRef.nativeElement.querySelector('#panel_item_'+(index+1)).style.flex = "1";
-    // }
-
-    console.log("clicked index: ", index);
-
     let iframeEl = this.elRef.nativeElement.querySelector("#main_svg_"+(index));
 
     if(this.panelOpenState){
@@ -353,7 +266,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.isExpanded = index;
       
       this.socket.sendExpand("task",index,index,this.lockedCM[index].locked);
-      console.log("switch: ", iframeEl.contentWindow.document.getElementById("switch"));
+
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "rgb(64, 189, 115)");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
@@ -373,7 +286,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
         }
         //show the panel item under clicked item
         if(i == index+1){
-          console.log("#panel_item_+i).style.height = auto");
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0 0 16%";
         }
@@ -400,230 +312,29 @@ export class TabletComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
         this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
-
       }
     }
-
-    
-
-
-  }
-
-  expandDonePanel(index){
-    //this.tabletComp.handleLeftPanel(0);
-    this.socket.sendExpand("done",index,index,this.lockedCM[index].locked);
-  }
-
-  
-
-  generateData() {
-  //   this.data = [];
-  //   for (let i = 0; i < (8 + Math.floor(Math.random() * 10)); i++) {
-  //   this.data.push([
-  //   `Index ${i}`,
-  //   Math.floor(Math.random() * 100)
-  //   ]);
-  //  }
-  }
-
-  
-
-  private getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) ) + min;
   }
 
   ngOnInit(){
     this.elem = document.documentElement;
-    this.generateData();
 
-    //this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
-    //this.basicChart('#ab63fa');
     const tasksObservable = this.actionService.getActions();
 
     this.done = [];
     tasksObservable.subscribe(tasksData => {
-
       this.tasks = tasksData;
-      //this.done.push(this.tasks[0]);
+
     })
-    
-    //this.initSvg();
-    //this.drawChart(TEMPERATURES);
-
-  
-  }
-
-
-  
-
-  private brushed() {
-    
-    if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
-    console.log("brushed");
-    let s = d3.event.selection || this.x2.range();
-    let s2 = d3.event.selection || this.x4.range();
-    
-    this.x.domain(s.map(this.x2.invert, this.x2));
- 
-    this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
-    this.focus.select('.areaOuterLower').attr('d', this.outerLowerArea.bind(this));
-
-    this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    this.focus.select('.areaInner2').attr('d', this.innerArea2.bind(this));
-    this.focus.select('.areaOuterLower2').attr('d', this.outerLowerArea2.bind(this));
-
-    // this.focus.select('#hash4_5').attr('d', this.collisionArea.bind(this));
-    // this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
-    // this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
-
-
-    console.log("s: ", s);
-    this.focus.select('.axis--x').call(this.xAxis);
-    this.svg.select('.zoom').call(this.zoom.transform, d3.zoomIdentity
-        .scale(this.width / (s[1] - s[0]))
-        .translate(-s[0], 0));
-  }
-
-  private zoomed(isMaximized) {
-
-    if(isMaximized){
-      this.focus.attr("transform", "translate(0,100) scale(3,1)");
-    }
-    else{
-      this.focus.attr("transform", "translate(0,100) scale(1,1)");
-    }
-    
-
-  }
-
-  ngOnChanges() {
-
-  }
-
-
-  private async drawChart(data) {
-
-    //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    //this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
-    this.x2.domain(this.x.domain());
-    this.y2.domain(this.y.domain());
-
-
-    // first curve
-    this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
-      .attr('class', 'areaOuterUpper')
-      .attr('d',this.outerUpperArea)
-      .attr('clip-path', 'url(#rect-clip)');
-      
-
-    this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
-      .attr('class', 'areaInner')
-      .attr('d',this.innerArea)
-      .attr('clip-path', 'url(#rect-clip)');
-    
-
-      
-    this.focus.append('path')
-      .datum(TEMPERATURES[3].values)
-      .attr('class', 'areaOuterLower')
-      .attr('d',this.outerLowerArea)
-      .attr('clip-path', 'url(#rect-clip)');
-
-    //next curve
-
-    this.focus.append('path')
-      .datum(TEMPERATURES[4].values)
-      .attr('class', 'areaOuterUpper2')
-      .attr('d',this.outerUpperArea2)
-      .attr('clip-path', 'url(#rect-clip)');
-
-    this.focus.append('path')
-      .datum(TEMPERATURES[5].values)
-      .attr('class', 'areaInner2')
-      .attr('d',this.innerArea2)
-      .attr('clip-path', 'url(#rect-clip)');
-
-    this.focus.append('path')
-      .datum(TEMPERATURES[7].values)
-      .attr('class', 'areaOuterLower2')
-      .attr('d',this.outerLowerArea2)
-      .attr('clip-path', 'url(#rect-clip)');
-
-    // line pattern
-    this.focus.append("clipPath")
-      .datum(TEMPERATURES[7].values)
-      .attr("id", "clip-below")
-      .append("path")
-      .attr("class", "clip-below1");
-
-    this.focus.append("clipPath")
-      .datum(TEMPERATURES[0].values)
-      .attr("id", "clip-above")
-      .append("path")
-      .attr("class", "clip-above1");
-
-    this.focus.append("pattern")
-      .attr('id', "hash4_6")
-      .attr('width', "4") 
-      .attr('height',"4")
-      .attr('patternUnits',"userSpaceOnUse") 
-      .attr('patternTransform', "rotate(45)")
-      .append("rect")
-      .attr("width","2")
-      .attr("height", "4")
-      .attr("transform", "translate(0,0)")
-      .attr("fill", "#000")
-
-    this.focus.append("path")
-      .datum(TEMPERATURES[0].values)
-      .attr('id', 'hash4_5')
-      .attr("x", 0)
-      .attr("width", "100%")
-      .attr("height", "100%")
-      .attr("fill", "url(#hash4_6)")
-      .attr("clip-path", "url(#clip-above)")
-      .attr("d", this.collisionArea)
-
-
-    this.context.append('g')
-        .attr('class', 'brush')
-        .attr('visibility', 'hidden') 
-        .call(this.brush)
-        .call(this.brush.move, this.x.range());
-
-    this.svg.append('rect')
-        .attr('class', 'zoom')
-        .attr('width', this.width)
-        .attr('height', this.height)
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
-        .call(this.zoom);
-
-    this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date, TEMPERATURES[0].values[331].date].map(this.x));
-    
-  }
-
-
-
-
-  handleRightPanel(index){
-    console.log("this.chartTablet: ", this.chartTablet);
-
-    
-    this.rightPanel.show(index);
-    //console.log("linkRefs: ", this.linkRefs._results[index].toggle());
   }
 
   selectCard(index){
     
-    console.log("index: ", index, "locked: ", this.selectedCM[index]);
     let cards = this.elRef.nativeElement.querySelector("#panel_item_"+index).querySelectorAll(".card");
-    console.log("cards: ", cards);
+
     let iframeEl = this.elRef.nativeElement.querySelector("#main_svg_"+index);
     if(this.lockedCM[index].locked){
-      console.log("unlock");
+
       this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
       this.lockedCM[index].locked = false;
 
@@ -633,43 +344,44 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "#fff";
     }
     else{
-      console.log("locked: ", this.elRef.nativeElement.querySelectorAll('.card'));
+
       for (let i = 0; i < cards.length; i++) {
-        console.log("card: ", this.elRef.nativeElement.querySelector("#card_"+index+"_"+i));
         this.elRef.nativeElement.querySelector("#card_"+index+"_"+i).style.backgroundColor = "rgba(217,217,217,0.68)";
       }
       //gray
       this.elRef.nativeElement.querySelector('#panel_item_'+index).style.backgroundColor = "rgba(217,217,217,0.68)";
 
-
       this.lockedCM[index].locked = true
     }
 
     this.socket.sendLock(this.lockedCM[index].locked,index);
-    
-  }
-  
-  status(event: CdkDragStart){
-    console.log("exit: ", event);
-    // setTimeout(() => { this.tasks= { "content" : [
-    //   {"text": "task 0", "color":"rgb(38, 143, 85)"},
-    //   {"text": "task 1", "color":"rgb(38, 143, 85)"},
-    //   {"text": "task 2", "color":"rgb(38, 143, 85)"},
-    // ] } }, 2000); 
   }
 
   loadCardIframe(){
-    setTimeout(()=>{
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
       let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
       
       this.switchLeft = cardSwitch.getBoundingClientRect().x;
       this.switchTop = cardSwitch.getBoundingClientRect().y;
-    },1000)
   }
 
+  rescaleCollisionPattern(){
+    this.focus = d3.select(".focus");
+
+    this.focus.select("#hash4_6").attr("width", "1")
+    this.focus.select("#hash4_6").attr("height", "1")
+    this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
+    this.focus.select("#diagonalRect").attr("width", "1");
+    this.focus.select("#diagonalRect").attr("height", "0.5");
+    
+    this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(4,1)');
+  }
 
   ngAfterViewInit() {
+
+    this.rescaleCollisionPattern();
+    
+    //appending cm to left panel
     setTimeout(()=>{
       let panelItem = this.elRef.nativeElement.querySelector("#panel_item_0");
       panelItem.children[1].style.visibility = "visible";
@@ -683,41 +395,19 @@ export class TabletComponent implements OnInit, AfterViewInit {
       cln.querySelector('#card_0_0_copy').src ="assets/Tablet/Right/r_0_0_Tablet_start.svg";
       dropZone.appendChild(cln);
       console.log("panelItem.children[1]: ", panelItem.children[1]);
-    },50)
+    })
     
-    //this.viewContainer.insert(template);
-
-    
-
-    this.svg = d3.select('svg');
-    this.focus = d3.select(".focus");
-    this.context = d3.select(".context");
-
-    this.focus.select("#hash4_6").attr("width", "1")
-    this.focus.select("#hash4_6").attr("height", "1")
-    this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
-    this.focus.select("#diagonalRect").attr("width", "1");
-    this.focus.select("#diagonalRect").attr("height", "0.5");
-    
-    //this.initSvg();
-    this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(4,1)');
-    //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[249].date,TEMPERATURES[0].values[331].date].map(this.x));
-
     //Send the width of the cell to middle screen
     let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
     let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
 
-    this.socket.sendANumber(cellOffsetwdith);
-    
-    console.log("chart1 ", this.chart1._results[0].mainChart.nativeElement);
     this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+cellOffsetwdith+" "+cellOffsetHeght);
 
     this.socket.switchCCP().subscribe(data =>{
-
       switch (data.swiperIndex) {
         case 1:
           this.elRef.nativeElement.querySelector("#panel_item_0").remove();
-          console.log("swipe central");
+
           this.messageNumber_0 = 1;
           this.messageNumber_1 = 2;
           this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";
@@ -726,7 +416,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
 
           let svg_time_scale = this.elRef.nativeElement.querySelector("#svg_time_scale");
-          console.log(svg_time_scale.contentWindow.document.getElementById("timeText0").innerHTML);
+
           svg_time_scale.contentWindow.document.getElementById("timeText0").innerHTML = "17:00";
           svg_time_scale.contentWindow.document.getElementById("timeText1").innerHTML = "18:00";
           svg_time_scale.contentWindow.document.getElementById("timeText2").innerHTML = "19:00";
@@ -734,31 +424,23 @@ export class TabletComponent implements OnInit, AfterViewInit {
           this.focus.attr('transform', 'translate(' + (-1290) + ',' + 100 + ') scale(5,1)');
 
           let iframePanelItem0 = this.elRef.nativeElement.querySelector("#main_svg_0");
-          console.log("new src: ", this.sanitizer.bypassSecurityTrustResourceUrl("assets/r_4_Tablet.svg"));
-          console.log("iframe src: ", this.elRef.nativeElement.querySelector("#main_svg_0").src);
           iframePanelItem0.src = "assets/r_4_Tablet.svg";
           break;
         case 2:
           this.messageNumber_0 = 2;
           this.messageNumber_1 = 3;
-          console.log("message 2");
         break;
       
         default:
           break;
       }
-      
-      //this.swiperIndexCentral = data.swiperIndex;
     })
-    
-    
   }
 
   loadIframe(){
-    setTimeout(() => {
-      if(!this.loaded){
-        let initPanelHeightNmbr = this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight;
-      console.log("offsetHeight nativeElement: ", this.elRef.nativeElement.querySelector('mat-expansion-panel-header').offsetHeight);
+    if(!this.loaded){
+      let initPanelHeightNmbr = this.elRef.nativeElement.querySelector('#iframeOverlay_0').getBoundingClientRect().height;
+
       this.initPanelItemHeight =  initPanelHeightNmbr+"px";
       this.panelItemHeight = this.initPanelItemHeight;
       this.panelItemHeightEmitter$.next(this.panelItemHeight);
@@ -775,20 +457,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
       this.focus.select("#diagonalRect").attr("width", "1");
       this.focus.select("#diagonalRect").attr("height", "0.2");
-
-      //this.elRef.nativeElement.querySelector("#main_svg_0").src = "assets/Tablet/Right/r_4_Tablet.svg";
       
       this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
       this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
       this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
       this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
-      }
-      
-      //const template = this.panelRight._results[0].createEmbeddedView(null);
-      //this.dropZone.insert(template);
-      this.loaded = true;
-    }, 100);
+    }
     
+    this.loaded = true;
   }
 
   onIndexChange(index: number) {
@@ -796,60 +472,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.socket.sendSwipe(index);
   }
 
-  CCP_activation(index: number) {
-    console.log('Swiper index: ' + index);
-    //this.socket.sendExpand("task",index+4,0,this.lockedCM[index].locked);
-    //this.socket.sendCCP(1);
-  }
-
-  middleSwipe(){
-    console.log("click");
-  }
-
-  loadIframe2(){
-    // this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
-    //   console.log("this.chartBackground: ", this.chartBackground.contentWindow.document.getElementById("scaleY50"));
-
-    //   let screenWidth = window.innerWidth;
-    //   let screenHeight = window.innerHeight;
-
-      
-    //   let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("scaleY50").getBoundingClientRect().y;
-      
-    //   let focusHeight = this.elRef.nativeElement.querySelector(".focus").getBoundingClientRect().height;
-
-    //   let scaleGraphY = 0.5;
-
-    //   let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
-
-
-    //   this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
-
-    //   //put the graph on it's right position
-    //   this.elRef.nativeElement.querySelector(".focus").setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest)+") scale(1,"+scaleGraphY+")");
-
-    //   this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
-  }
-
   resize(){
-    
-
     if(!this.hideTabletPanels){
       this.hideTabletPanels = true;
       this.changeDetector.detectChanges();
-      console.log();
       
       this.socket.sendMaximized(true);
-
     }
     else{
-      console.log("scale back graph", this.focus);
-      console.log("chart1", this.elRef.nativeElement.querySelector("#chart1"));
-      console.log("chart1: ", this.viewContainerRef._data.renderElement.querySelector(".focus")); 
-      console.log("mainChart: ", this.viewContainerRef); 
-      //let cellOffsetwdith = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
-      //let cellOffsetHeght = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
-
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
@@ -861,12 +491,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
   reload(){
     this.socket.sendReloadPage(true);
     window.location.reload();
-    
   }
 
   goToCCP(){
-   // this.myEvent.emit(null);
-    //this.middleComponent.goToCCP();
     this.nextMessageIndex++;
     if(this.nextMessageIndex>1){
       this.nextMessageIndex = 2;
@@ -875,8 +502,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
     else{
       this.socket.sendCCP(0,this.nextMessageIndex);
     }
-    
-    
   }
 
   openFullscreen() {

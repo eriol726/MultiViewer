@@ -67,7 +67,6 @@ export class RightComponent implements OnInit, AfterViewInit {
   }
 
   loadIframe(index){
-    setTimeout(()=>{
       if (!this.isLoaded){
       
         let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
@@ -81,17 +80,9 @@ export class RightComponent implements OnInit, AfterViewInit {
           let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
 
           this.initPanelItemHeight =  initPanelHeightNmbr+"px";
-          console.log("this.initPanelItemHeight: ", this.initPanelItemHeight);
-          //this.panelHeight2 = this.initPanelItemHeight;
         }
         this.isLoaded =true;
       }
-    },1000)
-      
-      //let numberOne: number = 1;
-      //let CM1 = document.getElementById('1');
-      
-    
   }
 
   ngOnChanges() {
@@ -130,11 +121,6 @@ export class RightComponent implements OnInit, AfterViewInit {
     
 
     setTimeout(()=>{
-      let mainSvg = this.elRef.nativeElement.querySelector("#card3_1");
-      let cardSwitch =   mainSvg.contentWindow.document.getElementById("card_1_switch");
-      const p: HTMLDivElement = this.renderer.createElement('div');
-      p.insertAdjacentHTML('beforeend', '<div class="two" (click)="switch()">two</div>');
-      this.renderer.appendChild(cardSwitch, p)
       
       this.panelHeight2 = this.initPanelItemHeight;
       this.elRef.nativeElement.querySelector("#iframeOverlay_right_"+0).style.backgroundColor = "rgba(217,217,217,0.68)";

@@ -155,7 +155,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   }
 
   loadIframe(){
-    setTimeout(() => {
       
       this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       
@@ -228,7 +227,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       //put the graph on it's right position
       this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest+45)+") scale(1,"+scaleGraphY+")");
 
-    },100);
   }
 
   ngAfterViewInit(){
@@ -259,9 +257,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     //hack to append a DOM element that has not been rendered
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");
 
-    // setTimeout(()=>{
-    //   this.goToCCP();
-    // },55000)
 
     this.display.switchCCP().subscribe(data =>{
       console.log("switch ccp: ", data);
@@ -422,10 +417,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         
       }
       console.log("expand", this.testvar);
-    })
-
-    this.display.getANumber().subscribe(cellWidth =>{
-      this.tabletCellWidth = cellWidth;
     })
 
     this.display.setPlaneIcons().subscribe(planeIcons =>{

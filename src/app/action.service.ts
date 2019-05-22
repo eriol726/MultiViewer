@@ -54,10 +54,10 @@ export class ActionService {
   public getActions() : any{
     console.log("this.actions: ", this.actions);
     const data = new Observable(observer => {
-      setTimeout(() => {
+
         
         observer.next(this.actions);
-      },100);
+
     });
 
     return data;
@@ -65,9 +65,9 @@ export class ActionService {
 
   public getCountermeasures() : any{
     const data = new Observable(observer => {
-      setTimeout(() => {
+
         observer.next(this.actions);
-      },100)
+
     } )
     return data;
 
