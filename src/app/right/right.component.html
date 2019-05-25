@@ -13,11 +13,11 @@
               (closed)="panelOpenState = false"
               [expanded]="isExpanded===i"
               hideToggle="true"
-              *ngFor="let item of done1; let i = index" 
+              *ngFor="let item of COUNTERMEASURES; let i = index" 
               [attr.id]='"panel_item_"+i'
               [@.disabled]="false"
               #panelRight >
-              <mat-expansion-panel-header [collapsedHeight]="panelHeight2" [expandedHeight]="panelHeight2" (click)="expandTaskPanel(i)" #panelHeader >
+              <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" (click)="expandTaskPanel(i)" #panelHeader >
                 <mat-panel-title  >   
                   <iframe #iframe id='cm_left_{{i}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/Screen/Right/r_"+i+"_left_Screen.svg" | safe' style="border: 0px; flex-grow: 1; " ></iframe>
         

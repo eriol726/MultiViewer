@@ -24,9 +24,9 @@ export class WebsocketService {
   private socket = io('http://localhost:3000');
   
 
-  expandItem() {
-    let observable = new Observable<{type:String, state:number, closedIndex:number, locked:boolean}>(observer => {
-        this.socket.on('expandItem', (data) => {
+  expandPanelItem() {
+    let observable = new Observable<{isExpanded:number, panelIndex:number, locked:boolean}>(observer => {
+        this.socket.on('expandPanelItem', (data) => {
           observer.next(data);
         });
         return () => {
@@ -49,7 +49,7 @@ export class WebsocketService {
   }
 
   moveItem() {
-    let observable = new Observable<{type:String, previousIndex:number, currentIndex: number, containerData: {"text": string, "color":string, "startDate": Date, "endDate": Date}}>(observer => {
+    let observable = new Observable<{currentIndex: number, containerData: {"text": string, "color":string, "startDate": Date, "endDate": Date}}>(observer => {
         this.socket.on('moveItem', (data) => {
           observer.next(data);
         });
@@ -84,9 +84,9 @@ export class WebsocketService {
     return observable;
   }
 
-  swipeCM() {
+  changeCard() {
     let observable = new Observable<number>(observer => {
-        this.socket.on('swipeCM', (data) => {
+        this.socket.on('changeCard', (data) => {
           observer.next(data);
         });
         return () => {
@@ -96,9 +96,9 @@ export class WebsocketService {
     return observable;
   }
 
-  switchCCP(){
+  changeMessage(){
     let observable = new Observable<{graphFactorIndex:number, swiperIndex:number}>(observer => {
-      this.socket.on('switchCCP', (data) => {
+      this.socket.on('changeMessage', (data) => {
         observer.next(data);
       });
       return () => {
@@ -168,32 +168,32 @@ export class WebsocketService {
     return observable;
   }
 
-  sendExpand(data, data1, data2, data3){
-    this.socket.emit('expandItem', data, data1, data2, data3 );
+  sendExpand(isExpanded, panelIndex, isLocked){
+    this.socket.emit('expandPanelItem', isExpanded, panelIndex, isLocked );
   }
 
   sendLock(data, data1){
     this.socket.emit('lockItem', data, data1 );
   }
 
-  sendMove(data, data1, data2, data3){
-    this.socket.emit('moveItem',data, data1 ,data2, data3);
+  sendMove(cmIndex, COUNTERMEASURES){
+    this.socket.emit('moveItem',cmIndex, COUNTERMEASURES);
   }
 
   sendZoom(data, data1, data2,data3){
     this.socket.emit('zoomChart',data, data1, data2, data3);
   }
 
-  sendMaximized(data){
-    this.socket.emit('maximizeChart',data);
+  sendMaximized(isMaximized){
+    this.socket.emit('maximizeChart',isMaximized);
   }
 
-  sendSwipe(data){
-    this.socket.emit('swipeCM',data);
+  sendCardIndex(cardIndex){
+    this.socket.emit('changeCard',cardIndex);
   }
 
-  sendCCP(data, data1){
-    this.socket.emit('switchCCP',data, data1);
+  sendMessage(curveFactor, messageIndex){
+    this.socket.emit('changeMessage',curveFactor, messageIndex);
   }
 
   sendANumber(data){
@@ -204,16 +204,16 @@ export class WebsocketService {
     this.socket.emit('setPlaneIcons',data);
   }
 
-  sendReloadPage(data){
-    this.socket.emit('reloadPage',data);
+  sendReloadPage(isReloaded){
+    this.socket.emit('reloadPage',isReloaded);
   }
 
-  sendPriorotize(data){
-    this.socket.emit('prioritize',data);
+  sendPriorotize(isPrioritized){
+    this.socket.emit('prioritize',isPrioritized);
   }
 
-  sendFullscreen(data){
-    this.socket.emit('fullscreen',data);
+  sendFullscreen(isFullScreen){
+    this.socket.emit('fullscreen',isFullScreen);
   }
 
 

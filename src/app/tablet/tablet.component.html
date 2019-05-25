@@ -12,7 +12,7 @@
               </div>
               <img src="assets/reload_icon.png" height="42" width="42" style="position: absolute; bottom: 0px;" (click)="reload()">
               <img src="assets/fullscreen_icon.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 42px" (click)="isFullScreen == false ? openFullscreen() : closeFullscreen()">
-              <img src="assets/long-arrow-right.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 84px" (click)="goToCCP()">
+              <img src="assets/long-arrow-right.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 84px" (click)="nextMessage()">
             </div>
             
           </div>
@@ -24,7 +24,7 @@
 
             <div class="cell" style="flex: 0 0 3%; justify-content: center; display: flex; align-items: center;">
               <div class="applied-box" style="height: 50px">
-                <p>{{cmText}}</p>
+                <p>{{centralBarInfo}}</p>
               </div>
             </div>
 
@@ -36,11 +36,8 @@
             <div class="cell" style="border-top: 5px solid red; background-color: #fff; ">
               <div  class="swiper-container" [swiper]="config" [(index)]="swiperIndexCentral" >
                 <div class="swiper-wrapper" (click)="resize()">
-                  
-
-                   
                         <div class="swiper-slide" >
-                          <iframe id="message_0" [src]='"assets/Tablet/Central/m_"+messageNumber_0+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                          <iframe id="message_0" [src]='"assets/Tablet/Central/m_"+messageNumber+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
                           <div class="iframeOverlay"></div>
                         </div>
                         <div class="swiper-slide" >
@@ -55,16 +52,6 @@
                           <iframe id="message_1" [src]='"assets/Tablet/Central/f_3_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
                           <div class="iframeOverlay"></div>
                         </div>
-                    
-
-
-                    <!-- <iframe src="assets/Tablet/Central/m_1_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
-                    <div class="iframeOverlay"></div>
-                    </div>
-                    <div class="swiper-slide" >
-                    <iframe  src="assets/Tablet/Central/m_2_Tablet.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
-                    <div class="iframeOverlay"></div> -->
-                  
                 </div>
                 <div class="swiper-pagination"></div>
               </div>
@@ -77,24 +64,24 @@
             </div>
 
             <div class="cell" style="flex: 0 0 95%; ">
-              <div dragula="COPYABLE" id="right" class="example-list-right"> 
+              <div dragula="COPYABLE" id="right" class="example-list-right" style="width: 100%;"> 
                 <mat-expansion-panel 
                                     (opened)="panelOpenState = true"
                                     (closed)="panelOpenState = false"
                                     [expanded]="isExpanded===i"
                                     hideToggle="true"
-                                    *ngFor="let item of tasks; let i = index" 
+                                    *ngFor="let item of COUNTERMEASURES; let i = index" 
                                     [attr.id]='"panel_item_"+i'
                                     #panelRight >
-                  <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" (click)="expandTaskPanel(i)" >
+                  <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" (click)="expandTaskPanel(i)" >
                     <mat-panel-title  >
-                      <iframe id='main_svg_{{i}}' class="svgCM" [src]='"assets/cm_"+(i+1)+".svg" | safe' (load)="loadIframe()" style="border: 0px; flex-grow: 1; "></iframe>
+                      <iframe id='cm_header_{{i}}' class="svgCM" [src]='"assets/cm_"+(i+1)+".svg" | safe' (load)="loadCMgraphics()" [style.height]="initPanelItemHeight" style="border: 0px; flex-grow: 1; "></iframe>
                       <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
                     </mat-panel-title>
                   </mat-expansion-panel-header >
             
                     <div class="cardList" (dblclick)="selectCard(i)" >
-                        <div  class="swiper-container" [swiper]="config" (indexChange)="onIndexChange($event)" style="height: 100%;" #cardList>
+                        <div  class="swiper-container" [swiper]="config" (indexChange)="changeCard($event)" style="height: 100%;" #cardList>
                           <div class="swiper-wrapper" >
                               <div class="swiper-slide" *ngFor="let card of createRange(item.cards+1); let n=index" >
                    
@@ -114,12 +101,12 @@
                 </mat-expansion-panel>
                 
 
-                <mat-expansion-panel class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden" >
-                  <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight"  >
+                <mat-expansion-panel id='panel_item_4' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden" >
+                  <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight"  >
                   </mat-expansion-panel-header >
                 </mat-expansion-panel>
                 <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden">
-                  <mat-expansion-panel-header [collapsedHeight]="panelItemHeight" [expandedHeight]="panelItemHeight" >
+                  <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" >
                   </mat-expansion-panel-header >
                 </mat-expansion-panel>
               </div>
@@ -130,11 +117,8 @@
         <app-middle style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative"></app-middle>
         <iframe src="assets/Tablet/Central/ExpandedView_CM4_Graph_for_Tablet.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: absolute; top: 0px; left: 0px; z-index: 99" ></iframe>
        
-
-        
-
         <img src="assets/long-arrow-right.png" height="100" width="100" style="position: absolute; bottom: 0px; left:0px; transform: scaleX(-1); z-index: 100;" (click)="resize()">
-        <!-- <div (click)="resize()" style="height: 100px;width: 100px;position: absolute; bottom: 0px; z-index: 100; background-color: red; "></div> -->
+
       </div> 
 
     </div>

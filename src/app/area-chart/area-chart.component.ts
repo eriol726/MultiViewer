@@ -47,12 +47,7 @@ export class AreaChartComponent implements OnInit {
 
   done: MyType[];
 
-  
-
   chartData = [];
-  //data = [];
-
-  expand = [false,false,false,false];
 
   messageState : number = 0;
   panelIndex : number = 0;
@@ -77,17 +72,13 @@ export class AreaChartComponent implements OnInit {
   private y2: any;
 
   private xAxis: any;
-  private xAxis2: any;
   private yAxis: any;
 
   private context: any;
   private brush: any;
   private zoom: any;
 
-  private area2: any;
-
   private collisionArea: any;
-  private collisionArea2: any;
   private focus: any;
 
   private outerUpperArea: any;
@@ -122,11 +113,6 @@ export class AreaChartComponent implements OnInit {
   collisionFadeEndStart = 330+0;
   collisionEnd = 340+0;
 
- 
-
-
-  
-
   public isExpanded: number  = -1;
   public fade = 0;
     
@@ -149,8 +135,6 @@ export class AreaChartComponent implements OnInit {
               private socket:WebsocketService ) { }
   
   ngOnInit(){
-
-    //this.data = TEMPERATURES.map((v) => v.values.map((v) => v.date ))[0];
 
     const tasksObservable = this.actionService.getActions();
     tasksObservable.subscribe(tasksData => {
@@ -175,22 +159,6 @@ export class AreaChartComponent implements OnInit {
   }
 
   expandTaskPanel(index){
-
-    // rescale the minutes to be comparable with the database 
-    // for (let index = 0; index < 56; index++) {
-    //   if(this.zoomDate2.getMinutes() > index*4 && this.zoomDate2.getMinutes() < index*4+4){
-    //     this.zoomDate2.setHours(this.zoomDate2.getHours(),index*4+4,0,0);
-    //     this.zoomDate1.setHours(this.zoomDate1.getHours(),index*4+4,0,0);
-    //   }
-    // }
-
-    // this.focusIndexMin = TEMPERATURES[6].values.findIndex((d: any) => {
-    //   return d.date.getTime() === this.zoomDate1.getTime()
-    // });
-
-    // this.focusIndexMax = TEMPERATURES[6].values.findIndex((d: any) => {
-    //   return d.date.getTime() === this.zoomDate2.getTime()
-    // });
 
     this.curveFactorOrange = 0;
     this.createFadeFront(this.curveFactorOrange);
@@ -378,7 +346,6 @@ export class AreaChartComponent implements OnInit {
 
 
   private initSvg() {
-    console.log("initSvg++++++");
     this.svg = d3.select("svg");
     let screenWidth = window.innerWidth;
     let screenHeight = window.innerHeight;
@@ -403,7 +370,6 @@ export class AreaChartComponent implements OnInit {
 
 
     this.xAxis = d3.axisBottom(this.x);
-    this.xAxis2 = d3.axisBottom(this.x2);
     this.yAxis = d3.axisLeft(this.y);
 
     this.brush = d3.brushX()
@@ -493,7 +459,6 @@ export class AreaChartComponent implements OnInit {
     this.innerArea = d3.area()
       .curve(this.interpolationMethod)
       .x(function(d: any){ 
-        //console.log("d.date: ", this.x(d.date));  
         return this.x(d.date);
       }.bind(this))
       .y0((d: any, i:number) => {
@@ -660,15 +625,6 @@ export class AreaChartComponent implements OnInit {
           return this.y(d.temperature);
         }
       });
-
-    // brush area
-     this.area2 = d3Shape.area()
-      .curve(this.interpolationMethod)
-      .x((d: any) => this.x2(d.date))
-      .y0((d: any) => this.y2(d.temperature)+5)
-      .y1((d: any) => this.y2(d.temperature));
-    
-    let svg1 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     
     this.svg.append('defs').append('clipPath')
         .attr('id', 'clip')
@@ -850,32 +806,6 @@ export class AreaChartComponent implements OnInit {
       .attr('d',this.outerLowerArea2)
       .attr('clip-path', 'url(#rect-clip)');
 
-    
-
-
-
-
-    // axis
-    // this.focus.append('g')
-    // .attr('class', 'axis axis--x')
-    // .attr('transform', 'translate(0,' + this.height + ')')
-    // .call(this.xAxis);
-
-    // this.focus.append('g')
-    // .attr('class', 'axis axis--y')
-    // .call(this.yAxis);
-
-    
-    // this.context.append('path')
-    //     .datum(TEMPERATURES[0].values)
-    //     .attr('class', 'area')
-    //     .attr('d', this.area2);
-
-    // this.context.append('g')
-    //     .attr('class', 'axis axis--x')
-    //     .attr('transform', 'translate(0,' + this.height2 + ')')
-    //     .call(this.xAxis2);
-
     this.context.append('g')
         .attr('class', 'brush')
         .attr('visibility', 'hidden') 
@@ -891,12 +821,8 @@ export class AreaChartComponent implements OnInit {
     let svg = document.createElement('svg'); 
     this.svg = d3.select("svg");
 
-    //hack to append a DOM element that has not been rendered
-    //this.renderer.appendChild(this.mainChart.nativeElement,this.svg._groups[0][0] );
-
     this.curveFactorBlue = 62;
     if(this.panelOpenState || this.lockedCM[0]){
-      console.log("init somthing open");
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
         if(i>= this.collisionStart && i <= this.collisionEnd ){
           return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactorBlue);
@@ -906,31 +832,23 @@ export class AreaChartComponent implements OnInit {
         }
       }));
     }else{
-      console.log("init nothing open");
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
     }
 
     this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));
-
-    //this.context.select(".brush").call(this.brush.move, [TEMPERATURES[0].values[0].date,TEMPERATURES[0].values[358].date].map(this.x));
-
-    //let brushT = {"k": 4.365853658536583, "x": -1405.939024390243, "y": 0};
-    //this.socket.sendZoom(true, TEMPERATURES[0].values[249],TEMPERATURES[0].values[331].date,brushT);
   }
 
 
   selectCard(index){
     this.selectedCM[index] = true;
-    
+
     if(this.lockedCM[index].locked){
-      //this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "";
+
       this.lockedCM[index].locked = false;
-      //this.curveFactorLocked = 0;
       this.curveFactorLocked -= this.lockedCM[index].graphFactor;
     }
     else{
-      //this.elRef.nativeElement.querySelector('.example-list-right').children[index].style.backgroundColor = "#65a5ef";
       this.lockedCM[index].locked = true;
       this.curveFactorLocked += this.lockedCM[index].graphFactor;
       
@@ -945,14 +863,14 @@ export class AreaChartComponent implements OnInit {
     let screenHeight = window.innerHeight;
     //this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
-    this.socket.expandItem().subscribe(data=>{
+    this.socket.expandPanelItem().subscribe(data=>{
 
-      if(data.state != -1){
+      if(data.isExpanded != -1){
         this.panelOpenState = true;
-        this.expandTaskPanel(data.state);
+        this.expandTaskPanel(data.isExpanded);
       }else{
         this.panelOpenState = false;
-        this.expandTaskPanel(data.closedIndex);
+        this.expandTaskPanel(data.panelIndex);
       }
         
     });
@@ -966,7 +884,7 @@ export class AreaChartComponent implements OnInit {
       this.selectCard(data.state);
     })
 
-    this.socket.switchCCP().subscribe(data=>{
+    this.socket.changeMessage().subscribe(data=>{
       if(data.swiperIndex ==2 || data.swiperIndex == 1 ){
         console.log("graphFactorIndex: ", data.graphFactorIndex);
         this.panelOpenState = true;
@@ -974,19 +892,6 @@ export class AreaChartComponent implements OnInit {
       }
       
     })
-
-    this.socket.maximizeChart().subscribe(data=>{
-      //console.log("this.svg._groups[0][0]", this.svg._groups[0][0]);
-      //this.renderer.appendChild(this.chartContainer.nativeElement,this.svg._groups[0][0] );
-      //this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-     // this.context.select(".brush").call(this.brush.move, d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-      //this.context.select(".brush").call(this.brush.move, [d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; })].map(this.x));
-    })
-
-  }
-
-  public getContent(): void{
-    //this.renderContent.next(true);
   }
 
 }

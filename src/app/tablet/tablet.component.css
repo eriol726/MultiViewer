@@ -25,9 +25,6 @@ body {
 }
 
 .applied-box{
-    /* position:absolute;
-    top:0;
-    left:0; */
     width:100%;
     background-color: #e3f0fc;
     border-top: 5px solid #2277d6;
@@ -45,8 +42,7 @@ body {
     width: 100%;
     box-sizing: border-box;
     padding: 0px;
-    /*height: 300px;  Should be removed. Only for demonstration */
-  }
+}
 
 drag-scroll {
     height: 50px;
@@ -78,31 +74,8 @@ drag-scroll {
     z-index: 2;
     flex-grow: 1;
     display: flex;                   
-    /* height: 90vh; */
-    /* border: 2px solid; */
     background-color: #f4f4f4;
 }
-
-/* .cell:nth-child(-n+3) {
-    flex: 0 0 5%;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-} */
-
-/* .cell:nth-child(n+4):nth-child(-n+6){
-    border-bottom: none;
-    border-top: none;
-}
-
-.cell:nth-child(n+7) {
-    height: 100px;
-    width: 200px;
-    position: absolute;
-    top: 80%;
-} */
-
-
 
 #title{
     float: left;
@@ -125,12 +98,10 @@ drag-scroll {
 }
 
 .example-list-right {
-    /* overflow: hidden; */
     display: flex; 
     flex-direction: column;
     min-height: 100%;
     flex: 1;
-    /* width: 100% */
 }
 
 .mat-expansion-panel  {
@@ -146,7 +117,6 @@ drag-scroll {
     padding: 0px 0px !important; 
     flex-direction: column !important;
     flex: 1;
-    /* height: 110px; */
 }
 
 .mat-expansion-panel-header-title{
@@ -167,9 +137,8 @@ drag-scroll {
     /* background-color: #fff; */
 }
 
-
-.mat-expanded {
-    /* background-color: rgb(255, 255, 255) !important; */
+.swiper-slide ng-star-inserted swiper-slide-active{
+    background: none !important;
 }
 
 .mat-expansion-panel-body{
@@ -182,7 +151,7 @@ drag-scroll {
     position: absolute;
     top: 0px;
     height: 80%;
-    background-color: #fff;
+    /* background-color: #fff; */
     border: 0px;
     margin-bottom: 20px;
 }
@@ -212,10 +181,6 @@ drag-scroll {
     height:10%;
 }
 
-.swiper-pagination{
-    /* bottom: 0px !important; */
-} 
-
 .swiper-container{
     height: 100%; 
     width: 100%;
@@ -225,8 +190,7 @@ drag-scroll {
 .swiper-slide {
     text-align: center;
     font-size: 18px;
-    background: #fff;
-    /* Center slide text vertically */
+    /* background: #fff; */
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;

@@ -120,11 +120,11 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     this.elem = document.documentElement;
-    const tasksObservable = this.actionService.getActions();
+    const COUNTERMEASURESObservable = this.actionService.getActions();
     
-    tasksObservable.subscribe(tasksData => {
+    COUNTERMEASURESObservable.subscribe(COUNTERMEASURESData => {
 
-      this.CMs = tasksData;
+      this.CMs = COUNTERMEASURESData;
     })
 
     const headers = new HttpHeaders();
@@ -258,7 +258,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     let chart2  = this.elRef.nativeElement.querySelector("#chart2");
 
 
-    this.display.switchCCP().subscribe(data =>{
+    this.display.changeMessage().subscribe(data =>{
       console.log("switch ccp: ", data);
       //this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
@@ -320,21 +320,21 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     
     });
 
-    this.display.expandItem().subscribe(data =>{
+    this.display.expandPanelItem().subscribe(data =>{
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "hidden";
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
-      if(data.state == -1 && !data.locked){
+      if(data.isExpanded == -1 && !data.locked){
         // we set data.closedIndex+1 because icon/bar 0 is only visible in the begining
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Icon").style.visibility = "hidden";
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex+1)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex+1)+"_Bar").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
-      else if(data.state == 0){
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Icon").style.visibility = "visible";
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar").style.visibility = "visible";
+      else if(data.isExpanded == 0){
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex+1)+"_Icon").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex+1)+"_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
-        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.panelIndex].text  + " PREVIEW";
       }
       else{
         chartBackground.contentWindow.document.getElementById("CM"+(1)+"_Icon").style.visibility = "hidden";
@@ -349,10 +349,10 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         chartBackground.contentWindow.document.getElementById("CM"+(4)+"_Icon").style.visibility = "hidden";
         chartBackground.contentWindow.document.getElementById("CM"+(4)+"_Bar").style.visibility = "hidden";
 
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Icon").style.visibility = "visible";
-        chartBackground.contentWindow.document.getElementById("CM"+(data.closedIndex+1)+"_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex+1)+"_Icon").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex+1)+"_Bar").style.visibility = "visible";
         chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
-        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.closedIndex].text  + " PREVIEW";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.panelIndex].text  + " PREVIEW";
       }
 
       
@@ -441,7 +441,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
     this.elRef.nativeElement.querySelector("#message_1_elm").style.visibility = "hidden";
 
-    this.display.sendCCP(5,1);
+    this.display.sendMessage(5,1);
   }
 
   openFullscreen() {

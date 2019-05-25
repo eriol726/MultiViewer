@@ -20,9 +20,9 @@ io.on('connection', (socket) => {
     // When we receive a 'message' event from our client, print out
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
-    socket.on('expandItem', (panel, itemIndex, close, lockedStatus) => {
-        console.log("Message Received, state: " + itemIndex);
-        io.emit('expandItem', {type:panel, state: itemIndex, closedIndex:close, locked:lockedStatus});    
+    socket.on('expandPanelItem', (_isExpanded, _panelIndex, _locked) => {
+        console.log("Message Received, state: " + _panelIndex);
+        io.emit('expandPanelItem', {isExpanded: _isExpanded, panelIndex:_panelIndex, locked:_locked});    
     });
 
     socket.on('lockItem', (panel, itemIndex) => {
@@ -30,9 +30,9 @@ io.on('connection', (socket) => {
         io.emit('lockItem', {type:panel, state: itemIndex});    
     });
 
-    socket.on('moveItem', (action, prevIndex, currIndex, indexData) => {
-        console.log("Message Received, state: " + prevIndex + " " + currIndex);
-        io.emit('moveItem', {type: action, previousIndex: prevIndex, currentIndex: currIndex, containerData: indexData});    
+    socket.on('moveItem', (currIndex, CM) => {
+        console.log("Message Received, state: " + currIndex );
+        io.emit('moveItem', {currentIndex: currIndex, containerData: CM});    
     });
 
     socket.on('zoomChart', (zoom, min, max, xyk) => {
@@ -45,14 +45,14 @@ io.on('connection', (socket) => {
         io.emit('maximizeChart', {state: maximized});    
     });
 
-    socket.on('swipeCM', (index) => {
+    socket.on('changeCard', (index) => {
         console.log("Message Received, zoom: " + index);
-        io.emit('swipeCM',index);    
+        io.emit('changeCard',index);    
     });
 
-    socket.on('switchCCP', (index, index2) => {
+    socket.on('changeMessage', (index, index2) => {
         console.log("Message Received, zoom: " + index);
-        io.emit('switchCCP',{graphFactorIndex: index, swiperIndex: index2});    
+        io.emit('changeMessage',{graphFactorIndex: index, swiperIndex: index2});    
     });
 
     socket.on('getANumber', (index) => {

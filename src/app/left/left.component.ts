@@ -25,13 +25,13 @@ type MyType = {
 
 
 export class LeftComponent implements OnInit, AfterViewInit {
- // @Input() tasks;
+ // @Input() COUNTERMEASURES;
   @Input() expand;
   @ViewChildren('panel') panel;
   @ViewChild('chart') mainChart: ElementRef;
 
   elem;
-  tasks2: {};
+  COUNTERMEASURES2: {};
 
   private innerWidth: number;
   svg ;
@@ -242,7 +242,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
       
     })
 
-    this.display.switchCCP().subscribe(CCPindex =>{
+    this.display.changeMessage().subscribe(CCPindex =>{
 
       switch (CCPindex.swiperIndex) {
         case 1:
@@ -258,9 +258,8 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
     })
 
-    this.display.expandItem().subscribe(data=>{
-      console.log("data.closedIndex: ", data.closedIndex, "  ", data.state);
-      switch(data.state){
+    this.display.expandPanelItem().subscribe(data=>{
+      switch(data.panelIndex){
         case -1:
           //this.cm = 0;
           break;
@@ -279,9 +278,9 @@ export class LeftComponent implements OnInit, AfterViewInit {
       switch (data.currentIndex) {
         case 0:
           this.cm = 1;
-          setTimeout(() => {
+
             APbackground.contentWindow.document.getElementById("CM1_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
-          },100)
+
           
           
           break;
@@ -292,9 +291,9 @@ export class LeftComponent implements OnInit, AfterViewInit {
           }
           else{
             this.cm = 4;
-            setTimeout(() => {
+
               APbackground.contentWindow.document.getElementById("CM4_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
-            },100)
+       
             
           }
           
@@ -305,10 +304,10 @@ export class LeftComponent implements OnInit, AfterViewInit {
           break;
       }
       this.prevCm = this.cm;
-      if(data.type === "change"){
+      // if(data.type === "change"){
 
-        this.data2.push(data.containerData);
-      }
+      //   this.data2.push(data.containerData);
+      // }
     })
 
     this.display.prioritize().subscribe(data =>{
