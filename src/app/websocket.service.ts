@@ -36,9 +36,9 @@ export class WebsocketService {
     return observable;
   }
 
-  lockItem() {
+  lockCM() {
     let observable = new Observable<{type:Boolean, state:number}>(observer => {
-        this.socket.on('lockItem', (data) => {
+        this.socket.on('lockCM', (data) => {
           observer.next(data);
         });
         return () => {
@@ -172,8 +172,8 @@ export class WebsocketService {
     this.socket.emit('expandPanelItem', isExpanded, panelIndex, isLocked );
   }
 
-  sendLock(data, data1){
-    this.socket.emit('lockItem', data, data1 );
+  sendLock(isLocked: boolean, CMindex: number){
+    this.socket.emit('lockCM', isLocked, CMindex );
   }
 
   sendMove(cmIndex, COUNTERMEASURES){
@@ -200,8 +200,8 @@ export class WebsocketService {
     this.socket.emit('getANumber',data);
   }
 
-  sendPlaneIcon(data){
-    this.socket.emit('setPlaneIcons',data);
+  sendPlaneIcon(noConflict: boolean){
+    this.socket.emit('setPlaneIcons',noConflict);
   }
 
   sendReloadPage(isReloaded){

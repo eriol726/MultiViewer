@@ -113,15 +113,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
             
             el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
             // gray out when CM is chosen
-            //this.elRef.nativeElement.querySelector('#iframeOverlay_'+taskIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
-
-            let cards = el.querySelectorAll(".card");
             this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
-            // for (let index = 0; index < cards.length; index++) {
-            //   el.querySelectorAll(".card")[index].id = "card_"+taskIndex+"_"+index+"_copy";
-              
-            //   this.elRef.nativeElement.querySelector('#card_'+taskIndex+"_"+index).style.backgroundColor = "rgba(217,217,217,0.68)";
-            // }
+
             el.querySelector('#cm_header_'+taskIndex).id = "cm_header_copy_"+taskIndex;
           }
 

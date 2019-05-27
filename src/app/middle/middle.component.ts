@@ -139,21 +139,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       
   }
 
-  private initSvg() {
-    //this.svg = d3.select('svg');
-    this.margin = {top: 20, right: 20, bottom: 110, left: 40};
-    this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
-    this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
-    this.height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
-    this.height2 = +this.svg.attr("height") -this.margin2.top - this.margin2.bottom;
-
-    let bounds = this.svg.node().getBoundingClientRect();
-    
-    this.width = bounds.width - this.margin.left - this.margin.right,
-    this.height = bounds.height - this.margin.top - this.margin.bottom;
-
-  }
-
   loadIframe(){
       
       this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
@@ -230,15 +215,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    this.display.fullScreen().subscribe(data =>{
-      console.log("fullscreen: ", data);
-      if(data){
-        //this.openFullscreen();
-      }
-      else{
-        //this.closeFullscreen();
-      }
-    })
 
     this.display.reloadPage().subscribe(reload =>{
       console.log("reload", reload);
@@ -247,7 +223,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         window.location.reload();
         this.reloaded=false;
       }
-      
     })
 
     this.display.prioritize().subscribe(data =>{
@@ -259,8 +234,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
 
     this.display.changeMessage().subscribe(data =>{
-      console.log("switch ccp: ", data);
-      //this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "visible";
       let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
       switch (data.swiperIndex) {
         case 1:
@@ -277,9 +250,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       }
       
 
-      
-
-      console.log(chartBackground.contentWindow.document.getElementById("Transparent_Frame"));
       chartBackground.contentWindow.document.getElementById("Transparent_Frame").style.visibility = "visible";
       chartBackground.contentWindow.document.getElementById("Transparent_Starting").style.visibility = "hidden";
 

@@ -25,9 +25,9 @@ io.on('connection', (socket) => {
         io.emit('expandPanelItem', {isExpanded: _isExpanded, panelIndex:_panelIndex, locked:_locked});    
     });
 
-    socket.on('lockItem', (panel, itemIndex) => {
+    socket.on('lockCM', (panel, itemIndex) => {
         console.log("Message Received, state: " + itemIndex);
-        io.emit('lockItem', {type:panel, state: itemIndex});    
+        io.emit('lockCM', {type:panel, state: itemIndex});    
     });
 
     socket.on('moveItem', (currIndex, CM) => {

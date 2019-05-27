@@ -183,7 +183,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       }
     })
 
-    this.display.lockItem().subscribe(data =>{
+    this.display.lockCM().subscribe(data =>{
       if(data.type){
         this.elRef.nativeElement.querySelector('#panel_item_'+data.state).style.background = "rgba(217,217,217,0.68)";
       }
@@ -233,7 +233,7 @@ export class RightComponent implements OnInit, AfterViewInit {
 
         //show the item under clicked item
         if(i == data.panelIndex+1){
-          // this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
         }
