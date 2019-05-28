@@ -21,38 +21,38 @@ io.on('connection', (socket) => {
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
     socket.on('expandPanelItem', (_isExpanded, _panelIndex, _locked) => {
-        console.log("Message Received, state: " + _panelIndex);
+        console.log("Message Received: " + _panelIndex);
         io.emit('expandPanelItem', {isExpanded: _isExpanded, panelIndex:_panelIndex, locked:_locked});    
     });
 
     socket.on('lockCM', (panel, itemIndex) => {
-        console.log("Message Received, state: " + itemIndex);
+        console.log("Message Received: " + itemIndex);
         io.emit('lockCM', {type:panel, state: itemIndex});    
     });
 
     socket.on('moveItem', (currIndex, CM) => {
-        console.log("Message Received, state: " + currIndex );
+        console.log("Message Received: " + currIndex );
         io.emit('moveItem', {currentIndex: currIndex, containerData: CM});    
     });
 
     socket.on('zoomChart', (zoom, min, max, xyk) => {
-        console.log("Message Received, zoom: " + zoom);
+        console.log("Message Received: " + zoom);
         io.emit('zoomChart', {state: zoom, xDomainMin: min, xDomainMax: max, brushTransform: xyk});    
     });
 
     socket.on('maximizeChart', (maximized) => {
-        console.log("Message Received, zoom: " + maximized);
+        console.log("Message Received: " + maximized);
         io.emit('maximizeChart', {state: maximized});    
     });
 
     socket.on('changeCard', (index) => {
-        console.log("Message Received, zoom: " + index);
+        console.log("Message Received: " + index);
         io.emit('changeCard',index);    
     });
 
     socket.on('changeMessage', (index, index2) => {
-        console.log("Message Received, zoom: " + index);
-        io.emit('changeMessage',{graphFactorIndex: index, swiperIndex: index2});    
+        console.log("Message Received: " + index);
+        io.emit('changeMessage',{graphFactor: index, messageIndex: index2});    
     });
 
     socket.on('getANumber', (index) => {

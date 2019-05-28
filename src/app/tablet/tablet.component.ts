@@ -144,12 +144,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
       cardSwitch.setAttribute("transform", "translate(30,0)")
       cardSwitch.setAttribute("fill", "rgb(64, 189, 115)")
       this.prioritize = true;
-      this.socket.sendMessage(5,3);
+      //this.socket.sendMessage(5,3);
     }else{
       cardSwitch.setAttribute("transform", "translate(0,0)")
       cardSwitch.setAttribute("fill", "#b3b3b3")
       this.prioritize = false;
-      this.socket.sendMessage(5,99);
+      //this.socket.sendMessage(5,99);
     }
     this.socket.sendPriorotize(this.prioritize);
   }
@@ -361,8 +361,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
         this.socket.sendMessage(0,this.nextMessageIndex);
 
         this.elRef.nativeElement.querySelector("#panel_item_0").remove();
-
-        
 
         this.messageNumber = 1;
         this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";

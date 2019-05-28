@@ -508,9 +508,11 @@ export class AreaChartComponent implements OnInit {
     })
 
     this.socket.changeMessage().subscribe(data=>{
-      if(data.swiperIndex ==2 || data.swiperIndex == 1 ){
+      console.log("data.graphFactorIndex: ", data.messageIndex);
+      if(data.messageIndex ==2 || data.messageIndex == 1 ){
+        
         this.panelOpenState = true;
-        this.expandTaskPanel(data.graphFactorIndex);
+        this.expandTaskPanel(data.graphFactor);
       }
     })
   }

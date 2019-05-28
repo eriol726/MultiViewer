@@ -242,72 +242,27 @@ export class LeftComponent implements OnInit, AfterViewInit {
       
     })
 
-    this.display.changeMessage().subscribe(CCPindex =>{
-
-      switch (CCPindex.swiperIndex) {
-        case 1:
-        this.cm = 99;
-          break;
-        case 99:
-        this.cm = 99;
-          break;
-      
-        default:
-          break;
-      }
-
+    this.display.changeMessage().subscribe(data =>{
+      this.cm = 99;
     })
 
-    this.display.expandPanelItem().subscribe(data=>{
-      switch(data.panelIndex){
-        case -1:
-          //this.cm = 0;
-          break;
-        case 0:
-         //this.cm = 1;
-          break;
-        case 3:
-         // this.cm = 4;
-          break;
-      }
-    
-    });
-
     this.display.moveItem().subscribe(data=>{
-      let APbackground = this.elRef.nativeElement.querySelector("#actionPlanBackground");
       switch (data.currentIndex) {
         case 0:
           this.cm = 1;
-
-            APbackground.contentWindow.document.getElementById("CM1_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
-
-          
-          
           break;
         case 3:
-          
           if(this.switchOn){
             this.cm = 5;
           }
           else{
             this.cm = 4;
-
-              APbackground.contentWindow.document.getElementById("CM4_Bar").setAttribute("fill", "rgba(141,197,242,0.9)");;
-       
-            
           }
-          
-          
           break;
-      
         default:
           break;
       }
       this.prevCm = this.cm;
-      // if(data.type === "change"){
-
-      //   this.data2.push(data.containerData);
-      // }
     })
 
     this.display.prioritize().subscribe(data =>{

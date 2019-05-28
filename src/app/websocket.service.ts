@@ -97,7 +97,7 @@ export class WebsocketService {
   }
 
   changeMessage(){
-    let observable = new Observable<{graphFactorIndex:number, swiperIndex:number}>(observer => {
+    let observable = new Observable<{graphFactor:number, messageIndex:number}>(observer => {
       this.socket.on('changeMessage', (data) => {
         observer.next(data);
       });
@@ -208,7 +208,7 @@ export class WebsocketService {
     this.socket.emit('reloadPage',isReloaded);
   }
 
-  sendPriorotize(isPrioritized){
+  sendPriorotize(isPrioritized: boolean){
     this.socket.emit('prioritize',isPrioritized);
   }
 
