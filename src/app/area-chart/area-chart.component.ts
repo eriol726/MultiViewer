@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChildren, ViewChild, Input, Renderer2, Injectable } from '@angular/core';
-import { TEMPERATURES } from 'src/data/temperatures';
+import { BAGS } from 'src/data/bags';
 import * as d3 from 'd3';
 import { WebsocketService } from '../websocket.service';
 
@@ -75,7 +75,7 @@ export class AreaChartComponent implements OnInit {
 
   constructor(private elRef:ElementRef,
               private renderer:Renderer2,
-              private socket:WebsocketService ) { }
+              private socketService:WebsocketService ) { }
   
   ngOnInit(){
     this.initSvg();
@@ -90,10 +90,10 @@ export class AreaChartComponent implements OnInit {
     this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
       if(i>= this.collisionStart && i <= this.collisionEnd  ){
-        return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactorBlue);
+        return this.y(BAGS[7].values[i].bags+this.curveFactorBlue);
       }
       else{
-        return this.y(TEMPERATURES[0].values[i].temperature);
+        return this.y(BAGS[0].values[i].bags);
       }
     }));
   }
@@ -138,10 +138,10 @@ export class AreaChartComponent implements OnInit {
 
     // set plane icons to green
     if(this.curveFactorBlue > 60 ){
-      this.socket.sendPlaneIcon(true);
+      this.socketService.sendPlaneIcon(true);
     }
     else{
-      this.socket.sendPlaneIcon(false);
+      this.socketService.sendPlaneIcon(false);
     }
 
     this.changeCurveConflict()
@@ -178,32 +178,32 @@ export class AreaChartComponent implements OnInit {
   rampFunction(i,curveIndex){
 
     if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature+this.fadeFrontNumbers[i-this.collisionStart]);
+      return this.y(BAGS[curveIndex].values[i].bags+this.fadeFrontNumbers[i-this.collisionStart]);
     }
     else if(i>= this.collisionFadeFrontStop && i <=  this.collisionFadeEndStart  ){
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature+this.curveFactorOrange);
+      return this.y(BAGS[curveIndex].values[i].bags+this.curveFactorOrange);
     }
     else if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature+ this.fadeEndNumbers[i-this.collisionFadeEndStart-1]);
+      return this.y(BAGS[curveIndex].values[i].bags+ this.fadeEndNumbers[i-this.collisionFadeEndStart-1]);
     }
     else{
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature);
+      return this.y(BAGS[curveIndex].values[i].bags);
     }
   }
 
   rampFunction2(i,curveIndex){
 
     if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature+this.fadeFrontNumbers[i-this.collisionStart]);
+      return this.y(BAGS[curveIndex].values[i].bags+this.fadeFrontNumbers[i-this.collisionStart]);
     }
     else if(i>= this.collisionFadeFrontStop && i <=  this.collisionFadeEndStart  ){
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature+this.curveFactorBlue);
+      return this.y(BAGS[curveIndex].values[i].bags+this.curveFactorBlue);
     }
     else if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature+ this.fadeEndNumbers[i-this.collisionFadeEndStart-1]);
+      return this.y(BAGS[curveIndex].values[i].bags+ this.fadeEndNumbers[i-this.collisionFadeEndStart-1]);
     }
     else{
-      return this.y(TEMPERATURES[curveIndex].values[i].temperature);
+      return this.y(BAGS[curveIndex].values[i].bags);
     }
   }
 
@@ -229,11 +229,11 @@ export class AreaChartComponent implements OnInit {
     this.y = d3.scaleLinear().range([this.height, 0]);
     this.y2 = d3.scaleLinear().range([this.height2, 0]);
 
-    let frontFadeMax = TEMPERATURES[0].values[this.collisionFadeFrontStop].temperature;
-    let frontFadeMin = TEMPERATURES[7].values[this.collisionFadeFrontStop].temperature;
+    let frontFadeMax = BAGS[0].values[this.collisionFadeFrontStop].bags;
+    let frontFadeMin = BAGS[7].values[this.collisionFadeFrontStop].bags;
     let collisionFadeFront = this.createFadeFront(frontFadeMax-frontFadeMin);
-    let endFadeMax = TEMPERATURES[0].values[this.collisionFadeEndStart].temperature;
-    let endFadeMin = TEMPERATURES[7].values[this.collisionFadeEndStart].temperature;
+    let endFadeMax = BAGS[0].values[this.collisionFadeEndStart].bags;
+    let endFadeMin = BAGS[7].values[this.collisionFadeEndStart].bags;
     let collisionFadeEnd = this.createFadeEnd(endFadeMax-endFadeMin);
 
     // colission curve
@@ -242,30 +242,30 @@ export class AreaChartComponent implements OnInit {
       .x((d:any) => this.x(d.date)-0)
       .y0((d:any, i:number) => {
         if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
-          return this.y(TEMPERATURES[7].values[i].temperature - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
+          return this.y(BAGS[7].values[i].bags - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
         }
         else if(i>= this.collisionFadeFrontStop && i <= this.collisionFadeEndStart && this.panelOpenState){
-          return this.y(TEMPERATURES[7].values[i].temperature);
+          return this.y(BAGS[7].values[i].bags);
         }
         else if(i> this.collisionFadeEndStart  && i <= this.collisionEnd ){
-          return this.y(TEMPERATURES[7].values[i].temperature - collisionFadeEnd[this.collisionEnd-i]);
+          return this.y(BAGS[7].values[i].bags - collisionFadeEnd[this.collisionEnd-i]);
         }
         else{
-          return this.y(TEMPERATURES[0].values[i].temperature);
+          return this.y(BAGS[0].values[i].bags);
         }
       })
       .y1((d:any, i:number) => {
         if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
-          return this.y(TEMPERATURES[0].values[i].temperature - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
+          return this.y(BAGS[0].values[i].bags - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
         }
         else if(i>= this.collisionFadeFrontStop  && i <= this.collisionFadeEndStart && this.panelOpenState){
-          return this.y(TEMPERATURES[0].values[i].temperature);
+          return this.y(BAGS[0].values[i].bags);
         }
         else if(i> this.collisionFadeEndStart  && i <= this.collisionEnd ){
-          return this.y(TEMPERATURES[0].values[i].temperature - collisionFadeEnd[this.collisionEnd-i] );
+          return this.y(BAGS[0].values[i].bags - collisionFadeEnd[this.collisionEnd-i] );
         }
         else{
-          return this.y(TEMPERATURES[0].values[i].temperature);
+          return this.y(BAGS[0].values[i].bags);
         }
       });
     
@@ -288,7 +288,7 @@ export class AreaChartComponent implements OnInit {
       .y0((d: any, i:number) => {
         if(i < 90){
           // to fix the with of the tiny curve start 
-          return this.y(d.temperature)+7;
+          return this.y(d.bags)+7;
         }
         else{
           return this.rampFunction(i,1);
@@ -326,7 +326,7 @@ export class AreaChartComponent implements OnInit {
       .x((d: any) => this.x(d.date))
       .y0((d: any, i:number) => {
         if(i < 90){
-          return this.y(d.temperature)+7;
+          return this.y(d.bags)+7;
         }else{
           return this.rampFunction2(i,5);
         }
@@ -359,8 +359,8 @@ export class AreaChartComponent implements OnInit {
 
   private async drawChart() {
 
-    this.x.domain(d3.extent(TEMPERATURES[0].values, function(d:any) { return d.date; }));
-    this.y.domain([0, d3.max(TEMPERATURES[0].values, function(d:any) { return d.temperature; })]);
+    this.x.domain(d3.extent(BAGS[0].values, function(d:any) { return d.date; }));
+    this.y.domain([0, d3.max(BAGS[0].values, function(d:any) { return d.bags; })]);
     this.x2.domain(this.x.domain());
     this.y2.domain(this.y.domain());
 
@@ -369,19 +369,19 @@ export class AreaChartComponent implements OnInit {
     // collision area
     this.curveFactorBlue = -62;
     this.focus.append("clipPath")
-      .datum(TEMPERATURES[7].values)
+      .datum(BAGS[7].values)
       .attr("id", "clip-below")
       .append("path")
       .attr("class", "clip-below1");
 
     this.focus.append("clipPath")
-      .datum(TEMPERATURES[0].values)
+      .datum(BAGS[0].values)
       .attr("id", "clip-above")
       .append("path")
       .attr("class", "clip-above1");
 
     this.focus.append("path")
-      .datum(TEMPERATURES[0].values)
+      .datum(BAGS[0].values)
       .attr('id', 'hash4_5')
       .attr("x", 0)
       .attr("width", "100%")
@@ -410,19 +410,19 @@ export class AreaChartComponent implements OnInit {
     this.createFadeEnd(this.curveFactorOrange);
 
     this.focus.append('path')
-      .datum(TEMPERATURES[0].values)
+      .datum(BAGS[0].values)
       .attr('class', 'areaOuterUpper')
       .attr('d',this.outerUpperArea)
       .attr('clip-path', 'url(#rect-clip)');
       
     this.focus.append('path')
-      .datum(TEMPERATURES[1].values)
+      .datum(BAGS[1].values)
       .attr('class', 'areaInner')
       .attr('d',this.innerArea)
       .attr('clip-path', 'url(#rect-clip)');
       
     this.focus.append('path')
-      .datum(TEMPERATURES[3].values)
+      .datum(BAGS[3].values)
       .attr('class', 'areaOuterLower')
       .attr('d',this.outerLowerArea)
       .attr('clip-path', 'url(#rect-clip)');
@@ -433,19 +433,19 @@ export class AreaChartComponent implements OnInit {
     this.createFadeEnd(this.curveFactorBlue);
 
     this.focus.append('path')
-      .datum(TEMPERATURES[4].values)
+      .datum(BAGS[4].values)
       .attr('class', 'areaOuterUpper2')
       .attr('d',this.outerUpperArea2)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[5].values)
+      .datum(BAGS[5].values)
       .attr('class', 'areaInner2')
       .attr('d',this.innerArea2)
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
-      .datum(TEMPERATURES[7].values)
+      .datum(BAGS[7].values)
       .attr('class', 'areaOuterLower2')
       .attr('d',this.outerLowerArea2)
       .attr('clip-path', 'url(#rect-clip)');
@@ -454,14 +454,14 @@ export class AreaChartComponent implements OnInit {
     if(this.panelOpenState || this.lockedCM[0]){
       this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
         if(i>= this.collisionStart && i <= this.collisionEnd ){
-          return this.y(TEMPERATURES[7].values[i].temperature+this.curveFactorBlue);
+          return this.y(BAGS[7].values[i].bags+this.curveFactorBlue);
         }
         else{
-          return this.y(TEMPERATURES[0].values[i].temperature);
+          return this.y(BAGS[0].values[i].bags);
         }
       }));
     }else{
-      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(TEMPERATURES[7].values[i].temperature)).bind(this));
+      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(BAGS[7].values[i].bags)).bind(this));
     }
 
     this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
@@ -487,7 +487,7 @@ export class AreaChartComponent implements OnInit {
     let screenHeight = window.innerHeight;
     //this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
-    this.socket.expandPanelItem().subscribe(data=>{
+    this.socketService.expandPanelItem().subscribe(data=>{
 
       if(data.isExpanded != -1){
         this.panelOpenState = true;
@@ -498,17 +498,16 @@ export class AreaChartComponent implements OnInit {
       }
     });
 
-    this.socket.moveItem().subscribe(data=>{
+    this.socketService.moveItem().subscribe(data=>{
       this.lockCM(data.currentIndex);
       this.expandTaskPanel(data.currentIndex);
     })
 
-    this.socket.lockCM().subscribe(data=>{
+    this.socketService.lockCM().subscribe(data=>{
       this.lockCM(data.state);
     })
 
-    this.socket.changeMessage().subscribe(data=>{
-      console.log("data.graphFactorIndex: ", data.messageIndex);
+    this.socketService.changeMessage().subscribe(data=>{
       if(data.messageIndex ==2 || data.messageIndex == 1 ){
         
         this.panelOpenState = true;

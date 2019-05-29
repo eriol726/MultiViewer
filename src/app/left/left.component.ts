@@ -1,20 +1,7 @@
 import { Component, ViewChildren, OnInit, Input, Inject, AfterViewInit, ElementRef, HostListener, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActionService } from '../action.service';
 import { WebsocketService } from '../websocket.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
-import { TEMPERATURES } from '../../data/temperatures';
-import { AreaChartComponent } from '../area-chart/area-chart.component';
-import { Subject } from 'rxjs';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { DOCUMENT } from '@angular/common';
-
-type MyType = {
-  text: string;
-  color: string;
-  startDate: Date;
-  endDate: Date;
-}
 
 @Component({
   selector: 'app-left',
@@ -23,115 +10,48 @@ type MyType = {
   styleUrls: ['./left.component.css']
 })
 
-
 export class LeftComponent implements OnInit, AfterViewInit {
- // @Input() COUNTERMEASURES;
-  @Input() expand;
-  @ViewChildren('panel') panel;
+
   @ViewChild('chart') mainChart: ElementRef;
 
-  elem;
-  COUNTERMEASURES2: {};
+  private elem;
 
-  private innerWidth: number;
-  svg ;
+  private svg;
   private width;
-  x;
-  y;
+  
+  private x;
+  private y;
+  private g: any;
 
   public cm = 0;
+  public hideChart: boolean = true;
 
-  data2: MyType[] = [];
-  barHeigt: number;
-  xLinear: d3.ScaleLinear<number, number>;
-  xTime: d3.ScaleTime<number, number>;
-  margin: { top: number; right: number; bottom: number; left: number; };
-  height: number;
-  g: any;
-
-  hideChart: boolean = true;
-  hideCM: boolean= false;
-  testVar: number =55;
-  reloaded: boolean;
-  prevCm: number = 0;
-
-  switchOn:boolean = false;
-
+  private xLinear: d3.ScaleLinear<number, number>;
+  private xTime: d3.ScaleTime<number, number>;
+  private margin: { top: number; right: number; bottom: number; left: number; };
+  private height: number;
+  
+  private reloaded: boolean;
+  private switchOn:boolean = false;
  
 // https://stackoverflow.com/questions/45709725/angular-4-viewchild-component-is-undefined
-  constructor(@Inject(DOCUMENT) private document: any, private actionService : ActionService, private display : WebsocketService, private elRef:ElementRef) {
-
-  }
-
-  onClick(){
-    console.log("click");
-    this.actionService.emitChange('Data from child');
-  
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
-    }
-  }
-
-  show(index){
-    console.log("index: ", index , " " , this.panel);
-    // if(this.panel._results[index].expanded == false){
-    //   this.panel._results[index].expanded = true;
-    // }
-    // else{
-    //   this.panel._results[index].expanded = false;
-    // }
-    
-    
-  }
+  constructor(@Inject(DOCUMENT) private document: any, 
+                                private socketService : WebsocketService, 
+                                private elRef:ElementRef) {}
 
   ngOnInit() {
     this.elem = document.documentElement;
-    console.log("ngInit");
-  
-    // this.areaChart.renderContent.subscribe(value =>
-    //   {
-    //     this.getContent();
-    //   })
     
     this.svg = d3.select(".CMchart");
-    console.log("this.svg: ", this.svg);
+
     this.margin = { top: 20, right: 0, bottom: 30, left: 0 };
 
     this.xLinear = d3.scaleLinear();
     this.xTime = d3.scaleTime();
     this.y = d3.scaleBand().padding(0.1);
-
-    // this.g = this.svg.append("g")
-    //   .attr("transform", "translate(" + 0 + "," + 0 + ")")
-    //   .attr("class", "CMhistory");
-
-    // add the x Axis
-    // this.g.append("g").
-    // attr("class", "axis axis--x");
-
-    // append history line
-    // this.g.select(".axis--x").append("rect")
-    // .attr("class", "historyLine")
-    // .attr("width", 2)
-    // .attr("height", "100%" )
-    // .attr("fill", "black")
-
-    //this.draw();
-
-    //this.update(this.data2);
-
   }
 
   draw(){
-    
     let bounds = this.svg.node().getBoundingClientRect();
     
     this.width = bounds.width - this.margin.left - this.margin.right,
@@ -140,11 +60,8 @@ export class LeftComponent implements OnInit, AfterViewInit {
     this.xLinear.rangeRound([0, this.width]);
     this.xTime.rangeRound([0, this.width]);
 
-    let index = -1;
     let startDate = new Date(2018,1,1,11,14,0);
     let endDate = new Date(2018,1,1,14,47,0);
-    //let filteredObj = TEMPERATURES[0].values.findIndex(item => item.date === startDate);
-
 
     this.xTime.domain([startDate,endDate]);
     this.y.domain([0,5]);
@@ -159,10 +76,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
 
     this.g.select(".historyLine")
     .attr("transform", "translate(" + x +"," + -this.height + ")"); 
-    
   }
-
-
 
   update(data){
 
@@ -216,80 +130,50 @@ export class LeftComponent implements OnInit, AfterViewInit {
       .attr("fill", "white");
   }
 
-  iframeLoad(){
-    
-  }
-
   ngAfterViewInit(){
 
-    this.display.fullScreen().subscribe(data =>{
-      console.log("fullscreen: ", data);
-      if(data){
-        //this.openFullscreen();
-      }
-      else{
-        //this.closeFullscreen();
-      }
-    })
-
-    this.display.reloadPage().subscribe(reload =>{
-      console.log("reload " , reload )
+    this.socketService.reloadPage().subscribe(reload =>{
       this.reloaded= reload;
       if (this.reloaded) {
         window.location.reload();
         this.reloaded=false;
       }
-      
     })
 
-    this.display.changeMessage().subscribe(data =>{
+    this.socketService.changeMessage().subscribe(data =>{
       this.cm = 99;
     })
 
-    this.display.moveItem().subscribe(data=>{
+    this.socketService.moveItem().subscribe(data=>{
       switch (data.currentIndex) {
         case 0:
           this.cm = 1;
           break;
         case 3:
           if(this.switchOn){
-            this.cm = 5;
+            this.cm = 4;
           }
           else{
-            this.cm = 4;
+            this.cm = 3;
           }
           break;
         default:
           break;
       }
-      this.prevCm = this.cm;
     })
 
-    this.display.prioritize().subscribe(data =>{
+    this.socketService.prioritize().subscribe(data =>{
       this.switchOn = data;
     })
 
-    
-
-    this.display.maximizeChart().subscribe(data=>{
+    this.socketService.maximizeChart().subscribe(data=>{
       if(!this.hideChart){
         this.hideChart = true;
-        this.hideCM = false;
-        this.testVar = 66;
-        console.log("show CMchart");
       }
       else{
-        console.log("hide CMchart");
         this.hideChart = false;
-        this.hideCM = true;
-        this.testVar = 99;
       }
-      
     })
-  }
-
-  private getContent(){
-    console.log("tja");
   }
 
   openFullscreen() {
@@ -322,15 +206,5 @@ export class LeftComponent implements OnInit, AfterViewInit {
       this.document.msExitFullscreen();
     }
   }
-
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    
-    //this.draw();
-    
-  }
-
-
 
 }

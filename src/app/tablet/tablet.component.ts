@@ -72,7 +72,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   constructor(@Inject(DOCUMENT) private document: any,
               private actionService : ActionService, 
-              private socket : WebsocketService, 
+              private socketService : WebsocketService, 
               private elRef:ElementRef,
               public dragulaService: DragulaService,
               public sanitizer: DomSanitizer) { 
@@ -102,7 +102,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           if (!this.ACTIONPLAN.some((x,i) => x.id == taskIndex) ){
             
             this.ACTIONPLAN.push(this.COUNTERMEASURES[taskIndex]);
-            this.socket.sendMove(taskIndex,this.COUNTERMEASURES[taskIndex]);
+            this.socketService.sendMove(taskIndex,this.COUNTERMEASURES[taskIndex]);
    
             // we must change the name of the copied elements so we now which background color we will change
             el.id = "panel_item_copy_"+taskIndex;
@@ -151,7 +151,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.prioritize = false;
       //this.socket.sendMessage(5,99);
     }
-    this.socket.sendPriorotize(this.prioritize);
+    this.socketService.sendPriorotize(this.prioritize);
   }
 
 
@@ -172,7 +172,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       
       this.isExpanded = index;
       
-      this.socket.sendExpand(index,index,this.lockedCM[index].locked);
+      this.socketService.sendExpand(index,index,this.lockedCM[index].locked);
 
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "rgb(64, 189, 115)");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
@@ -212,7 +212,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
 
-      this.socket.sendExpand(-1,index,this.lockedCM[index].locked);
+      this.socketService.sendExpand(-1,index,this.lockedCM[index].locked);
 
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
@@ -249,7 +249,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.lockedCM[index].locked = true
     }
-    this.socket.sendLock(this.lockedCM[index].locked,index);
+    this.socketService.sendLock(this.lockedCM[index].locked,index);
   }
 
   loadCardIframe(){
@@ -328,7 +328,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   changeCard(index: number) {
-    this.socket.sendCardIndex(index);
+    this.socketService.sendCardIndex(index);
   }
 
   resize(){
@@ -337,7 +337,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       let chartBackground = this.elRef.nativeElement.querySelector('#chartBackground');
       console.log("chartBackground: ", chartBackground);
       chartBackground.contentWindow.document.getElementById('history-layer').style.opacity = "1";
-      this.socket.sendMaximized(true);
+      this.socketService.sendMaximized(true);
     }
     else{
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
@@ -345,12 +345,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
       
       this.hideTabletPanels = false;
-      this.socket.sendMaximized(false);
+      this.socketService.sendMaximized(false);
     }
   }
 
   reload(){
-    this.socket.sendReloadPage(true);
+    this.socketService.sendReloadPage(true);
     window.location.reload();
   }
 
@@ -358,7 +358,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     switch (++this.nextMessageIndex) {
       case 1:
-        this.socket.sendMessage(0,this.nextMessageIndex);
+        this.socketService.sendMessage(0,this.nextMessageIndex);
 
         this.elRef.nativeElement.querySelector("#panel_item_0").remove();
 
@@ -379,7 +379,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/r_4_Tablet.svg";
         break;
       case 2:
-          this.socket.sendMessage(5,this.nextMessageIndex);
+          this.socketService.sendMessage(5,this.nextMessageIndex);
           this.messageNumber = 2;
         break;
       default:
@@ -391,7 +391,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   openFullscreen() {
     this.isFullScreen = true;
     console.log("sendFullscreen");
-    this.socket.sendFullscreen(true);
+    this.socketService.sendFullscreen(true);
     if (this.elem.requestFullscreen) {
       this.elem.requestFullscreen();
     } else if (this.elem.mozRequestFullScreen) {
@@ -408,7 +408,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   /* Close fullscreen */
   closeFullscreen() {
-    this.socket.sendFullscreen(false);
+    this.socketService.sendFullscreen(false);
     this.isFullScreen = false;
     if (this.document.exitFullscreen) {
       this.document.exitFullscreen();

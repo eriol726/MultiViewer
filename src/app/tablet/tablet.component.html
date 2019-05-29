@@ -1,127 +1,125 @@
+<div class="box" >      
+  <div [hidden]="hideTabletPanels"  style="display: flex; height: 100%">
+      <div class="column">
+        <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
+          <p style="font-family: Titillium; margin: 0px !important">ACTION PLAN</p>
+        </div>
 
-    <div class="box" >      
-      <div [hidden]="hideTabletPanels"  style="display: flex; height: 100%">
-          <div class="column">
-            <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
-              <p style="font-family: Titillium; margin: 0px !important">ACTION PLAN</p>
-            </div>
-
-            <div class="cell" style="flex: 0 0 95%;">
-              <div dragula="COPYABLE" id="left" class="example-list-left" (click)="closeLeftPanel($event.target)" > 
-                
-              </div>
-              <img src="assets/reload_icon.png" height="42" width="42" style="position: absolute; bottom: 0px;" (click)="reload()">
-              <img src="assets/fullscreen_icon.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 42px" (click)="isFullScreen == false ? openFullscreen() : closeFullscreen()">
-              <img src="assets/long-arrow-right.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 84px" (click)="nextMessage()">
-            </div>
+        <div class="cell" style="flex: 0 0 95%;">
+          <div dragula="COPYABLE" id="left" class="example-list-left" (click)="closeLeftPanel($event.target)" > 
             
           </div>
-
-          <div class="column">
-            <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
-                <p style="font-family: Titillium; margin: 0px !important">LATE PASSENGERS</p>
-            </div>
-
-            <div class="cell" style="flex: 0 0 3%; justify-content: center; display: flex; align-items: center;">
-              <div class="applied-box" style="height: 50px">
-                <p>{{centralBarInfo}}</p>
-              </div>
-            </div>
-
-            <div class="cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >
-              <app-area-chart id="chart1" style="width: 100%" #chart1></app-area-chart>
-              <iframe id="svg_time_scale" src="assets/Tablet/Central/CentralFrame_noGraph_4.svg" style="position: absolute; bottom: 0px; width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
-            </div>
-
-            <div class="cell" style="border-top: 5px solid red; background-color: #fff; ">
-              <div  class="swiper-container" [swiper]="config" [(index)]="swiperIndexCentral" >
-                <div class="swiper-wrapper" (click)="resize()">
-                        <div class="swiper-slide" >
-                          <iframe id="message_0" [src]='"assets/Tablet/Central/m_"+messageNumber+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                          <div class="iframeOverlay"></div>
-                        </div>
-                        <div class="swiper-slide" >
-                          <iframe id="message_1" [src]='"assets/Tablet/Central/f_1_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                          <div class="iframeOverlay"></div>
-                        </div>
-                        <div class="swiper-slide" >
-                          <iframe id="message_1" [src]='"assets/Tablet/Central/f_2_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                          <div class="iframeOverlay"></div>
-                        </div>
-                        <div class="swiper-slide" >
-                          <iframe id="message_1" [src]='"assets/Tablet/Central/f_3_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                          <div class="iframeOverlay"></div>
-                        </div>
-                </div>
-                <div class="swiper-pagination"></div>
-              </div>
-            </div>
-          </div> 
-
-          <div class="column">
-            <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
-              <p style="font-family: Titillium; margin: 0px !important">COUNTERMEASURES</p>
-            </div>
-
-            <div class="cell" style="flex: 0 0 95%; ">
-              <div dragula="COPYABLE" id="right" class="example-list-right" style="width: 100%;"> 
-                <mat-expansion-panel 
-                                    (opened)="panelOpenState = true"
-                                    (closed)="panelOpenState = false"
-                                    [expanded]="isExpanded===i"
-                                    hideToggle="true"
-                                    *ngFor="let item of COUNTERMEASURES; let i = index" 
-                                    [attr.id]='"panel_item_"+i'
-                                    #panelRight >
-                  <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" (click)="expandTaskPanel(i)" >
-                    <mat-panel-title  >
-                      <iframe id='cm_header_{{i}}' class="svgCM" [src]='"assets/cm_"+(i+1)+".svg" | safe' (load)="loadCMgraphics()" [style.height]="initPanelItemHeight" style="border: 0px; flex-grow: 1; "></iframe>
-                      <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
-                    </mat-panel-title>
-                  </mat-expansion-panel-header >
-            
-                    <div class="cardList" (dblclick)="selectCard(i)" >
-                        <div  class="swiper-container" [swiper]="config" (indexChange)="changeCard($event)" style="height: 100%;" #cardList>
-                          <div class="swiper-wrapper" >
-                              <div class="swiper-slide" *ngFor="let card of createRange(item.cards+1); let n=index" >
-                   
-                                  <iframe id="card_{{i}}_{{n}}" class="card" [src]='"assets/Tablet/Right/r_"+i+"_"+n+"_Tablet.svg" | safe' (load)="loadCardIframe()" style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                                    <div class="iframeOverlay">
-                                        <div id="switchFunction"  (click)="switch()" style="width:50px; height: 20px; position:absolute;" [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
-                                    </div>
-                       
-                              </div>
-                          </div>
-                          <div class="swiper-pagination"></div>
-                            <div class="arrowUp">
-                              <svg><polyline  points="298.58 166.55 318.36 181.53 338.14 166.55" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-                            </div>
-                          </div>
-                    </div >
-                </mat-expansion-panel>
-                
-
-                <mat-expansion-panel id='panel_item_4' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden" >
-                  <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight"  >
-                  </mat-expansion-panel-header >
-                </mat-expansion-panel>
-                <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden">
-                  <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" >
-                  </mat-expansion-panel-header >
-                </mat-expansion-panel>
-              </div>
-            </div> <!-- cell -->
-          </div> <!-- column -->
+          <img src="assets/reload_icon.png" height="42" width="42" style="position: absolute; bottom: 0px;" (click)="reload()">
+          <img src="assets/fullscreen_icon.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 42px" (click)="isFullScreen == false ? openFullscreen() : closeFullscreen()">
+          <img src="assets/long-arrow-right.png" height="42" width="42" style="position: absolute; bottom: 0px; left: 84px" (click)="nextMessage()">
+        </div>
       </div>
-      <div [hidden]="!hideTabletPanels" style="width: 100%; height: 100%;" id="expandedView">
-        <app-middle style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative"></app-middle>
-        <iframe src="assets/Tablet/Central/ExpandedView_CM4_Graph_for_Tablet.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: absolute; top: 0px; left: 0px; z-index: 99" ></iframe>
-       
-        <img src="assets/long-arrow-right.png" height="100" width="100" style="position: absolute; bottom: 0px; left:0px; transform: scaleX(-1); z-index: 100;" (click)="resize()">
 
+      <div class="column">
+        <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
+            <p style="font-family: Titillium; margin: 0px !important">LATE PASSENGERS</p>
+        </div>
+
+        <div class="cell" style="flex: 0 0 3%; justify-content: center; display: flex; align-items: center;">
+          <div class="applied-box" style="height: 50px">
+            <p>{{centralBarInfo}}</p>
+          </div>
+        </div>
+
+        <div class="cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >
+          <app-area-chart id="chart1" style="width: 100%" #chart1></app-area-chart>
+          <iframe id="svg_time_scale" src="assets/Tablet/Central/CentralFrame_noGraph_4.svg" style="position: absolute; bottom: 0px; width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
+        </div>
+
+        <div class="cell" style="border-top: 5px solid red; background-color: #fff; ">
+          <div  class="swiper-container" [swiper]="config" [(index)]="swiperIndexCentral" >
+            <div class="swiper-wrapper" (click)="resize()">
+                    <div class="swiper-slide" >
+                      <iframe id="message_0" [src]='"assets/Tablet/Central/m_"+messageNumber+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                      <div class="iframeOverlay"></div>
+                    </div>
+                    <div class="swiper-slide" >
+                      <iframe id="message_1" [src]='"assets/Tablet/Central/f_1_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                      <div class="iframeOverlay"></div>
+                    </div>
+                    <div class="swiper-slide" >
+                      <iframe id="message_1" [src]='"assets/Tablet/Central/f_2_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                      <div class="iframeOverlay"></div>
+                    </div>
+                    <div class="swiper-slide" >
+                      <iframe id="message_1" [src]='"assets/Tablet/Central/f_3_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                      <div class="iframeOverlay"></div>
+                    </div>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
       </div> 
 
-    </div>
+      <div class="column">
+        <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
+          <p style="font-family: Titillium; margin: 0px !important">COUNTERMEASURES</p>
+        </div>
+
+        <div class="cell" style="flex: 0 0 95%; ">
+          <div dragula="COPYABLE" id="right" class="example-list-right" style="width: 100%;"> 
+            <mat-expansion-panel 
+                                (opened)="panelOpenState = true"
+                                (closed)="panelOpenState = false"
+                                [expanded]="isExpanded===i"
+                                hideToggle="true"
+                                *ngFor="let item of COUNTERMEASURES; let i = index" 
+                                [attr.id]='"panel_item_"+i'
+                                #panelRight >
+              <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" (click)="expandTaskPanel(i)" >
+                <mat-panel-title  >
+                  <iframe id='cm_header_{{i}}' class="svgCM" [src]='"assets/cm_"+(i+1)+".svg" | safe' (load)="loadCMgraphics()" [style.height]="initPanelItemHeight" style="border: 0px; flex-grow: 1; "></iframe>
+                  <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
+                </mat-panel-title>
+              </mat-expansion-panel-header >
+        
+                <div class="cardList" (dblclick)="selectCard(i)" >
+                    <div  class="swiper-container" [swiper]="config" (indexChange)="changeCard($event)" style="height: 100%;" #cardList>
+                      <div class="swiper-wrapper" >
+                          <div class="swiper-slide" *ngFor="let card of createRange(item.cards+1); let n=index" >
+                
+                              <iframe id="card_{{i}}_{{n}}" class="card" [src]='"assets/Tablet/Right/r_"+i+"_"+n+"_Tablet.svg" | safe' (load)="loadCardIframe()" style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                                <div class="iframeOverlay">
+                                    <div id="switchFunction"  (click)="switch()" style="width:50px; height: 20px; position:absolute;" [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
+                                </div>
+                    
+                          </div>
+                      </div>
+                      <div class="swiper-pagination"></div>
+                        <div class="arrowUp">
+                          <svg><polyline  points="298.58 166.55 318.36 181.53 338.14 166.55" fill="none" stroke="#5b5b5b" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                        </div>
+                      </div>
+                </div >
+            </mat-expansion-panel>
+            
+
+            <mat-expansion-panel id='panel_item_4' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden" >
+              <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight"  >
+              </mat-expansion-panel-header >
+            </mat-expansion-panel>
+            <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden">
+              <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" >
+              </mat-expansion-panel-header >
+            </mat-expansion-panel>
+          </div>
+        </div> <!-- cell -->
+      </div> <!-- column -->
+  </div>
+  <div [hidden]="!hideTabletPanels" style="width: 100%; height: 100%;" id="expandedView">
+    <app-middle style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative"></app-middle>
+    <iframe src="assets/Tablet/Central/ExpandedView_CM4_Graph_for_Tablet.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: absolute; top: 0px; left: 0px; z-index: 99" ></iframe>
+    
+    <img src="assets/long-arrow-right.png" height="100" width="100" style="position: absolute; bottom: 0px; left:0px; transform: scaleX(-1); z-index: 100;" (click)="resize()">
+
+  </div> 
+
+</div>
     
 
 
