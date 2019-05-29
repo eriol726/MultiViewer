@@ -1,4 +1,4 @@
-import { Component, ViewChildren, OnInit, Input, Inject, AfterViewInit, ElementRef, HostListener, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChildren, OnInit, Inject, AfterViewInit, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WebsocketService } from '../websocket.service';
 import * as d3 from 'd3';
 import { DOCUMENT } from '@angular/common';
