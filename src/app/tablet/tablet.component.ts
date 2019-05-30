@@ -306,6 +306,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
 
+      this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
+
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-500) + ',' + 100 + ') scale(5,1)');
 
@@ -364,6 +366,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
         this.messageNumber = 1;
         this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";
+        this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_0.svg";
         this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
@@ -376,7 +379,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         svg_time_scale.contentWindow.document.getElementById("timeText3").innerHTML = "20:00";
         this.focus.attr('transform', 'translate(' + (-1290) + ',' + 100 + ') scale(5,1)');
 
-        this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/r_4_Tablet.svg";
+        
         break;
       case 2:
           this.socketService.sendMessage(5,this.nextMessageIndex);

@@ -1,15 +1,7 @@
 import { Component, AfterViewInit, Input, ViewChildren, OnInit, ViewEncapsulation, ElementRef, ViewChild, QueryList, ChangeDetectorRef, AfterContentChecked, Inject, Renderer2 } from '@angular/core';
-import { AppComponent} from "../app.component";
-import { Injectable } from '@angular/core';
-import { LeftComponent } from "../left/left.component";
 import { ActionService } from '../action.service';
 import { WebsocketService } from '../websocket.service';
-import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from "igniteui-angular";
-import { NavigationStart } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
+import { IgxExpansionPanelComponent } from "igniteui-angular";
 
 type PanelParamsType = {isExpanded:number, panelIndex:number, locked:boolean};
 
@@ -234,13 +226,14 @@ export class RightComponent implements OnInit, AfterViewInit {
         //show the item under clicked item
         if(i == data.panelIndex+1){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
         }
 
+        // when the last cm is opened
         if(data.panelIndex == this.COUNTERMEASURES.length-1){
           
-          // this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.height = this.initPanelItemHeight;
+          this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.height = this.initPanelItemHeight;
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.flex = "1";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.setProperty('margin-bottom', '20px', 'important');
         }
@@ -252,8 +245,8 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.expandedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
           this.elRef.nativeElement.querySelector("#panel_item_"+i).firstChild.style.marginBottom  = "0px";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
       }
     }  

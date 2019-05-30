@@ -175,13 +175,13 @@ export class AreaChartComponent implements OnInit {
     return this.fadeEndNumbers;
   }
 
-  rampFunction(i,curveIndex){
+  rampFunction(i,curveIndex,curveFactor){
 
     if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
       return this.y(BAGS[curveIndex].values[i].bags+this.fadeFrontNumbers[i-this.collisionStart]);
     }
     else if(i>= this.collisionFadeFrontStop && i <=  this.collisionFadeEndStart  ){
-      return this.y(BAGS[curveIndex].values[i].bags+this.curveFactorOrange);
+      return this.y(BAGS[curveIndex].values[i].bags+curveFactor);
     }
     else if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){
       return this.y(BAGS[curveIndex].values[i].bags+ this.fadeEndNumbers[i-this.collisionFadeEndStart-1]);
@@ -191,22 +191,20 @@ export class AreaChartComponent implements OnInit {
     }
   }
 
-  rampFunction2(i,curveIndex){
-
-    if(i> this.collisionStart && i < this.collisionFadeFrontStop  ){
-      return this.y(BAGS[curveIndex].values[i].bags+this.fadeFrontNumbers[i-this.collisionStart]);
+  rampFunctionCollision(i,curveIndex,collisionFadeFront,collisionFadeEnd){
+    if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
+      return this.y(BAGS[curveIndex].values[i].bags - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
     }
-    else if(i>= this.collisionFadeFrontStop && i <=  this.collisionFadeEndStart  ){
-      return this.y(BAGS[curveIndex].values[i].bags+this.curveFactorBlue);
-    }
-    else if(i> this.collisionFadeEndStart  && i < this.collisionEnd ){
-      return this.y(BAGS[curveIndex].values[i].bags+ this.fadeEndNumbers[i-this.collisionFadeEndStart-1]);
-    }
-    else{
+    else if(i>= this.collisionFadeFrontStop && i <= this.collisionFadeEndStart && this.panelOpenState){
       return this.y(BAGS[curveIndex].values[i].bags);
     }
+    else if(i> this.collisionFadeEndStart  && i <= this.collisionEnd ){
+      return this.y(BAGS[curveIndex].values[i].bags - collisionFadeEnd[this.collisionEnd-i]);
+    }
+    else{
+      return this.y(BAGS[0].values[i].bags);
+    }
   }
-
 
   private initSvg() {
     this.svg = d3.select("svg");
@@ -241,32 +239,10 @@ export class AreaChartComponent implements OnInit {
       .curve(this.interpolationMethod)
       .x((d:any) => this.x(d.date)-0)
       .y0((d:any, i:number) => {
-        if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
-          return this.y(BAGS[7].values[i].bags - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
-        }
-        else if(i>= this.collisionFadeFrontStop && i <= this.collisionFadeEndStart && this.panelOpenState){
-          return this.y(BAGS[7].values[i].bags);
-        }
-        else if(i> this.collisionFadeEndStart  && i <= this.collisionEnd ){
-          return this.y(BAGS[7].values[i].bags - collisionFadeEnd[this.collisionEnd-i]);
-        }
-        else{
-          return this.y(BAGS[0].values[i].bags);
-        }
+        return this.rampFunctionCollision(i,7,collisionFadeFront,collisionFadeEnd);
       })
       .y1((d:any, i:number) => {
-        if(i>= this.collisionStart && i < this.collisionFadeFrontStop  ){
-          return this.y(BAGS[0].values[i].bags - collisionFadeFront[this.collisionFadeFrontStop-i-1] );
-        }
-        else if(i>= this.collisionFadeFrontStop  && i <= this.collisionFadeEndStart && this.panelOpenState){
-          return this.y(BAGS[0].values[i].bags);
-        }
-        else if(i> this.collisionFadeEndStart  && i <= this.collisionEnd ){
-          return this.y(BAGS[0].values[i].bags - collisionFadeEnd[this.collisionEnd-i] );
-        }
-        else{
-          return this.y(BAGS[0].values[i].bags);
-        }
+        return this.rampFunctionCollision(i,0,collisionFadeFront,collisionFadeEnd);
       });
     
     // first curve
@@ -274,10 +250,10 @@ export class AreaChartComponent implements OnInit {
     .curve(this.interpolationMethod)
     .x((d: any) => this.x(d.date))
     .y0((d: any, i: number) => {
-      return this.rampFunction(i,0);
+      return this.rampFunction(i,0,this.curveFactorOrange);
     })
     .y1((d: any, i: number) => {
-      return this.rampFunction(i,1);
+      return this.rampFunction(i,1,this.curveFactorOrange);
     });
 
     this.innerArea = d3.area()
@@ -291,21 +267,21 @@ export class AreaChartComponent implements OnInit {
           return this.y(d.bags)+7;
         }
         else{
-          return this.rampFunction(i,1);
+          return this.rampFunction(i,1,this.curveFactorOrange);
         }
       })
       .y1((d: any, i:number) => {
-        return this.rampFunction(i,2);
+        return this.rampFunction(i,2,this.curveFactorOrange);
       });
 
     this.outerLowerArea = d3.area()
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
-        return this.rampFunction(i,2);
+        return this.rampFunction(i,2,this.curveFactorOrange);
       })
       .y1((d: any, i:number) => {
-        return this.rampFunction(i,3);
+        return this.rampFunction(i,3,this.curveFactorOrange);
       });
 
 
@@ -314,11 +290,11 @@ export class AreaChartComponent implements OnInit {
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
-        return this.rampFunction2(i,4);
+        return this.rampFunction(i,4,this.curveFactorBlue);
         
       })
       .y1((d: any, i:number) => {
-        return this.rampFunction2(i,5);
+        return this.rampFunction(i,5,this.curveFactorBlue);
       });
 
     this.innerArea2 = d3.area()
@@ -328,21 +304,21 @@ export class AreaChartComponent implements OnInit {
         if(i < 90){
           return this.y(d.bags)+7;
         }else{
-          return this.rampFunction2(i,5);
+          return this.rampFunction(i,5,this.curveFactorBlue);
         }
       })
       .y1((d: any, i:number) => {
-        return this.rampFunction2(i,6);
+        return this.rampFunction(i,6,this.curveFactorBlue);
       });
     
     this.outerLowerArea2 = d3.area()
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
-        return this.rampFunction2(i,6);
+        return this.rampFunction(i,6,this.curveFactorBlue);
       })
       .y1((d: any, i:number) => {
-        return this.rampFunction2(i,7);
+        return this.rampFunction(i,7,this.curveFactorBlue);
       });
     
     this.svg.append('defs').append('clipPath')

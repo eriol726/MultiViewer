@@ -23,7 +23,7 @@ export class LeftComponent implements OnInit, AfterViewInit {
   private y;
   private g: any;
 
-  public cm = 0;
+  public cm = "start";
   public hideChart: boolean = true;
 
   private xLinear: d3.ScaleLinear<number, number>;
@@ -141,20 +141,20 @@ export class LeftComponent implements OnInit, AfterViewInit {
     })
 
     this.socketService.changeMessage().subscribe(data =>{
-      this.cm = 99;
+      this.cm = "next";
     })
 
     this.socketService.moveItem().subscribe(data=>{
       switch (data.currentIndex) {
         case 0:
-          this.cm = 1;
+          this.cm = "cm0";
           break;
         case 3:
           if(this.switchOn){
-            this.cm = 4;
+            this.cm = "cm3_prioritized";
           }
           else{
-            this.cm = 3;
+            this.cm = "cm3";
           }
           break;
         default:
