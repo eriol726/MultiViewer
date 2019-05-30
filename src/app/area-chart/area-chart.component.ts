@@ -53,8 +53,8 @@ export class AreaChartComponent implements OnInit {
   private collisionStart = 200;
   private collisionFadeFrontStop = 220;
 
-  private collisionFadeEndStart = 330;
-  private collisionEnd = 340;
+  private collisionFadeEndStart = 280;
+  private collisionEnd = 300;
 
   //private curveFactor
   private lockedCM = [{"locked": false, "graphFactor": 25},
@@ -93,7 +93,7 @@ export class AreaChartComponent implements OnInit {
         return this.y(BAGS[7].values[i].bags+this.curveFactorBlue);
       }
       else{
-        return this.y(BAGS[0].values[i].bags);
+        return this.y(BAGS[0].values[i].bags+5);
       }
     }));
   }
@@ -149,8 +149,8 @@ export class AreaChartComponent implements OnInit {
   }
 
   private createFadeFront(curveFactor){
-    let size = this.collisionFadeFrontStop+1 -this.collisionStart;
-    const a: number[] = [];
+    let size = this.collisionFadeFrontStop -this.collisionStart;
+
     this.fadeFrontNumbers = [];
     let step = curveFactor/size;
     let sumStep = 0;
@@ -163,8 +163,8 @@ export class AreaChartComponent implements OnInit {
 
   private createFadeEnd(curveFactor){
     
-    let size = this.collisionEnd+1-this.collisionFadeEndStart;
-    const a: number[] = [];
+    let size = this.collisionEnd-this.collisionFadeEndStart;
+
     this.fadeEndNumbers = [];
     let step = curveFactor/size;
     let sumStep = curveFactor;
@@ -343,7 +343,6 @@ export class AreaChartComponent implements OnInit {
     this.svg = d3.select("svg");
 
     // collision area
-    this.curveFactorBlue = -62;
     this.focus.append("clipPath")
       .datum(BAGS[7].values)
       .attr("id", "clip-below")
@@ -426,19 +425,17 @@ export class AreaChartComponent implements OnInit {
       .attr('d',this.outerLowerArea2)
       .attr('clip-path', 'url(#rect-clip)');
 
-    this.curveFactorBlue = 62;
-    if(this.panelOpenState || this.lockedCM[0]){
-      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
-        if(i>= this.collisionStart && i <= this.collisionEnd ){
-          return this.y(BAGS[7].values[i].bags+this.curveFactorBlue);
-        }
-        else{
-          return this.y(BAGS[0].values[i].bags);
-        }
-      }));
-    }else{
-      this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => this.y(BAGS[7].values[i].bags)).bind(this));
-    }
+
+    this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
+      if(i>= this.collisionStart && i <= this.collisionEnd ){
+        return this.y(BAGS[7].values[i].bags+(-this.curveFactorOrange));
+      }
+      else{
+        // +5 because get rid off the conflict pattern that will be visivle where the rampFunc starts
+        return this.y(BAGS[0].values[i].bags+5);
+      }
+    }));
+
 
     this.focus.select('.clip-below1').attr('d', this.collisionArea.y0(0).bind(this));
     this.focus.select('.clip-above1').attr('d', this.collisionArea.y0(this.height).bind(this));

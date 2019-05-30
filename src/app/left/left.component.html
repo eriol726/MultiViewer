@@ -1,11 +1,11 @@
 <div class="row" #chart>
     <div [hidden]="hideChart" style="height: 100%; margin-top: 0%">
-        <iframe src="assets/Expanded_View_LeftScreen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>  
+        <iframe src="assets/Screen/Left/Expanded_View_LeftScreen.svg" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>  
         <!-- <app-area-chart></app-area-chart> -->
     </div>
 
     <div [hidden]="!hideChart" style="height: 100%">
-        <iframe id="actionPlanBackground" (load)="iframeLoad()" [src]='"assets/Screen/Left/ActionPlan_background_"+cm+".svg" | safe' style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
+        <iframe id="actionPlanBackground" [src]='"assets/Screen/Left/ActionPlan_background_"+cm+".svg" | safe' style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" ></iframe>
         <svg  class="CMchart"  width="100%" height="100%" style="position: absolute; top: 0px; left: 0px; padding: 0px 0px 0px 0px"></svg> 
     </div>
 </div>
