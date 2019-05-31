@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone, Renderer2, Injectable, RendererFactory2, Inject  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output, ViewEncapsulation, HostListener, ChangeDetectionStrategy, ViewContainerRef, AfterViewInit, NgZone, Renderer2, Injectable, RendererFactory2, Inject, ViewChildren  } from '@angular/core';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import { DOCUMENT } from '@angular/common';
@@ -27,7 +27,7 @@ type MyType = {
 })
 
 export class MiddleComponent implements OnInit, AfterViewInit {
-  @ViewChild('areaChart') private areaChart: any;
+  @ViewChildren('areaChart') public areaChart: any;
   @ViewChild('row') private rowContainer: ElementRef;
   @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
   @Input() private data: Array<any>;
@@ -44,6 +44,8 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   private switchOn:boolean = false;
 
   public chartBackground: any;
+  public screenHeight = 0;
+  public screenWidth = 0;
 
   constructor(@Inject(DOCUMENT) private document: any, 
                                 private actionService : ActionService, 
@@ -60,61 +62,63 @@ export class MiddleComponent implements OnInit, AfterViewInit {
   }
 
   loadIframe(){
-      
-      this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
-      
-      this.message1_X = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().x;
-      this.message1_Y = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().y;
-      let message1_height = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().height;
-      let message1_width = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().width;
-      let historyLayerX = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().x;
-      let historyLayerY = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().y;
-      let historyLayerWidth = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().width;
-      let historyLayerHeight = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().height;
-      let historyLayer = this.chartBackground.contentWindow.document.getElementById("history-layer");
-      historyLayer.style.opacity = 0.0;
+    //this.areaChart.first.chartContainer.nativeElement.style.height = window.innerHeight+"px";
+    //this.areaChart.first.chartContainer.nativeElement.style.width = window.innerWidth+"px";
+    
+    this.chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+    
+    this.message1_X = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().x;
+    this.message1_Y = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().y;
+    let message1_height = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().height;
+    let message1_width = this.chartBackground.contentWindow.document.getElementById("Message_1").getBoundingClientRect().width;
+    let historyLayerX = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().x;
+    let historyLayerY = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().y;
+    let historyLayerWidth = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().width;
+    let historyLayerHeight = this.chartBackground.contentWindow.document.getElementById("history-layer").getBoundingClientRect().height;
+    let historyLayer = this.chartBackground.contentWindow.document.getElementById("history-layer");
+    historyLayer.style.opacity = 0.0;
 
-      this.elRef.nativeElement.querySelector("#history_layer_2").style.top = historyLayerY+"px";
-      this.elRef.nativeElement.querySelector("#history_layer_2").style.left = historyLayerX+"px";
-      this.elRef.nativeElement.querySelector("#history_layer_2").style.width = historyLayerWidth-3+"px";
-      this.elRef.nativeElement.querySelector("#history_layer_2").style.height = historyLayerHeight+"px";
+    this.elRef.nativeElement.querySelector("#history_layer_2").style.top = historyLayerY+"px";
+    this.elRef.nativeElement.querySelector("#history_layer_2").style.left = historyLayerX+"px";
+    this.elRef.nativeElement.querySelector("#history_layer_2").style.width = historyLayerWidth-3+"px";
+    this.elRef.nativeElement.querySelector("#history_layer_2").style.height = historyLayerHeight+"px";
 
-      this.elRef.nativeElement.querySelector("#message_1_elm").style.top = this.message1_Y+"px";
-      this.elRef.nativeElement.querySelector("#message_1_elm").style.left = this.message1_X+"px";
-      this.elRef.nativeElement.querySelector("#message_1_elm").style.width = message1_width+"px";
-      this.elRef.nativeElement.querySelector("#message_1_elm").style.height = message1_height+"px";
+    this.elRef.nativeElement.querySelector("#message_1_elm").style.top = this.message1_Y+"px";
+    this.elRef.nativeElement.querySelector("#message_1_elm").style.left = this.message1_X+"px";
+    this.elRef.nativeElement.querySelector("#message_1_elm").style.width = message1_width+"px";
+    this.elRef.nativeElement.querySelector("#message_1_elm").style.height = message1_height+"px";
 
-      this.elRef.nativeElement.querySelector("#message_2_elm").style.top = this.message1_Y+"px";
-      this.elRef.nativeElement.querySelector("#message_2_elm").style.left = this.message1_X+"px";
-      this.elRef.nativeElement.querySelector("#message_2_elm").style.width = message1_width+"px";
+    this.elRef.nativeElement.querySelector("#message_2_elm").style.top = this.message1_Y+"px";
+    this.elRef.nativeElement.querySelector("#message_2_elm").style.left = this.message1_X+"px";
+    this.elRef.nativeElement.querySelector("#message_2_elm").style.width = message1_width+"px";
 
-      // X-ray Maintenance icon is visible in the first state
-      this.chartBackground.contentWindow.document.getElementById("CM99_Icon").style.visibility = "visible";
-      this.chartBackground.contentWindow.document.getElementById("CM99_Bar").style.visibility = "visible";  
-      
-      this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
+    // X-ray Maintenance icon is visible in the first state
+    this.chartBackground.contentWindow.document.getElementById("CM99_Icon").style.visibility = "visible";
+    this.chartBackground.contentWindow.document.getElementById("CM99_Bar").style.visibility = "visible";  
+    
+    this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
 
-      let screenWidth = window.innerWidth;
-      let screenHeight = window.innerHeight;
+    let screenWidth = window.innerWidth;
+    let screenHeight = window.innerHeight;
 
-      this.x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
-      let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
-      this.chartPaddingRight = screenWidth - (layer6Boundings.width + layer6Boundings.x);
+    this.x = this.chartBackground.contentWindow.document.getElementById("first-line").getBoundingClientRect().x;
+    let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
+    this.chartPaddingRight = screenWidth - (layer6Boundings.width + layer6Boundings.x);
 
-      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("buttom-line").getBoundingClientRect().y;
-      
-      // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
-      let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
+    let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("buttom-line").getBoundingClientRect().y;
+    
+    // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
+    let focusHeight = this.areaChart.first.focus._groups[0][0].getBoundingClientRect().height;
 
-      let scaleGraphY = 0.7;
+    let scaleGraphY = 0.7;
 
-      let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
+    let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
-      this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
-      this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
-      
-      //put the graph on it's right position
-      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest+45)+") scale(1,"+scaleGraphY+")");
+    this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
+    this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
+    
+    //put the graph on it's right position
+    this.areaChart.first.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest+45)+") scale(1,"+scaleGraphY+")");
   }
 
   ngAfterViewInit(){
@@ -185,29 +189,31 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     this.socketService.expandPanelItem().subscribe(data =>{
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "hidden";
-      this.chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
+      let chartBackground = this.elRef.nativeElement.querySelector("#chartBackground");
+      console.log("chartBackground: ", chartBackground);
+      chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
       if(data.isExpanded == -1 && !data.locked){
-        this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
       else{
-        this.chartBackground.contentWindow.document.getElementById("CM0_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM0_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM0_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM0_Bar").style.visibility = "hidden";
 
-        this.chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
 
-        this.chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
 
-        this.chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "hidden";
+        chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "hidden";
 
-        this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "visible";
-        this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "visible";
-        this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
-        this.chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.panelIndex].text  + " PREVIEW";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";
+        chartBackground.contentWindow.document.getElementById("Preview_Bar").getElementsByTagName("text")[0].innerHTML = this.CMs[data.panelIndex].text  + " PREVIEW";
       }
     });
 
@@ -218,13 +224,13 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
 
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
-        this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
+        //this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
 
         this.isExpanded = true;
       }
       else{
         this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
-        this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "visible";
+        //this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#history_layer_2").style.visibility = "visible";
         this.isExpanded = false;
       }

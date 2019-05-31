@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, ChangeDetectorRef, ViewContainerRef, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, ChangeDetectorRef, ViewContainerRef, Output, EventEmitter, Inject, ContentChildren, QueryList } from '@angular/core';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
@@ -37,10 +37,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
-  @ViewChildren('chart1') chart1: any;
+  @ViewChildren('chart1') public chart1;
+  @ViewChildren('chart2') public chart2: QueryList<ElementRef>;
+  @ContentChildren('chart2') chart22: QueryList<ElementRef>;
   @ViewChildren('cardList') cardList: ElementRef;
   @ViewChild('chart') mainChart: ElementRef;
   @ViewChild('dropZone', {read: ViewContainerRef}) dropZone: ViewContainerRef;
+  @Input() showMe;
 
   private lockedCM = [{"locked": false, "graphFactor": 5},
                       {"locked": false, "graphFactor": 20},
@@ -69,6 +72,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private prioritize: boolean = false;
   private loaded:boolean = false;
   private initPanelItemHeight: string = "auto";
+  private screenHeight: number;
+  private screenWidth: number;
 
   constructor(@Inject(DOCUMENT) private document: any,
               private actionService : ActionService, 
@@ -296,6 +301,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     this.rescaleCollisionPattern();
 
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+
+    console.log("chart1: ", this.chart1.first.chartContainer.nativeElement.style.height);
+    this.chart1.first.chartContainer.nativeElement.style.height= "100%";
+    this.chart1.first.chartContainer.nativeElement.style.width= "100%";
+    // this.chart1.changes.subscribe((item: any) => {
+    //   console.log("item: ", item);
+    //   item.first.areaChart.chartContainer.nativeElement.style.height = "100%";
+    //   item.first.areaChart.chartContainer.nativeElement.style.width = "100%";
+    // });
+
   }
 
   loadCMgraphics(){
@@ -305,9 +322,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
       this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
-
+      this.chart1.first.chartContainer.nativeElement.style.height = "100%";
+      this.chart1.first.chartContainer.nativeElement.style.width = "100%";
+      
       this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
-
+      
       this.focus = d3.select(".focus");
       this.focus.attr('transform', 'translate(' + (-500) + ',' + 100 + ') scale(5,1)');
 
@@ -336,15 +355,36 @@ export class TabletComponent implements OnInit, AfterViewInit {
   resize(){
     if(!this.hideTabletPanels){
       this.hideTabletPanels = true;
-      let chartBackground = this.elRef.nativeElement.querySelector('#chartBackground');
-      console.log("chartBackground: ", chartBackground);
-      chartBackground.contentWindow.document.getElementById('history-layer').style.opacity = "1";
+      let chartBackground = this.elRef.nativeElement.querySelector('#chart2');
+      //this.chart2._results[0].areaChart.nativeElement.clientHeight = "800px";
+      console.log("maximized");
+      this.chart2.changes.subscribe((item: any) => {
+          if(item.last){
+            item.first.areaChart.first.chartContainer.nativeElement.style.height = this.screenHeight+1+"px";
+            item.first.areaChart.first.chartContainer.nativeElement.style.width = this.screenWidth+1+"px";
+            console.log("item.first.areaChart: ", item.first.areaChart);
+            item.first.areaChart.first.height = +500; 
+            item.first.areaChart.first.width = +500; 
+            item.first.areaChart.first.focus._groups[0][0].height = 501;
+            item.first.areaChart.first.focus._groups[0][0].width = 501;
+          }
+      });
+
+      
+      // chartBackground.contentWindow.document.getElementById('history-layer').style.opacity = "1";
+      
       this.socketService.sendMaximized(true);
     }
     else{
-      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
-      this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
+      this.chart1.changes.subscribe(item =>{
+        if(item.last){
+          item._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
+          this.focus = d3.select(".focus");
+          this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
+        }
+      })
+      
+      
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);

@@ -215,7 +215,7 @@ export class AreaChartComponent implements OnInit {
 
     this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
     
-    this.width = this.chartContainer.nativeElement.offsetWidth;
+    this.width = window.innerWidth;
     this.height = +500;// - this.margin.top - this.margin.bottom;
     this.height2 = +500 -this.margin2.top - this.margin2.bottom;
 
@@ -458,6 +458,7 @@ export class AreaChartComponent implements OnInit {
 
     let screenWidth = window.innerWidth;
     let screenHeight = window.innerHeight;
+
     //this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
 
     this.socketService.expandPanelItem().subscribe(data=>{

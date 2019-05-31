@@ -14,9 +14,9 @@ svg {
   pointer-events: all;
 }
 
-.focus {
+/* .focus {
   width: 100%;
-}
+} */
 
 .above { fill: rgb(252,141,89,0); }
 
