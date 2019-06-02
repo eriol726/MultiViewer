@@ -62,7 +62,7 @@
             <rect x="0.69" y="935.33" width="1919.79" height="119.77" fill="#fff"/>
         </g>
         <g id="Layer_6" data-name="Layer 6">
-            <rect id="buttom-line" x="0.69" y="798.84" width="1919.79" height="131.09" fill="#f2a120" opacity="0.03"/>
+            <rect id="Bottom_line" x="0.69" y="798.84" width="1919.79" height="131.09" fill="#f2a120" opacity="0.03"/>
             <rect x="0.69" y="123.91" width="1919.79" height="106.18" fill="#e3f0fc" opacity="0.16"/>
         </g>
         <g id="Preview_Bar" style="visibility: hidden">
@@ -93,7 +93,7 @@
                     <rect x="0.69" y="221.02" width="122.8" height="11.7" fill="#8dc5f2"/>
                 </g>
             </g>
-            <rect x="1.1" y="123.85" width="1919.69" height="110.73" fill="#e3f0fc" opacity="0.16"/>
+            <rect id="icon-header" x="1.1" y="123.85" width="1919.69" height="110.73" fill="#e3f0fc" opacity="0.16"/>
             <polyline points="497.45 952.05 497.57 374.59 497.45 54.35" fill="none" stroke="#2277d6" stroke-width="3"/>
             <path d="M562,897.79h34v3.58H562Zm12.85-10.25,7.78,2.08,9.5,2.54a2.69,2.69,0,0,0,1.4-5.19l-9.5-2.54-4.94-16.14-3.46-.92v14.82l-8.89-2.38-1.66-4.15-2.6-.7v9.25l2.86.77Z" fill="#f2a120"/>
             <path d="M1330.13,897.79h34v3.58h-34ZM1343,887.54l7.79,2.08,9.5,2.54a2.69,2.69,0,0,0,1.4-5.19l-9.51-2.54-4.93-16.14-3.46-.92v14.82l-8.89-2.38-1.67-4.15-2.59-.7v9.25l2.86.77Z" fill="#f2a120"/>

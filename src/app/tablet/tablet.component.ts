@@ -38,6 +38,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
   @ViewChildren('chart1') chart1: any;
+  @ViewChildren('chart2') chart2: any;
   @ViewChildren('cardList') cardList: ElementRef;
   @ViewChild('chart') mainChart: ElementRef;
   @ViewChild('dropZone', {read: ViewContainerRef}) dropZone: ViewContainerRef;
@@ -69,6 +70,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private prioritize: boolean = false;
   private loaded:boolean = false;
   private initPanelItemHeight: string = "auto";
+  middleTopMargin: any;
 
   constructor(@Inject(DOCUMENT) private document: any,
               private actionService : ActionService, 
@@ -265,13 +267,25 @@ export class TabletComponent implements OnInit, AfterViewInit {
   rescaleCollisionPattern(){
     this.focus = d3.select(".focus");
 
+    // .attr('id', "hash4_6")
+    //   .attr('width', "4") 
+    //   .attr('height',"4")
+    //   .attr('patternUnits',"userSpaceOnUse") 
+    //   .attr('patternTransform', "rotate(45)")
+    //   .append("rect")
+    //   .attr("id","diagonalRect")
+    //   .attr("width","0.6")
+    //   .attr("height", "4")
+    //   .attr("transform", "translate(0,0)")
+    //   .attr("fill", "#000")
+
     this.focus.select("#hash4_6").attr("width", "1")
     this.focus.select("#hash4_6").attr("height", "1")
-    this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
+    this.focus.select("#hash4_6").attr("patternTransform", "rotate(70)")
     this.focus.select("#diagonalRect").attr("width", "1");
     this.focus.select("#diagonalRect").attr("height", "0.5");
     
-    this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(4,1)');
+    //this.focus.attr('transform', 'translate(' + (-1270) + ',' + 50 + ') scale(4,1)');
   }
 
   appendInitCMtoLeft(){
@@ -294,37 +308,40 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
 
-    this.rescaleCollisionPattern();
+    
 
   }
 
   loadCMgraphics(){
     if(!this.loaded){
       this.initPanelItemHeight = this.elRef.nativeElement.querySelector('#panel_item_5').getBoundingClientRect().height+"px";
+      
 
       this.cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
-      this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#chart1").offsetHeight;
+      this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#graph-cell").offsetHeight;
+      let middleCellHeader = this.elRef.nativeElement.querySelector("#middle-cell-header").offsetHeight;
+      let middleCellAppliedbox = this.elRef.nativeElement.querySelector("#middle-cell-appliedbox").offsetHeight;
+      
+      this.middleTopMargin = middleCellHeader+middleCellAppliedbox;
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
-
+      
+      this.elRef.nativeElement.querySelector('#chart1').style.height = this.cellOffsetHeight+"px";
+      this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+"px";
+      this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
+      this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
       this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
 
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(' + (-500) + ',' + 100 + ') scale(5,1)');
+      this.focus.attr('transform', 'translate(-400,100) scale(1.4,0.7)');
 
-      this.focus.select("#hash4_6").attr("width", "1")
-      this.focus.select("#hash4_6").attr("height", "1")
-      this.focus.select("#hash4_6").attr("patternTransform", "rotate(-80)")
-      this.focus.select("#diagonalRect").attr("width", "1");
-      this.focus.select("#diagonalRect").attr("height", "0.2");
-      
       this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
       this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
       this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
       this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
 
       this.appendInitCMtoLeft();
+      //this.rescaleCollisionPattern();
     }
-    
     this.loaded = true;
   }
 
@@ -336,15 +353,38 @@ export class TabletComponent implements OnInit, AfterViewInit {
   resize(){
     if(!this.hideTabletPanels){
       this.hideTabletPanels = true;
-      let chartBackground = this.elRef.nativeElement.querySelector('#chartBackground');
-      console.log("chartBackground: ", chartBackground);
-      chartBackground.contentWindow.document.getElementById('history-layer').style.opacity = "1";
+      
       this.socketService.sendMaximized(true);
+      this.elRef.nativeElement.querySelector('#chart1').style.height = "100%";
+      this.elRef.nativeElement.querySelector('#chart1').style.width = "100%";
+      this.elRef.nativeElement.querySelector('#chart1').style.left = "0px";
+
+      setTimeout(()=>{
+        let chartBackground = this.elRef.nativeElement.querySelector('#chartBackground');
+        let chartAreaBottom = chartBackground.contentWindow.document.querySelector('#Bottom_line').getBoundingClientRect().y;
+        let chartAreaHeight = chartBackground.contentWindow.document.querySelector('#Layer_6').getBoundingClientRect().height;
+        let iconFooter = chartBackground.contentWindow.document.querySelector('#Bottom_line').getBoundingClientRect().height;
+        let iconHeader = chartBackground.contentWindow.document.querySelector('#icon-header').getBoundingClientRect().height;
+        let chartAreaWidth = chartBackground.contentWindow.document.querySelector('#Layer_6').getBoundingClientRect().width;
+
+        console.group("height: ", chartBackground.contentWindow.document.querySelector('#Bottom_line').getBoundingClientRect());
+        this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+chartAreaWidth+" "+chartAreaHeight);
+        this.elRef.nativeElement.querySelector('#chart1').style.height = chartAreaHeight-iconFooter-iconHeader+"px";
+        this.elRef.nativeElement.querySelector('#chart1').style.width = window.innerWidth;
+        this.elRef.nativeElement.querySelector('#chart1').style.left = 0+"px";
+        this.elRef.nativeElement.querySelector('#chart1').style.top = ""; 
+        this.elRef.nativeElement.querySelector('#chart1').style.bottom = 245+"px";
+        this.focus.attr('transform', 'translate(-220,175) scale(1.45,0.50)');
+      },100)
     }
     else{
+      
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
+
+      this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px";
+
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(' + (-1270) + ',' + 100 + ') scale(5,1)');
+      this.focus.attr('transform', 'translate(-950,150) scale(1.4,0.7)');
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);
@@ -377,7 +417,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
         svg_time_scale.contentWindow.document.getElementById("timeText1").innerHTML = "18:00";
         svg_time_scale.contentWindow.document.getElementById("timeText2").innerHTML = "19:00";
         svg_time_scale.contentWindow.document.getElementById("timeText3").innerHTML = "20:00";
-        this.focus.attr('transform', 'translate(' + (-1290) + ',' + 100 + ') scale(5,1)');
+
+        this.focus.attr('transform', 'translate(-950,150) scale(1.4,0.7)');
 
         
         break;

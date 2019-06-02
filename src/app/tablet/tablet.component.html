@@ -1,6 +1,7 @@
-<div class="box" >      
+<div class="box" >
+  <app-area-chart id="chart1" style="width: 100%; position: absolute; z-index: 55;" (click)="resize()" #chart1></app-area-chart>      
   <div [hidden]="hideTabletPanels"  style="display: flex; height: 100%">
-      <div class="column">
+      <div class="column" style="z-index: 99">
         <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
           <p style="font-family: Titillium; margin: 0px !important">ACTION PLAN</p>
         </div>
@@ -15,25 +16,25 @@
         </div>
       </div>
 
-      <div class="column">
-        <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
+      <div class="column" style="z-index: 40" >
+        <div class="cell" id="middle-cell-header" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
             <p style="font-family: Titillium; margin: 0px !important">LATE PASSENGERS</p>
         </div>
 
-        <div class="cell" style="flex: 0 0 3%; justify-content: center; display: flex; align-items: center;">
+        <div class="cell" id="middle-cell-appliedbox" style="flex: 0 0 3%; justify-content: center; display: flex; align-items: center;">
           <div class="applied-box" style="height: 50px">
             <p>{{centralBarInfo}}</p>
           </div>
         </div>
 
-        <div class="cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >
-          <app-area-chart id="chart1" style="width: 100%" #chart1></app-area-chart>
+        <div class="cell" id="graph-cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >
+          
           <iframe id="svg_time_scale" src="assets/Tablet/Central/CentralFrame_noGraph_4.svg" style="position: absolute; bottom: 0px; width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
         </div>
 
-        <div class="cell" style="border-top: 5px solid red; background-color: #fff; ">
+        <div class="cell" style="border-top: 5px solid red; background-color: #fff;">
           <div  class="swiper-container" [swiper]="config" [(index)]="swiperIndexCentral" >
-            <div class="swiper-wrapper" (click)="resize()">
+            <div class="swiper-wrapper" >
                     <div class="swiper-slide" >
                       <iframe id="message_0" [src]='"assets/Tablet/Central/m_"+messageNumber+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
                       <div class="iframeOverlay"></div>
@@ -56,7 +57,7 @@
         </div>
       </div> 
 
-      <div class="column">
+      <div class="column" style="z-index: 99">
         <div class="cell" style="flex: 0 0 5%; justify-content: center; display: flex; align-items: center;">
           <p style="font-family: Titillium; margin: 0px !important">COUNTERMEASURES</p>
         </div>
@@ -112,8 +113,8 @@
       </div> <!-- column -->
   </div>
   <div [hidden]="!hideTabletPanels" style="width: 100%; height: 100%;" id="expandedView">
-    <app-middle style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative"></app-middle>
-    <iframe src="assets/Tablet/Central/ExpandedView_CM4_Graph_for_Tablet.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: absolute; top: 0px; left: 0px; z-index: 99" ></iframe>
+    <app-middle id="chart-background" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" #chart2></app-middle>
+    <!-- <iframe src="assets/Tablet/Central/ExpandedView_CM4_Graph_for_Tablet.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: absolute; top: 0px; left: 0px; z-index: 99" ></iframe> -->
     
     <img src="assets/long-arrow-right.png" height="100" width="100" style="position: absolute; bottom: 0px; left:0px; transform: scaleX(-1); z-index: 100;" (click)="resize()">
 

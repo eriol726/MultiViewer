@@ -101,7 +101,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
       this.chartPaddingRight = screenWidth - (layer6Boundings.width + layer6Boundings.x);
 
-      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("buttom-line").getBoundingClientRect().y;
+      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("Bottom_line").getBoundingClientRect().y;
       
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
