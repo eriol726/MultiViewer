@@ -186,7 +186,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
         // remove all exept from the opened
         if(i != index ){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.marginBottom = "0px !important";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
 
           let closedPanelItem = this.elRef.nativeElement.querySelector("#cm_header_"+(i));
@@ -199,13 +198,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0 0 16%";
         }
+        if(i < index && i != this.COUNTERMEASURES.length-2){
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
+        }
       }
       // if last panel item is expanded show panel item above
       if(index == this.COUNTERMEASURES.length-1){
         this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.flex = "0 0 16%";
       }
-      
     }
     else{
       // set the central info text
@@ -218,10 +219,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.socketService.sendExpand(-1,index,this.lockedCM[index].locked);
 
+      // go back closed panel items
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
         this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
+        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
       }
     }
   }
@@ -307,8 +310,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
       cln.style.height = "auto";
 
       dropZone.appendChild(cln);
-
-
   }
   
 
@@ -365,20 +366,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       setTimeout(()=>{
         let chartBackground = this.elRef.nativeElement.querySelector('#chartBackground');
-        let chartAreaBottom = chartBackground.contentWindow.document.querySelector('#Bottom_line').getBoundingClientRect().y;
+        chartBackground.contentWindow.document.querySelector('#Scale').style.visibility = "visible";
+        
         let chartAreaHeight = chartBackground.contentWindow.document.querySelector('#Layer_6').getBoundingClientRect().height;
-        let iconFooter = chartBackground.contentWindow.document.querySelector('#Bottom_line').getBoundingClientRect().height;
-        let iconHeader = chartBackground.contentWindow.document.querySelector('#icon-header').getBoundingClientRect().height;
         let chartAreaWidth = chartBackground.contentWindow.document.querySelector('#Layer_6').getBoundingClientRect().width;
 
-        console.group("height: ", chartBackground.contentWindow.document.querySelector('#Bottom_line').getBoundingClientRect());
         this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+chartAreaWidth+" "+chartAreaHeight);
-        //this.elRef.nativeElement.querySelector('#chart1').style.height = chartAreaHeight-iconFooter-iconHeader+"px";
         this.elRef.nativeElement.querySelector('#chart1').style.width = window.innerWidth;
         this.elRef.nativeElement.querySelector('#chart1').style.left = 0+"px";
         this.elRef.nativeElement.querySelector('#chart1').style.top = ""; 
         this.elRef.nativeElement.querySelector('#chart1').style.bottom = 0+"px";
         this.focus.attr('transform', 'translate(0,140) scale(1.0,0.50)');
+        
       },100)
     }
     else{

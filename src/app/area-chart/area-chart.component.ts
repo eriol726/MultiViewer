@@ -56,6 +56,8 @@ export class AreaChartComponent implements OnInit {
   private collisionFadeEndStart = 280;
   private collisionEnd = 300;
 
+  private messageGraphFactor: number = 0;
+
   //private curveFactor
   private lockedCM = [{"locked": false, "graphFactor": 25},
                       {"locked": false, "graphFactor": 88},
@@ -100,31 +102,18 @@ export class AreaChartComponent implements OnInit {
 
   expandTaskPanel(index, curveNr){
 
-    
-
     if(!this.panelOpenState ){
-      
-      this.curveFactorBlue = this.curveFactorLocked+20;
+      this.curveFactorBlue = this.curveFactorLocked+this.lockedCM[0].graphFactor-this.messageGraphFactor;
     }else{
-      
-      this.curveFactorBlue = this.lockedCM[index].graphFactor;
-    }
-
-    if(this.panelOpenState){
-
       for (let i = 0; i < this.lockedCM.length; i++) {
-        
         if(this.lockedCM[i].locked && i != index  ){
-          console.log("unlock");
           this.curveFactorBlue =  this.lockedCM[index].graphFactor + this.curveFactorLocked;
           break;
         }
-        else{
-          console.log("locked");
-        }
       }
-      
+      this.curveFactorBlue = this.lockedCM[index].graphFactor;
     }
+
     if(this.lockedCM[index].locked ){
       this.curveFactorBlue =   this.curveFactorLocked;
     }
@@ -140,9 +129,7 @@ export class AreaChartComponent implements OnInit {
       this.socketService.sendPlaneIcon(false);
     }
 
-    console.log("this.curveFactorBlue: ", this.curveFactorBlue);
     this.changeCurveConflict(curveNr)
-
   }
 
   private createFadeFront(curveFactor){
@@ -489,7 +476,8 @@ export class AreaChartComponent implements OnInit {
       }
       else if(data.messageIndex == 2){
         this.panelOpenState = true;
-        this.expandTaskPanel(data.graphFactor, "2");
+        this.messageGraphFactor = data.graphFactor;
+        this.expandTaskPanel(data.graphFactor, "2" );
       }
     })
   }
