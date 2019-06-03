@@ -19,7 +19,7 @@
               #panelRight >
               <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" (click)="expandTaskPanel(i)" #panelHeader >
                 <mat-panel-title  >   
-                  <iframe #iframe id='cm_left_{{i}}' class="panel-iframe" (load)="loadIframe(i+1)" [src]='"assets/Screen/Right/r_"+i+"_left_Screen.svg" | safe' style="border: 0px; flex-grow: 1; " ></iframe>
+                  <iframe #iframe id='cm_left_{{i}}' class="panel-iframe" (load)="loadIframe()" [src]='"assets/Screen/Right/r_"+i+"_left_Screen.svg" | safe' style="border: 0px; flex-grow: 1; " ></iframe>
         
                   <div *ngIf="isExpanded!==i;else other_content"  style="flex-grow: 2" >
                     <iframe  id='cm_right_{{i}}' class="panel-iframe" [src]='"assets/Screen/Right/r_"+i+"_right_Screen.svg" | safe' style="border: 0px; flex: 5; height: 100%;width: 100%"></iframe>

@@ -186,6 +186,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         // remove all exept from the opened
         if(i != index ){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.marginBottom = "0px !important";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
 
           let closedPanelItem = this.elRef.nativeElement.querySelector("#cm_header_"+(i));
@@ -331,6 +332,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.middleTopMargin = middleCellHeader+middleCellAppliedbox;
     this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
     
+    console.log("middleCellHeader: ", middleCellHeader);
+    console.log("middleCellHeader: ", middleCellHeader);
     this.elRef.nativeElement.querySelector('#chart1').style.height = this.cellOffsetHeight+"px";
     this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px";
     this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
@@ -370,12 +373,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
         console.group("height: ", chartBackground.contentWindow.document.querySelector('#Bottom_line').getBoundingClientRect());
         this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+chartAreaWidth+" "+chartAreaHeight);
-        this.elRef.nativeElement.querySelector('#chart1').style.height = chartAreaHeight-iconFooter-iconHeader+"px";
+        //this.elRef.nativeElement.querySelector('#chart1').style.height = chartAreaHeight-iconFooter-iconHeader+"px";
         this.elRef.nativeElement.querySelector('#chart1').style.width = window.innerWidth;
         this.elRef.nativeElement.querySelector('#chart1').style.left = 0+"px";
         this.elRef.nativeElement.querySelector('#chart1').style.top = ""; 
         this.elRef.nativeElement.querySelector('#chart1').style.bottom = 0+"px";
-        this.focus.attr('transform', 'translate(-245,90) scale(1.45,0.50)');
+        this.focus.attr('transform', 'translate(0,140) scale(1.0,0.50)');
       },100)
     }
     else{
@@ -387,7 +390,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px"; 
 
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(-1050,150) scale(1.4,0.7)');
+      this.focus.attr('transform', 'translate(-1050,0) scale(1.4,0.7)');
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);

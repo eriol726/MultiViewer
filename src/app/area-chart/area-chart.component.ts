@@ -39,9 +39,9 @@ export class AreaChartComponent implements OnInit {
   private collisionArea: any;
   private focus: any;
 
-  private outerUpperArea: any;
-  private innerArea: any;
-  private outerLowerArea: any;
+  private outerUpperArea: any = [null, null, null];
+  private innerArea: any = [null, null, null];
+  private outerLowerArea: any = [null, null, null];
   private outerUpperArea2: any;
   private outerLowerArea2: any;
   private innerArea2: any;
@@ -82,10 +82,10 @@ export class AreaChartComponent implements OnInit {
     this.drawChart();
   }
 
-  changeCurveConflict(){
-    this.focus.select('.areaOuterUpper2').attr('d', this.outerUpperArea2.bind(this));
-    this.focus.select('.areaOuterLower2').attr("d", this.outerLowerArea2.bind(this));
-    this.focus.select('.areaInner2').attr("d", this.innerArea2.bind(this));
+  changeCurveConflict(index: number){
+    this.focus.select('.areaOuterUpper'+index).attr('d', this.outerUpperArea[index].bind(this));
+    this.focus.select('.areaOuterLower'+index).attr("d", this.outerLowerArea[index].bind(this));
+    this.focus.select('.areaInner'+index).attr("d", this.innerArea[index].bind(this));
 
     this.focus.select('#hash4_5').attr('d', this.collisionArea.y0((d:any, i:number) => {
 
@@ -98,19 +98,15 @@ export class AreaChartComponent implements OnInit {
     }));
   }
 
-  expandTaskPanel(index){
+  expandTaskPanel(index, curveNr){
 
-    this.curveFactorOrange = 0;
-    this.createFadeFront(this.curveFactorOrange);
-    this.createFadeEnd(this.curveFactorOrange);
-    this.focus.select('.areaOuterUpper').attr('d', this.outerUpperArea.bind(this));
-    this.focus.select('.areaInner').attr('d', this.innerArea.bind(this));
-    this.focus.select('.areaOuterLower').attr('d', this.outerLowerArea.bind(this));
+    
 
     if(!this.panelOpenState ){
       
-      this.curveFactorBlue = this.curveFactorLocked;
+      this.curveFactorBlue = this.curveFactorLocked+20;
     }else{
+      
       this.curveFactorBlue = this.lockedCM[index].graphFactor;
     }
 
@@ -144,7 +140,8 @@ export class AreaChartComponent implements OnInit {
       this.socketService.sendPlaneIcon(false);
     }
 
-    this.changeCurveConflict()
+    console.log("this.curveFactorBlue: ", this.curveFactorBlue);
+    this.changeCurveConflict(curveNr)
 
   }
 
@@ -246,7 +243,7 @@ export class AreaChartComponent implements OnInit {
       });
     
     // first curve
-    this.outerUpperArea = d3.area()
+    this.outerUpperArea[1] = d3.area()
     .curve(this.interpolationMethod)
     .x((d: any) => this.x(d.date))
     .y0((d: any, i: number) => {
@@ -256,7 +253,7 @@ export class AreaChartComponent implements OnInit {
       return this.rampFunction(i,1,this.curveFactorOrange);
     });
 
-    this.innerArea = d3.area()
+    this.innerArea[1] = d3.area()
       .curve(this.interpolationMethod)
       .x(function(d: any){ 
         return this.x(d.date);
@@ -274,7 +271,7 @@ export class AreaChartComponent implements OnInit {
         return this.rampFunction(i,2,this.curveFactorOrange);
       });
 
-    this.outerLowerArea = d3.area()
+    this.outerLowerArea[1] = d3.area()
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
@@ -286,7 +283,7 @@ export class AreaChartComponent implements OnInit {
 
 
     //second curve
-    this.outerUpperArea2 = d3.area()
+    this.outerUpperArea[2] = d3.area()
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
@@ -297,7 +294,7 @@ export class AreaChartComponent implements OnInit {
         return this.rampFunction(i,5,this.curveFactorBlue);
       });
 
-    this.innerArea2 = d3.area()
+    this.innerArea[2] = d3.area()
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date))
       .y0((d: any, i:number) => {
@@ -311,7 +308,7 @@ export class AreaChartComponent implements OnInit {
         return this.rampFunction(i,6,this.curveFactorBlue);
       });
     
-    this.outerLowerArea2 = d3.area()
+    this.outerLowerArea[2] = d3.area()
       .curve(this.interpolationMethod)
       .x((d: any) => this.x(d.date) )
       .y0((d: any, i:number) => {
@@ -386,20 +383,20 @@ export class AreaChartComponent implements OnInit {
 
     this.focus.append('path')
       .datum(BAGS[0].values)
-      .attr('class', 'areaOuterUpper')
-      .attr('d',this.outerUpperArea)
+      .attr('class', 'areaOuterUpper1')
+      .attr('d',this.outerUpperArea[1])
       .attr('clip-path', 'url(#rect-clip)');
       
     this.focus.append('path')
       .datum(BAGS[1].values)
-      .attr('class', 'areaInner')
-      .attr('d',this.innerArea)
+      .attr('class', 'areaInner1')
+      .attr('d',this.innerArea[1])
       .attr('clip-path', 'url(#rect-clip)');
       
     this.focus.append('path')
       .datum(BAGS[3].values)
-      .attr('class', 'areaOuterLower')
-      .attr('d',this.outerLowerArea)
+      .attr('class', 'areaOuterLower1')
+      .attr('d',this.outerLowerArea[1])
       .attr('clip-path', 'url(#rect-clip)');
 
     //next curve
@@ -410,19 +407,19 @@ export class AreaChartComponent implements OnInit {
     this.focus.append('path')
       .datum(BAGS[4].values)
       .attr('class', 'areaOuterUpper2')
-      .attr('d',this.outerUpperArea2)
+      .attr('d',this.outerUpperArea[2])
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
       .datum(BAGS[5].values)
       .attr('class', 'areaInner2')
-      .attr('d',this.innerArea2)
+      .attr('d',this.innerArea[2])
       .attr('clip-path', 'url(#rect-clip)');
 
     this.focus.append('path')
       .datum(BAGS[7].values)
       .attr('class', 'areaOuterLower2')
-      .attr('d',this.outerLowerArea2)
+      .attr('d',this.outerLowerArea[2])
       .attr('clip-path', 'url(#rect-clip)');
 
 
@@ -464,16 +461,16 @@ export class AreaChartComponent implements OnInit {
 
       if(data.isExpanded != -1){
         this.panelOpenState = true;
-        this.expandTaskPanel(data.isExpanded);
+        this.expandTaskPanel(data.isExpanded,"2");
       }else{
         this.panelOpenState = false;
-        this.expandTaskPanel(data.panelIndex);
+        this.expandTaskPanel(data.panelIndex,"2");
       }
     });
 
     this.socketService.moveItem().subscribe(data=>{
       this.lockCM(data.currentIndex);
-      this.expandTaskPanel(data.currentIndex);
+      this.expandTaskPanel(data.currentIndex,"2");
     })
 
     this.socketService.lockCM().subscribe(data=>{
@@ -481,10 +478,18 @@ export class AreaChartComponent implements OnInit {
     })
 
     this.socketService.changeMessage().subscribe(data=>{
-      if(data.messageIndex ==2 || data.messageIndex == 1 ){
-        
+      if(data.messageIndex ==1  ){
+        this.curveFactorOrange = 0;
+        this.createFadeFront(this.curveFactorOrange);
+        this.createFadeEnd(this.curveFactorOrange);
+        this.changeCurveConflict(1);
         this.panelOpenState = true;
-        this.expandTaskPanel(data.graphFactor);
+        //this.expandTaskPanel(data.graphFactor, "1");
+
+      }
+      else if(data.messageIndex == 2){
+        this.panelOpenState = true;
+        this.expandTaskPanel(data.graphFactor, "2");
       }
     })
   }

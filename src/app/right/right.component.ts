@@ -45,12 +45,12 @@ export class RightComponent implements OnInit, AfterViewInit {
               private elRef:ElementRef) {}
 
 
-  loadIframe(index){
+  loadIframe(){
     setTimeout(()=>{
       if (!this.isLoaded){
         let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
         this.initPanelItemHeight =  initPanelHeightNmbr+"px";
-      
+        console.log("panel close");
         let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
         let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
 
@@ -62,10 +62,11 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility ="hidden";
         this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility ="hidden";
       }
+      this.isLoaded =true;
     });
       
 
-      this.isLoaded =true;
+      
   }
 
   ngAfterViewInit(){
@@ -229,7 +230,8 @@ export class RightComponent implements OnInit, AfterViewInit {
         //show the item under clicked item
         if(i == data.panelIndex+1){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+          //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
         }
 
@@ -249,7 +251,7 @@ export class RightComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
           this.elRef.nativeElement.querySelector("#panel_item_"+i).firstChild.style.marginBottom  = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
       }
     }  
