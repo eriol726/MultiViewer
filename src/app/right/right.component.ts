@@ -46,6 +46,7 @@ export class RightComponent implements OnInit, AfterViewInit {
 
 
   loadIframe(index){
+    setTimeout(()=>{
       if (!this.isLoaded){
         let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
         this.initPanelItemHeight =  initPanelHeightNmbr+"px";
@@ -61,6 +62,8 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility ="hidden";
         this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility ="hidden";
       }
+    });
+      
 
       this.isLoaded =true;
   }

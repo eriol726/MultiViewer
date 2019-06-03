@@ -77,7 +77,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private socketService : WebsocketService, 
               private elRef:ElementRef,
               public dragulaService: DragulaService,
-              public sanitizer: DomSanitizer) { 
+              public sanitizer: DomSanitizer,
+              private cdRef:ChangeDetectorRef) { 
 
       dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
@@ -255,6 +256,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   loadCardIframe(){
+    setTimeout(()=>{
       // get the switch element
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
       let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
@@ -262,6 +264,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       // position an overlay box to interact with the user
       this.switchLeft = cardSwitch.getBoundingClientRect().x;
       this.switchTop = cardSwitch.getBoundingClientRect().y;
+    },1000)
+      
   }
 
   rescaleCollisionPattern(){
@@ -289,7 +293,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   appendInitCMtoLeft(){
-    setTimeout(()=>{
+
       let panelItem = this.elRef.nativeElement.querySelector("#panel_item_0");
       panelItem.children[1].style.visibility = "visible";
 
@@ -303,46 +307,43 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       dropZone.appendChild(cln);
 
-    })
+
   }
+  
 
   ngAfterViewInit() {
+    this.loadCMgraphics()
 
+    this.appendInitCMtoLeft();
     
 
   }
 
   loadCMgraphics(){
-    if(!this.loaded){
-      this.initPanelItemHeight = this.elRef.nativeElement.querySelector('#panel_item_5').getBoundingClientRect().height+"px";
-      
 
-      this.cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
-      this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#graph-cell").offsetHeight;
-      let middleCellHeader = this.elRef.nativeElement.querySelector("#middle-cell-header").offsetHeight;
-      let middleCellAppliedbox = this.elRef.nativeElement.querySelector("#middle-cell-appliedbox").offsetHeight;
-      
-      this.middleTopMargin = middleCellHeader+middleCellAppliedbox;
-      this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
-      
-      this.elRef.nativeElement.querySelector('#chart1').style.height = this.cellOffsetHeight+"px";
-      this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+"px";
-      this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
-      this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
-      this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
+    this.initPanelItemHeight = this.elRef.nativeElement.querySelector('#panel_item_5').getBoundingClientRect().height+"px";
+    this.cdRef.detectChanges();
+    this.cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+    this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#graph-cell").offsetHeight;
+    let middleCellHeader = this.elRef.nativeElement.querySelector("#middle-cell-header").offsetHeight;
+    let middleCellAppliedbox = this.elRef.nativeElement.querySelector("#middle-cell-appliedbox").offsetHeight;
+    
+    this.middleTopMargin = middleCellHeader+middleCellAppliedbox;
+    this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
+    
+    this.elRef.nativeElement.querySelector('#chart1').style.height = this.cellOffsetHeight+"px";
+    this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px";
+    this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
+    this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
+    this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
 
-      this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(-400,100) scale(1.4,0.7)');
+    this.focus = d3.select(".focus");
+    this.focus.attr('transform', 'translate(-430,100) scale(1.4,0.7)');
 
-      this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
-      this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
-      this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
-      this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
-
-      this.appendInitCMtoLeft();
-      //this.rescaleCollisionPattern();
-    }
-    this.loaded = true;
+    this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
+    this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
+    this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
+    this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
   }
 
 
@@ -373,8 +374,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector('#chart1').style.width = window.innerWidth;
         this.elRef.nativeElement.querySelector('#chart1').style.left = 0+"px";
         this.elRef.nativeElement.querySelector('#chart1').style.top = ""; 
-        this.elRef.nativeElement.querySelector('#chart1').style.bottom = 245+"px";
-        this.focus.attr('transform', 'translate(-220,175) scale(1.45,0.50)');
+        this.elRef.nativeElement.querySelector('#chart1').style.bottom = 0+"px";
+        this.focus.attr('transform', 'translate(-245,90) scale(1.45,0.50)');
       },100)
     }
     else{
@@ -382,9 +383,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
 
       this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px";
+      this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px";
+      this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px"; 
 
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(-950,150) scale(1.4,0.7)');
+      this.focus.attr('transform', 'translate(-1050,150) scale(1.4,0.7)');
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);
@@ -418,7 +421,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         svg_time_scale.contentWindow.document.getElementById("timeText2").innerHTML = "19:00";
         svg_time_scale.contentWindow.document.getElementById("timeText3").innerHTML = "20:00";
 
-        this.focus.attr('transform', 'translate(-950,150) scale(1.4,0.7)');
+        this.focus.attr('transform', 'translate(-1050,150) scale(1.4,0.7)');
 
         
         break;

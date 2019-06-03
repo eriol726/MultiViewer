@@ -74,7 +74,7 @@
                                 #panelRight >
               <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" (click)="expandTaskPanel(i)" >
                 <mat-panel-title  >
-                  <iframe id='cm_header_{{i}}' class="svgCM" [src]='"assets/Tablet/Right/cm_header_"+(i)+".svg" | safe' (load)="loadCMgraphics()" [style.height]="initPanelItemHeight" style="border: 0px; flex-grow: 1; "></iframe>
+                  <iframe id='cm_header_{{i}}' class="svgCM" [src]='"assets/Tablet/Right/cm_header_"+(i)+".svg" | safe' [style.height]="initPanelItemHeight" style="border: 0px; flex-grow: 1; "></iframe>
                   <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
                 </mat-panel-title>
               </mat-expansion-panel-header >
