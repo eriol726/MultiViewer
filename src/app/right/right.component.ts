@@ -46,10 +46,11 @@ export class RightComponent implements OnInit, AfterViewInit {
 
 
   loadIframe(){
+    let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
+        this.initPanelItemHeight =  initPanelHeightNmbr+"px";
     setTimeout(()=>{
       if (!this.isLoaded){
-        let initPanelHeightNmbr = document.getElementById('mat-expansion-panel-header-0').offsetHeight;
-        this.initPanelItemHeight =  initPanelHeightNmbr+"px";
+        
         console.log("panel close");
         let panelItem_0_left = this.elRef.nativeElement.querySelector("#cm_left_"+0);
         let panelItem_0_right = this.elRef.nativeElement.querySelector("#cm_right_"+0);
@@ -229,16 +230,16 @@ export class RightComponent implements OnInit, AfterViewInit {
 
         //show the item under clicked item
         if(i == data.panelIndex+1){
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
-          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-          //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
+          //this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0.25";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "100%";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
         }
 
         // when the last cm is opened
         if(data.panelIndex == this.COUNTERMEASURES.length-1){
           
-          this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.height = this.initPanelItemHeight;
+          this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.height = "100%";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.flex = "1";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.setProperty('margin-bottom', '20px', 'important');
         }
