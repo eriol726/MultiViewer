@@ -103,17 +103,27 @@ export class AreaChartComponent implements OnInit {
   expandTaskPanel(index, curveNr){
 
     if(!this.panelOpenState ){
-      this.curveFactorBlue = this.curveFactorLocked+this.lockedCM[0].graphFactor-this.messageGraphFactor;
+      
+      this.curveFactorBlue = this.curveFactorLocked;
     }else{
-      for (let i = 0; i < this.lockedCM.length; i++) {
-        if(this.lockedCM[i].locked && i != index  ){
-          this.curveFactorBlue =  this.lockedCM[index].graphFactor + this.curveFactorLocked;
-          break;
-        }
-      }
       this.curveFactorBlue = this.lockedCM[index].graphFactor;
     }
 
+    if(this.panelOpenState){
+
+      for (let i = 0; i < this.lockedCM.length; i++) {
+        
+        if(this.lockedCM[i].locked && i != index  ){
+          console.log("unlock");
+          this.curveFactorBlue =  this.lockedCM[index].graphFactor + this.curveFactorLocked;
+          break;
+        }
+        else{
+          console.log("locked");
+        }
+      }
+      
+    }
     if(this.lockedCM[index].locked ){
       this.curveFactorBlue =   this.curveFactorLocked;
     }

@@ -126,11 +126,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
+            
           }
 
           let mainSvg = this.elRef.nativeElement.querySelector("#cm_header_"+(taskIndex));
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
+          mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
           
           //update infobox 
           this.centralBarInfo = this.COUNTERMEASURES[taskIndex].text + " APPLIED";

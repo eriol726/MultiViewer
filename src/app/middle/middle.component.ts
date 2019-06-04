@@ -106,7 +106,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
-      let scaleGraphY = 0.5;
+      let scaleGraphY = 0.7;
 
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
@@ -114,7 +114,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
       
       //put the graph on it's right position
-      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(graphStartHeight-focusHeight+scaleHeightRest+32)+") scale(1,"+scaleGraphY+")");
+      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(355)+") scale(1,"+scaleGraphY+")");
   }
 
   ngAfterViewInit(){
