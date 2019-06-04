@@ -209,7 +209,12 @@ export class RightComponent implements OnInit, AfterViewInit {
     this.openPanelIndex = data.panelIndex;
     
     this.expandedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+(this.openPanelIndex));
-    
+    for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
+      this.elRef.nativeElement.querySelector("#panel_item_"+i).firstChild.style.marginBottom  = "0px";
+      this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = this.initPanelItemHeight;
+      this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+      this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '20px', 'important');
+    }
     if(data.isExpanded != -1){
       this.elRef.nativeElement.querySelector("#panel_item_"+data.panelIndex).firstChild.style.marginBottom  = "-25px";
       this.panelOpenState = true;
@@ -238,6 +243,7 @@ export class RightComponent implements OnInit, AfterViewInit {
           let closedPanelItemLeft = this.elRef.nativeElement.querySelector("#cm_left_"+i);
 
           closedPanelItemLeft.contentWindow.document.getElementById("Clock_Layer").setAttribute("visibility" , "visible");
+          console.log("close index: ", data.panelIndex);
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');

@@ -192,17 +192,20 @@ export class MiddleComponent implements OnInit, AfterViewInit {
         this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
       else{
-        this.chartBackground.contentWindow.document.getElementById("CM0_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM0_Bar").style.visibility = "hidden";
+        if(!data.locked){
+          this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "hidden";
+          this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "hidden";
+        }
+        
 
-        this.chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
+        // this.chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
+        // this.chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
 
-        this.chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
+        // this.chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
+        // this.chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
 
-        this.chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "hidden";
+        // this.chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "hidden";
+        // this.chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "hidden";
 
         this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "visible";
         this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "visible";

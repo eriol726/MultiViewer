@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1132 266">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1132 250">
 	<defs>
 		<clipPath id="clip-path">
 			<rect x="1057.37" y="83.68" width="20.68" height="34.04" fill="none" />
@@ -11,7 +11,7 @@
 		XRay_Check_Screen
 	</title>
 	<g style="isolation:isolate">
-		<g id="Layer_2" data-name="Layer 2">
+		<g id="Layer_2" style="transform: scale(0.9)" data-name="Layer 2">
 			<g id="Layer_5" data-name="Layer 5">
 				<rect x="3.22" y="1.91" width="1125.31" height="258.21" fill="rgba(0,0,0,0)" />
 			</g>

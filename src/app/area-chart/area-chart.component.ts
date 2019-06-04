@@ -104,7 +104,7 @@ export class AreaChartComponent implements OnInit {
 
     if(!this.panelOpenState ){
       
-      this.curveFactorBlue = this.curveFactorLocked;
+      this.curveFactorBlue = this.curveFactorLocked+this.lockedCM[0].graphFactor-this.messageGraphFactor;
     }else{
       this.curveFactorBlue = this.lockedCM[index].graphFactor;
     }

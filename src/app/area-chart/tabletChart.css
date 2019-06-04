@@ -47,6 +47,11 @@ svg {
   fill: rgba(242, 161, 32,1);
 }
 
+.areaInner1 {
+  opacity: 0.50;
+  fill: rgba(242, 161, 32, 1);
+}
+
 .areaOuterUpper1{
   opacity: 0.24;
   fill: rgba(242, 161, 32,1);
@@ -58,21 +63,20 @@ svg {
   fill: rgba(62, 115, 247, 1);
 }
 
+.areaInner2 {
+  opacity: 0.50;
+  fill: rgba(62, 115, 247, 1);
+  }
+
 .areaOuterLower2{
   opacity: 0.24;
   fill: rgba(62, 115, 247, 1);
   }
 
 
-.areaInner1 {
-  opacity: 0.65;
-  fill: rgba(242, 161, 32, 1);
-}
 
-.areaInner2 {
-  opacity: 0.65;
-  fill: rgba(62, 115, 247, 1);
-  }
+
+
 
 .marker path {
   fill: none;
