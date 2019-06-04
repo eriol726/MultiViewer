@@ -132,7 +132,8 @@ export class AreaChartComponent implements OnInit {
     this.createFadeEnd(this.curveFactorBlue);
 
     // set plane icons to green
-    if(this.curveFactorBlue > 60 ){
+    console.log("this.curveFactorBlue: ", this.curveFactorBlue);
+    if(this.curveFactorBlue >= 60){
       this.socketService.sendPlaneIcon(true);
     }
     else{
@@ -479,6 +480,7 @@ export class AreaChartComponent implements OnInit {
         this.curveFactorOrange = 0;
         this.createFadeFront(this.curveFactorOrange);
         this.createFadeEnd(this.curveFactorOrange);
+        this.socketService.sendPlaneIcon(false);
         this.changeCurveConflict(1);
         this.panelOpenState = true;
         //this.expandTaskPanel(data.graphFactor, "1");

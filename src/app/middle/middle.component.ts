@@ -196,16 +196,6 @@ export class MiddleComponent implements OnInit, AfterViewInit {
           this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "hidden";
           this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "hidden";
         }
-        
-
-        // this.chartBackground.contentWindow.document.getElementById("CM1_Icon").style.visibility = "hidden";
-        // this.chartBackground.contentWindow.document.getElementById("CM1_Bar").style.visibility = "hidden";
-
-        // this.chartBackground.contentWindow.document.getElementById("CM2_Icon").style.visibility = "hidden";
-        // this.chartBackground.contentWindow.document.getElementById("CM2_Bar").style.visibility = "hidden";
-
-        // this.chartBackground.contentWindow.document.getElementById("CM3_Icon").style.visibility = "hidden";
-        // this.chartBackground.contentWindow.document.getElementById("CM3_Bar").style.visibility = "hidden";
 
         this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "visible";
         this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "visible";
@@ -235,9 +225,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     this.socketService.setPlaneIcons().subscribe(planeIcons =>{
       if(planeIcons){
-        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "green";
-        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "green";
-        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "green";
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "rgb(35, 182, 33)";
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[1].style.fill = "rgb(35, 182, 33)";
+        this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[2].style.fill = "rgb(35, 182, 33)";
       }
       else{
         this.chartBackground.contentWindow.document.getElementById("Plane_Icons").children[0].style.fill = "red";
