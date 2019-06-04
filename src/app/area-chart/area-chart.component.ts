@@ -459,7 +459,7 @@ export class AreaChartComponent implements OnInit {
 
       if(data.isExpanded != -1){
         this.panelOpenState = true;
-        this.expandTaskPanel(data.isExpanded,"2");
+        this.expandTaskPanel(data.panelIndex,"2");
       }else{
         this.panelOpenState = false;
         this.expandTaskPanel(data.panelIndex,"2");

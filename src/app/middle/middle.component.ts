@@ -186,17 +186,18 @@ export class MiddleComponent implements OnInit, AfterViewInit {
     this.socketService.expandPanelItem().subscribe(data =>{
       this.elRef.nativeElement.querySelector("#message_2_elm").style.visibility = "hidden";
       this.chartBackground.contentWindow.document.getElementById("Preview_Bar").children[0].style.fill = "#ffeb00";
-      if(data.isExpanded == -1 && !data.locked){
-        this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "hidden";
-        this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "hidden";
+
+      for (let index = 0; index < this.CMs.length; index++) {
+        if(!data.cmData[index].locked){
+          this.chartBackground.contentWindow.document.getElementById("CM"+(index)+"_Icon").style.visibility = "hidden";
+          this.chartBackground.contentWindow.document.getElementById("CM"+(index)+"_Bar").style.visibility = "hidden";
+        }
+      }
+
+      if(data.isExpanded == -1 ){
         this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "hidden";
       }
       else{
-        if(!data.locked){
-          this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "hidden";
-          this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "hidden";
-        }
-
         this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Icon").style.visibility = "visible";
         this.chartBackground.contentWindow.document.getElementById("CM"+(data.panelIndex)+"_Bar").style.visibility = "visible";
         this.chartBackground.contentWindow.document.getElementById("Preview_Bar").style.visibility = "visible";

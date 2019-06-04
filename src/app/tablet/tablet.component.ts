@@ -25,12 +25,12 @@ type CMstruct = {
 export class TabletComponent implements OnInit, AfterViewInit {
   config: any = {
     pagination: {
-    el: '.swiper-pagination',
+      el: '.swiper-pagination',
     },
     paginationClickable: true,
     navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
     },
     spaceBetween: 30
   };
@@ -105,6 +105,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           if (!this.ACTIONPLAN.some((x,i) => x.id == taskIndex) ){
             
             this.ACTIONPLAN.push(this.COUNTERMEASURES[taskIndex]);
+            this.lockedCM[taskIndex].locked=true;
             this.socketService.sendMove(taskIndex,this.COUNTERMEASURES[taskIndex]);
    
             // we must change the name of the copied elements so we now which background color we will change
@@ -178,7 +179,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       
       this.isExpanded = index;
       
-      this.socketService.sendExpand(index,index,this.lockedCM[index].locked);
+      this.socketService.sendExpand(index,index,this.lockedCM);
 
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "rgb(64, 189, 115)");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
@@ -220,7 +221,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
 
-      this.socketService.sendExpand(-1,index,this.lockedCM[index].locked);
+      this.socketService.sendExpand(-1,index,this.lockedCM);
 
       // go back closed panel items
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
@@ -390,9 +391,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px";
       this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px";
       this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px"; 
+      this.elRef.nativeElement.querySelector('#chart1').style.height = this.cellOffsetHeight+"px";
 
       this.focus = d3.select(".focus");
-      this.focus.attr('transform', 'translate(-1050,0) scale(1.4,0.7)');
+      this.focus.attr('transform', 'translate(-1050,150) scale(1.4,0.7)');
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);

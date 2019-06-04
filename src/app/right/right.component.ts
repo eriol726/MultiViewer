@@ -3,7 +3,7 @@ import { ActionService } from '../action.service';
 import { WebsocketService } from '../websocket.service';
 import { IgxExpansionPanelComponent } from "igniteui-angular";
 
-type PanelParamsType = {isExpanded:number, panelIndex:number, locked:boolean};
+type PanelParamsType = {isExpanded:number, panelIndex:number};
 
 
 @Component({
@@ -37,7 +37,7 @@ export class RightComponent implements OnInit, AfterViewInit {
   private elem;
   private reloaded: boolean;
   private isLoaded=false;
-  private panelParams: PanelParamsType = {isExpanded:0, panelIndex:0, locked:false};
+  private panelParams: PanelParamsType = {isExpanded:0, panelIndex:0};
 
 
   constructor(private actionService : ActionService, 
@@ -201,7 +201,7 @@ export class RightComponent implements OnInit, AfterViewInit {
     })
   }
 
-  panelManager(data: PanelParamsType){
+  panelManager(data){
     console.log("data.panelIndex: ", data.panelIndex);
     // -1 when some is closed eighter the index
     this.isExpanded = data.isExpanded;

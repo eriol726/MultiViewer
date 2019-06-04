@@ -20,9 +20,9 @@ io.on('connection', (socket) => {
     // When we receive a 'message' event from our client, print out
     // the contents of that message and then echo it back to our client
     // using `io.emit()`
-    socket.on('expandPanelItem', (_isExpanded, _panelIndex, _locked) => {
+    socket.on('expandPanelItem', (_isExpanded, _panelIndex, _cmData) => {
         console.log("Message Received: " + _panelIndex);
-        io.emit('expandPanelItem', {isExpanded: _isExpanded, panelIndex:_panelIndex, locked:_locked});    
+        io.emit('expandPanelItem', {isExpanded: _isExpanded, panelIndex:_panelIndex, cmData:_cmData});    
     });
 
     socket.on('lockCM', (panel, itemIndex) => {

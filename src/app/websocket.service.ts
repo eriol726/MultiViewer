@@ -6,7 +6,10 @@ import { environment} from '../environments/environment';
 import { LeftComponent } from './left/left.component';
 import { TabletComponent } from './tablet/tablet.component';
 
-
+type CMtype = [{"locked": false, "graphFactor": 5},
+{"locked": false, "graphFactor": 20},
+{"locked": false, "graphFactor": 10},
+{"locked": false, "graphFactor": 15}];
 
 
 // @Injectable({
@@ -21,11 +24,15 @@ export class WebsocketService {
     console.log("this.socket: ", this.socket);
   }
 
-  private socket = io('http://192.168.2.112:3000');
+  private socket = io('http://192.168.10.176:3000');
   
+  public lockedCM = [{"locked": false, "graphFactor": 0},
+                      {"locked": false, "graphFactor": 0},
+                      {"locked": false, "graphFactor": 0},
+                      {"locked": false, "graphFactor": 0}];
 
   expandPanelItem() {
-    let observable = new Observable<{isExpanded:number, panelIndex:number, locked:boolean}>(observer => {
+    let observable = new Observable<{isExpanded:number, panelIndex:number, cmData:CMtype}>(observer => {
         this.socket.on('expandPanelItem', (data) => {
           observer.next(data);
         });
@@ -168,8 +175,8 @@ export class WebsocketService {
     return observable;
   }
 
-  sendExpand(isExpanded, panelIndex, isLocked){
-    this.socket.emit('expandPanelItem', isExpanded, panelIndex, isLocked );
+  sendExpand(isExpanded, panelIndex, CMdata){
+    this.socket.emit('expandPanelItem', isExpanded, panelIndex, CMdata );
   }
 
   sendLock(isLocked: boolean, CMindex: number){
