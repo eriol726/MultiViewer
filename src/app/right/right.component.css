@@ -38,6 +38,7 @@ body{
     padding: 0 0px !important; 
     flex-direction: column !important;
     flex: 1;
+    height: 100%;
 }
 
 
@@ -57,7 +58,6 @@ body{
     min-width: 100%;
     min-height: 100%;
     flex-direction: column !important;
-    width: 100%;
 
 }
 
