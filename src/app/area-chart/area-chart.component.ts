@@ -141,6 +141,7 @@ export class AreaChartComponent implements OnInit {
     }
 
     this.changeCurveConflict(curveNr)
+    
   }
 
   private createFadeFront(curveFactor){
@@ -441,6 +442,7 @@ export class AreaChartComponent implements OnInit {
 
     if(this.lockedCM[index].locked){
       this.lockedCM[index].locked = false;
+      // subtract so we dont add graphFactor to infinity by double click
       this.curveFactorLocked -= this.lockedCM[index].graphFactor;
     }
     else{
@@ -467,6 +469,7 @@ export class AreaChartComponent implements OnInit {
     });
 
     this.socketService.moveItem().subscribe(data=>{
+      this.messageGraphFactor = this.lockedCM[0].graphFactor;
       this.lockCM(data.currentIndex);
       this.expandTaskPanel(data.currentIndex,"2");
     })

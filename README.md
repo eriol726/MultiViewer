@@ -3,9 +3,10 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
 
 ## Development server
-Start with installing node modules by running `npm install`
-Navigate to ./websocet-server and run  `node main.js` to start the websocket server.
-Run `ng serve --host 0.0.0.0` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. Start with installing node modules by running `npm install`
+2. Navigate to `./websocet-server` and run  `node main.js` to start the websocket server.
+3. Run `ng serve --host 0.0.0.0` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+4. Find your your local ip adress with by running `ipconfig` in cmd and use this adress followed with `:4200` to run the app on your tablet
 
 ## Code scaffolding
 
