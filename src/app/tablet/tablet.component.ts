@@ -125,6 +125,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
             this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
           }
 
           let mainSvg = this.elRef.nativeElement.querySelector("#cm_header_"+(taskIndex));
