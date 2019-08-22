@@ -33,27 +33,25 @@
         </div>
 
         <div class="cell" style="border-top: 5px solid red; background-color: #fff;">
-          <div  class="swiper-container" [swiper]="config" [(index)]="swiperIndexCentral" >
-            <div class="swiper-wrapper" >
-                    <div class="swiper-slide" >
-                      <iframe id="message_0" [src]='"assets/Tablet/Central/m_"+messageNumber+"_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                      <div class="iframeOverlay"></div>
-                    </div>
-                    <div class="swiper-slide" >
-                      <iframe id="message_1" [src]='"assets/Tablet/Central/f_1_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                      <div class="iframeOverlay"></div>
-                    </div>
-                    <div class="swiper-slide" >
-                      <iframe id="message_1" [src]='"assets/Tablet/Central/f_2_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                      <div class="iframeOverlay"></div>
-                    </div>
-                    <div class="swiper-slide" >
-                      <iframe id="message_1" [src]='"assets/Tablet/Central/f_3_Tablet.svg" | safe' style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                      <div class="iframeOverlay"></div>
-                    </div>
+            <div class="swiper-container" [swiper]="config">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide">Slide 1</div>
+                    <div class="swiper-slide">Slide 2</div>
+                    <div class="swiper-slide">Slide 3</div>
+                    ...
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+            
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            
+                <!-- If we need scrollbar -->
+                <div class="swiper-scrollbar"></div>
             </div>
-            <div class="swiper-pagination"></div>
-          </div>
         </div>
       </div> 
 
@@ -63,48 +61,40 @@
         </div>
 
         <div class="cell" style="flex: 0 0 95%; ">
-          <div dragula="COPYABLE" id="right" class="example-list-right" style="width: 100%;"> 
-            <mat-expansion-panel 
-                                (opened)="panelOpenState = true"
-                                (closed)="panelOpenState = false"
-                                [expanded]="isExpanded===i"
-                                hideToggle="true"
-                                *ngFor="let item of COUNTERMEASURES; let i = index" 
-                                [attr.id]='"panel_item_"+i'
-                                #panelRight >
-              <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" (click)="expandTaskPanel(i)" >
-                <mat-panel-title  >
-                  <iframe id='cm_header_{{i}}' class="svgCM" [src]='"assets/Tablet/Right/cm_header_"+(i)+".svg" | safe' [style.height]="initPanelItemHeight" style="border: 0px; flex-grow: 1; "></iframe>
-                  <div class="iframeOverlay" id="iframeOverlay_{{i}}"></div>
-                </mat-panel-title>
-              </mat-expansion-panel-header >
-        
-                <div class="cardList" (dblclick)="selectCard(i)" >
-                    <div  class="swiper-container" [swiper]="config" (indexChange)="changeCard($event)" style="height: 100%;" #cardList>
-                      <div class="swiper-wrapper" >
-                          <div class="swiper-slide" *ngFor="let card of createRange(item.cards+1); let n=index" >
-                
-                              <iframe id="card_{{i}}_{{n}}" class="card" [src]='"assets/Tablet/Right/r_"+i+"_"+n+"_Tablet.svg" | safe' (load)="loadCardIframe()" style="height: 100%; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
-                                <div class="iframeOverlay">
-                                    <div id="switchFunction"  (click)="switch()" style="width:50px; height: 20px; position:absolute;" [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
-                                </div>
+          <div dragula="COPYABLE" id="right" class="according" style="width: 100%; ">
+              <div class="card"  *ngFor="let item of createRange(1); let i = index" [id]='"panel_item_"+i' #panelRight>
+                <iframe [id]='"cm_svg_"+i' [src]='"assets/Tablet/Right/cm_header_"+i+".svg" | safe' [style.height.px]="100" style="border: 0px; width: 100%; position: absolute"></iframe>
+                <div class="card-header" style="padding: 0px" [id]="'card_header_'+i" style="position: relative; height: 100px; padding: 0px">
+                  <h5 class="mb-0" style="height: 100%; width: 100%"> 
+                    <div [id]='"controller-"+i' style="width: 100%; height: 100%" data-toggle="collapse" [attr.data-target]="'#'+collapseArray[i]" aria-expanded="true" [attr.aria-controls]="collapseArray[i]">
                     
+                    </div>
+                  </h5>
+                </div>
+                <div [id]="collapseArray[i]" class="collapse" [attr.aria-labelledby]="headingArray[i]" data-parent="#right">
+                  <div class="card-body" (dblclick)="selectCard(i)">
+                      <div class="swiper-container" (click)="awake()" [swiper]="config">
+                          <!-- Additional required wrapper -->
+                          <div class="swiper-wrapper">
+                              <!-- Slides -->
+                              <div class="swiper-slide">Slide 1</div>
+                              <div class="swiper-slide">Slide 2</div>
+                              <div class="swiper-slide">Slide 3</div>
+                              ...
                           </div>
+                          <!-- If we need pagination -->
+                          <div class="swiper-pagination"></div>
+                      
+                          <!-- If we need navigation buttons -->
+                          <div class="swiper-button-prev"></div>
+                          <div class="swiper-button-next"></div>
+                      
+                          <!-- If we need scrollbar -->
+                          <div class="swiper-scrollbar"></div>
                       </div>
-                      <div class="swiper-pagination"></div>
-                      </div>
-                </div >
-            </mat-expansion-panel>
-            
-
-            <mat-expansion-panel id='panel_item_4' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden" >
-              <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight"  >
-              </mat-expansion-panel-header >
-            </mat-expansion-panel>
-            <mat-expansion-panel id='panel_item_5' class="mat-elevation-z0" hideToggle="true" style="background-color: #f4f4f4; visibility: hidden">
-              <mat-expansion-panel-header [collapsedHeight]="initPanelItemHeight" [expandedHeight]="initPanelItemHeight" >
-              </mat-expansion-panel-header >
-            </mat-expansion-panel>
+                  </div>
+                </div>
+              </div>
           </div>
         </div> <!-- cell -->
       </div> <!-- column -->

@@ -6,6 +6,8 @@ import * as d3 from 'd3';
 import { DragulaService } from 'ng2-dragula';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { SwiperConfigInterface, SwiperPaginationInterface, SwiperComponent } from 'ngx-swiper-wrapper';
+import { SwiperModule } from 'awesome-swiper';
 
 type CMstruct = {
   id: string ;
@@ -24,16 +26,14 @@ type CMstruct = {
 
 export class TabletComponent implements OnInit, AfterViewInit {
   config: any = {
-    pagination: {
+      pagination: {
       el: '.swiper-pagination',
-    },
-    paginationClickable: true,
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    spaceBetween: 30
+      },
+      paginationClickable: true,
+      spaceBetween: 30
   };
+
+  
 
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
@@ -42,6 +42,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('cardList') cardList: ElementRef;
   @ViewChild('chart') mainChart: ElementRef;
   @ViewChild('dropZone', {read: ViewContainerRef}) dropZone: ViewContainerRef;
+  @ViewChild('usefulSwiper2') usefulSwiper: SwiperComponent;
 
   private lockedCM = [{"locked": false, "graphFactor": 5},
                       {"locked": false, "graphFactor": 20},
@@ -51,10 +52,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public COUNTERMEASURES: CMstruct[];
   public ACTIONPLAN: CMstruct[];
 
+  public collapseArray: Array<string> = ["collapseOne", "collapseTwo","collapseThree","collapseFour","collapseFive","collapseSix"];
+  public headingArray: Array<string> = ["headingOne", "headingTwo","headingThree","headingFour","headingFive","headingSix"]
+ 
+  public tja:string ="hello";
+
   public panelOpenState = false;
   public isExpanded: number  = -1;
   public isFullScreen: boolean = false;
-  public panelItemHeight: string = "auto";
+  //public panelItemHeight: string = "auto";
   public thePanel;
   public centralBarInfo: string = "Tap on a countermeasure to preview the effects";
   public switchTop:number;
@@ -69,7 +75,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private nextMessageIndex = 0;
   private prioritize: boolean = false;
   private loaded:boolean = false;
-  private initPanelItemHeight: string = "auto";
+  //private initPanelItemHeight: string = "auto";
   middleTopMargin: any;
 
   constructor(@Inject(DOCUMENT) private document: any,
@@ -79,7 +85,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
               public dragulaService: DragulaService,
               public sanitizer: DomSanitizer,
               private cdRef:ChangeDetectorRef) { 
-
+              
       dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
           return source.id === 'right';
@@ -107,30 +113,46 @@ export class TabletComponent implements OnInit, AfterViewInit {
             this.ACTIONPLAN.push(this.COUNTERMEASURES[taskIndex]);
             this.lockedCM[taskIndex].locked=true;
             this.socketService.sendMove(taskIndex,this.COUNTERMEASURES[taskIndex]);
-   
+            
             // we must change the name of the copied elements so we now which background color we will change
             el.id = "panel_item_copy_"+taskIndex;
-
-            el.querySelector('.mat-expansion-panel-header').style.height = this.initPanelItemHeight;
-            el.querySelector('#mat-expansion-panel-header-'+(taskIndex+2)).id = 'mat-expansion-panel-header-'+taskIndex+'-copy';
-            el.querySelector('#mat-expansion-panel-header-'+(taskIndex)+'-copy').style.height = this.initPanelItemHeight;
+            console.log("taskIndex: ", taskIndex);
+            console.log("#panel_item_: ", el.querySelector('#panel_item_'+(taskIndex)));
+            //el.querySelector('#'+this.collapseArray[taskIndex]).style.height = this.initPanelItemHeight;
             
-            el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
+            el.querySelector('#'+this.collapseArray[taskIndex]).id = this.collapseArray[taskIndex]+"-copy";
+            let collapsedClass = el.querySelector('#'+this.collapseArray[taskIndex]+"-copy");
+            console.log("collapsedClass: ", collapsedClass);
+            collapsedClass.setAttribute("aria-labelledby", this.headingArray[taskIndex]+"-copy");
+            collapsedClass.setAttribute("data-parent", "#left");
+            el.querySelector('#cm_svg_'+taskIndex).id = "cm_svg_"+taskIndex+"-copy";
+            let ctrl = el.querySelector('#controller-'+taskIndex);
+            console.log("ctrl: ", ctrl);
+            
+            ctrl.setAttribute("data-target", "#"+this.collapseArray[taskIndex]+"-copy");
+            ctrl.setAttribute("aria-controls", this.collapseArray[taskIndex]+"-copy");
+
+            ctrl.id = "controller-"+taskIndex+"-copy";
+         
+            //el.querySelector('[data-target="collapseOne"]')
+            //el.querySelector('#mat-expansion-panel-header-'+(taskIndex)+'-copy').style.height = this.initPanelItemHeight;
+            
+            //el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
             // gray out when CM is chosen
             this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
 
-            el.querySelector('#cm_header_'+taskIndex).id = "cm_header_copy_"+taskIndex;
+            //el.querySelector('#cm_header_'+taskIndex).id = "cm_header_copy_"+taskIndex;
           }
 
           // resize all right panel items when a expanded panel item is droped
-          for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-            this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
+          // for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
+          //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
+          //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+          //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
             
-          }
+          // }
 
-          let mainSvg = this.elRef.nativeElement.querySelector("#cm_header_"+(taskIndex));
+          let mainSvg = this.elRef.nativeElement.querySelector("#cm_svg_"+(taskIndex));
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
           mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
           mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
@@ -141,6 +163,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
         }
           
       }.bind(this));
+
+     
   }
 
   switch(){
@@ -163,10 +187,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   closeLeftPanel(elementRef){
-    for (let index = 0; index < this.ACTIONPLAN.length; index++) {
-      this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.height = "0px";
-      this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.visibility = "hidden";
-    }
+    // for (let index = 0; index < this.ACTIONPLAN.length; index++) {
+    //   this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.height = "0px";
+    //   this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.visibility = "hidden";
+    // }
   }
 
   expandTaskPanel(index){
@@ -267,11 +291,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     setTimeout(()=>{
       // get the switch element
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
-      let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
+      //let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
       
       // position an overlay box to interact with the user
-      this.switchLeft = cardSwitch.getBoundingClientRect().x;
-      this.switchTop = cardSwitch.getBoundingClientRect().y;
+      //this.switchLeft = cardSwitch.getBoundingClientRect().x;
+     // this.switchTop = cardSwitch.getBoundingClientRect().y;
     },1000)
       
   }
@@ -303,31 +327,31 @@ export class TabletComponent implements OnInit, AfterViewInit {
   appendInitCMtoLeft(){
 
       let panelItem = this.elRef.nativeElement.querySelector("#panel_item_0");
-      panelItem.children[1].style.visibility = "visible";
+     // panelItem.children[1].style.visibility = "visible";
 
       let dropZone = this.elRef.nativeElement.querySelector("#left");
       
-      let cln = panelItem.cloneNode(true);
-      cln.querySelector('#iframeOverlay_0').style.backgroundColor = "";
-      cln.querySelector('#card_0_0').src ="assets/Tablet/Right/r_0_0_Tablet_start.svg";
-      cln.querySelector('#cdk-accordion-child-2').style.height = "100%"; 
-      cln.style.height = "auto";
+     // let cln = panelItem.cloneNode(true);
+      //cln.querySelector('#iframeOverlay_0').style.backgroundColor = "";
+     // cln.querySelector('#card_0_0').src ="assets/Tablet/Right/r_0_0_Tablet_start.svg";
+      //cln.querySelector('#cdk-accordion-child-2').style.height = "100%"; 
+     // cln.style.height = "auto";
 
-      dropZone.appendChild(cln);
+     // dropZone.appendChild(cln);
   }
   
 
   ngAfterViewInit() {
     this.loadCMgraphics()
 
-    this.appendInitCMtoLeft();
+   // this.appendInitCMtoLeft();
     
 
   }
 
   loadCMgraphics(){
 
-    this.initPanelItemHeight = this.elRef.nativeElement.querySelector('#panel_item_5').getBoundingClientRect().height+"px";
+    //this.initPanelItemHeight = this.elRef.nativeElement.querySelector('#panel_item_5').getBoundingClientRect().height+"px";
     this.cdRef.detectChanges();
     this.cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
     this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#graph-cell").offsetHeight;
@@ -343,15 +367,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px";
     this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
     this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
-    this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
+    //this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
 
     this.focus = d3.select(".focus");
     this.focus.attr('transform', 'translate(-430,100) scale(1.4,0.7)');
 
-    this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
-    this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
-    this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
-    this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
+   // this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
+    //this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
+    //this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
+    //this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
+    
+    
   }
 
 
@@ -360,6 +386,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   resize(){
+    
     if(!this.hideTabletPanels){
       this.hideTabletPanels = true;
       
@@ -484,6 +511,20 @@ export class TabletComponent implements OnInit, AfterViewInit {
        items.push(i);
     }
     return items;
+  }
+
+  awake(){
+    //https://jsfiddle.net/y3sevr4k/
+    // console.log(".swiper: ", this.elRef.nativeElement.querySelector('.swiper'));
+    let mySwiper1  =this.elRef.nativeElement.querySelectorAll('.swiper-container');
+    console.log("mySwiper1: ", mySwiper1);
+    mySwiper1[1].swiper.update();
+
+
+    //this.usefulSwiper.
+    // //this.usefulSwiper.swiper
+    // console.log("this.usefulSwiper: ", this.usefulSwiper);
+    //mySwiper.init();
   }
 
 }

@@ -64,11 +64,7 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
     MiddleComponent,
     TabletComponent,
     ActionService,
-    AreaChartComponent,
-    {
-      provide: SWIPER_CONFIG,
-      useValue: DEFAULT_SWIPER_CONFIG
-    }
+    AreaChartComponent
   ],
     
   bootstrap: [AppComponent]

@@ -148,12 +148,11 @@ drag-scroll {
     height: 300px;
 }
 
-.card{
+.card1{
     width: 100%;
     position: absolute;
     top: 0px;
     height: 80%;
-    /* background-color: #fff; */
     border: 0px;
     margin-bottom: 20px;
 }
@@ -183,16 +182,24 @@ drag-scroll {
     height:10%;
 }
 
+swiper{
+    height: 300px;
+    width: 400px;
+}  
+
 .swiper-container{
     height: 100%; 
     width: 100%;
     padding-bottom: 30px;
 }
 
-.swiper-slide {
+.swiper-wrapper {
+    box-sizing: border-box;
+}
+
+/* .swiper-slide {
     text-align: center;
     font-size: 18px;
-    /* background: #fff; */
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -205,4 +212,4 @@ drag-scroll {
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
-  }
+  } */
