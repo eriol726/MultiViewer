@@ -196,7 +196,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
   expandTaskPanel(index){
     let iframeEl = this.elRef.nativeElement.querySelector("#cm_svg_"+(index));
 
-    
+    let cm_panel = this.elRef.nativeElement.querySelector("#"+this.collapseArray[index]);
+    if(cm_panel.className == "collapse show"){
+      this.panelOpenState = false;
+    }
+    else{
+      this.panelOpenState = true;
+    }
     if(this.panelOpenState){
       // set the central info text and color
       this.centralBarInfo = this.COUNTERMEASURES[index].text + " PREVIEW";
