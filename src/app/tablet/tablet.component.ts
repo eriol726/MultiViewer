@@ -52,7 +52,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public COUNTERMEASURES: CMstruct[];
   public ACTIONPLAN: CMstruct[];
 
-  public collapseArray: Array<string> = ["collapseOne", "collapseTwo","collapseThree","collapseFour","collapseFive","collapseSix"];
+  public collapseArray: Array<string> = ["collapseOne", "collapseTwo","collapseThree","collapseFour"];
   public headingArray: Array<string> = ["headingOne", "headingTwo","headingThree","headingFour","headingFive","headingSix"]
  
   public tja:string ="hello";
@@ -127,7 +127,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
             collapsedClass.setAttribute("data-parent", "#left");
             el.querySelector('#cm_svg_'+taskIndex).id = "cm_svg_"+taskIndex+"-copy";
             let ctrl = el.querySelector('#controller-'+taskIndex);
-            console.log("ctrl: ", ctrl);
             
             ctrl.setAttribute("data-target", "#"+this.collapseArray[taskIndex]+"-copy");
             ctrl.setAttribute("aria-controls", this.collapseArray[taskIndex]+"-copy");
@@ -168,6 +167,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   switch(){
+    console.log("switch");
     let cardSvg = this.elRef.nativeElement.querySelector("#card_3_2");
     let cardSwitch = cardSvg.contentWindow.document.getElementById("card_3_1_switch");
 
@@ -194,8 +194,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   expandTaskPanel(index){
-    let iframeEl = this.elRef.nativeElement.querySelector("#cm_header_"+(index));
+    let iframeEl = this.elRef.nativeElement.querySelector("#cm_svg_"+(index));
 
+    
     if(this.panelOpenState){
       // set the central info text and color
       this.centralBarInfo = this.COUNTERMEASURES[index].text + " PREVIEW";
@@ -204,7 +205,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.isExpanded = index;
       
       this.socketService.sendExpand(index,index,this.lockedCM);
-
+      console.log("send index: ", index);
+      
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("fill" , "rgb(64, 189, 115)");
       iframeEl.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(30,0)");
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "hidden");
@@ -246,12 +248,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
       iframeEl.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
 
       this.socketService.sendExpand(-1,index,this.lockedCM);
+      console.log("send index: ", index);
 
       // go back closed panel items
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-        this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
+        //this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
       }
     }
@@ -291,11 +294,21 @@ export class TabletComponent implements OnInit, AfterViewInit {
     setTimeout(()=>{
       // get the switch element
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
-      //let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
-      
+      console.log("mainSvg: ", mainSvg);
+      let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
+      console.log("cardSwitch: ", cardSwitch);
       // position an overlay box to interact with the user
-      //this.switchLeft = cardSwitch.getBoundingClientRect().x;
-     // this.switchTop = cardSwitch.getBoundingClientRect().y;
+
+      this.switchLeft = cardSwitch.getBoundingClientRect().x;
+      this.switchTop = cardSwitch.getBoundingClientRect().y;
+
+      setTimeout(()=>{
+        this.collapseArray.forEach(item =>{
+          let collapseElm = this.elRef.nativeElement.querySelector("#"+item);
+          collapseElm.className = "collapse";
+        })
+      },1000);
+      
     },1000)
       
   }
@@ -326,25 +339,47 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   appendInitCMtoLeft(){
 
-      let panelItem = this.elRef.nativeElement.querySelector("#panel_item_0");
-     // panelItem.children[1].style.visibility = "visible";
+    let panelItem = this.elRef.nativeElement.querySelector("#panel_item_0");
+    // panelItem.children[1].style.visibility = "visible";
 
-      let dropZone = this.elRef.nativeElement.querySelector("#left");
-      
-     // let cln = panelItem.cloneNode(true);
-      //cln.querySelector('#iframeOverlay_0').style.backgroundColor = "";
-     // cln.querySelector('#card_0_0').src ="assets/Tablet/Right/r_0_0_Tablet_start.svg";
-      //cln.querySelector('#cdk-accordion-child-2').style.height = "100%"; 
-     // cln.style.height = "auto";
+    let dropZone = this.elRef.nativeElement.querySelector("#left");
 
-     // dropZone.appendChild(cln);
+    let cln = panelItem.cloneNode(true);
+    cln.querySelector('#iframeOverlay_0').style.backgroundColor = "";
+    cln.querySelector('#card_0_0').src ="assets/Tablet/Right/r_0_0_Tablet_start.svg";
+    // cln.querySelector('#cdk-accordion-child-2').style.height = "100%"; 
+    cln.style.height = "auto";
+
+    let taskIndex = 0;
+    cln.id = "panel_item_copy_"+taskIndex;
+    console.log("taskIndex: ", cln);
+    console.log("#panel_item_: ", cln.querySelector('#panel_item_'+(taskIndex)));
+    //el.querySelector('#'+this.collapseArray[taskIndex]).style.height = this.initPanelItemHeight;
+
+    cln.querySelector('#'+this.collapseArray[taskIndex]).id = this.collapseArray[taskIndex]+"-copy";
+    let collapsedClass = cln.querySelector('#'+this.collapseArray[taskIndex]+"-copy");
+    console.log("collapsedClass: ", collapsedClass);
+    collapsedClass.setAttribute("aria-labelledby", this.headingArray[taskIndex]+"-copy");
+    collapsedClass.setAttribute("data-parent", "#left");
+    cln.querySelector('#cm_svg_'+taskIndex).id = "cm_svg_"+taskIndex+"-copy";
+    let ctrl = cln.querySelector('#controller-'+taskIndex);
+
+    ctrl.setAttribute("data-target", "#"+this.collapseArray[taskIndex]+"-copy");
+    ctrl.setAttribute("aria-controls", this.collapseArray[taskIndex]+"-copy");
+
+    ctrl.id = "controller-"+taskIndex+"-copy";
+
+    dropZone.appendChild(cln);
   }
   
 
   ngAfterViewInit() {
     this.loadCMgraphics()
 
-   // this.appendInitCMtoLeft();
+    this.loadCardIframe();
+    
+
+   this.appendInitCMtoLeft();
     
 
   }
@@ -439,11 +474,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
       case 1:
         this.socketService.sendMessage(0,this.nextMessageIndex);
 
-        this.elRef.nativeElement.querySelector("#panel_item_0").remove();
+        this.elRef.nativeElement.querySelector("#panel_item_copy_0").remove();
 
         this.messageNumber = 1;
         this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";
-        this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_0.svg";
+        this.elRef.nativeElement.querySelector("#card_header_0").src = "assets/Tablet/Right/cm_header_0.svg";
         this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
@@ -513,18 +548,5 @@ export class TabletComponent implements OnInit, AfterViewInit {
     return items;
   }
 
-  awake(){
-    //https://jsfiddle.net/y3sevr4k/
-    // console.log(".swiper: ", this.elRef.nativeElement.querySelector('.swiper'));
-    let mySwiper1  =this.elRef.nativeElement.querySelectorAll('.swiper-container');
-    console.log("mySwiper1: ", mySwiper1);
-    mySwiper1[1].swiper.update();
-
-
-    //this.usefulSwiper.
-    // //this.usefulSwiper.swiper
-    // console.log("this.usefulSwiper: ", this.usefulSwiper);
-    //mySwiper.init();
-  }
 
 }
