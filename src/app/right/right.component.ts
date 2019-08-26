@@ -166,7 +166,7 @@ export class RightComponent implements OnInit, AfterViewInit {
 
     this.display.changeCard().subscribe(currentCardIndex =>{
       // changing background for swiped card
-      
+      console.log("changeCard: ", currentCardIndex);
       currentCardIndex = currentCardIndex-1;
 
       for (let cardIndex = 0; cardIndex < this.COUNTERMEASURES[this.openPanelIndex].cards; cardIndex++) {

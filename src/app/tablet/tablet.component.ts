@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, ChangeDetectorRef, ViewContainerRef, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, ViewChildren, ViewChild, Input, AfterViewInit, ElementRef, ViewEncapsulation, ChangeDetectorRef, ViewContainerRef, Output, EventEmitter, Inject, Renderer2 } from '@angular/core';
 import { WebsocketService } from '../websocket.service';
 import { ActionService } from '../action.service';
 import * as d3 from 'd3';
@@ -84,7 +84,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private elRef:ElementRef,
               public dragulaService: DragulaService,
               public sanitizer: DomSanitizer,
-              private cdRef:ChangeDetectorRef) { 
+              private cdRef:ChangeDetectorRef,
+              private render: Renderer2) { 
               
       dragulaService.createGroup('COPYABLE', {
         copy: (el, source) => { 
@@ -168,6 +169,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
   switch(){
     console.log("switch");
+    let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
+      
+    if(mainSvg != null){
+      let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
+      console.log("cardSwitch: ", cardSwitch);
+      console.log("getBoundingClientRect: ", cardSwitch.getBoundingClientRect());
+    }
     let cardSvg = this.elRef.nativeElement.querySelector("#card_3_2");
     let cardSwitch = cardSvg.contentWindow.document.getElementById("card_3_1_switch");
 
@@ -224,7 +232,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
 
-          let closedPanelItem = this.elRef.nativeElement.querySelector("#cm_header_"+(i));
+          let closedPanelItem = this.elRef.nativeElement.querySelector("#cm_svg_"+(i));
 
           closedPanelItem.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
           closedPanelItem.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
@@ -296,17 +304,18 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.socketService.sendLock(this.lockedCM[index].locked,index);
   }
 
-  loadCardIframe(){
-    setTimeout(()=>{
+  loadCardIframe(i){
+    console.log("i :", i);
       // get the switch element
+    if(i == 5){
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
-      console.log("mainSvg: ", mainSvg);
+
       let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
       console.log("cardSwitch: ", cardSwitch);
-      // position an overlay box to interact with the user
-
+      console.log("getBoundingClientRect: ", cardSwitch.getBoundingClientRect());
       this.switchLeft = cardSwitch.getBoundingClientRect().x;
       this.switchTop = cardSwitch.getBoundingClientRect().y;
+      console.log("this.switchLeft: ", this.switchLeft);
 
       setTimeout(()=>{
         this.collapseArray.forEach(item =>{
@@ -314,8 +323,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
           collapseElm.className = "collapse";
         })
       },1000);
-      
-    },1000)
+    }
       
   }
 
@@ -382,10 +390,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.loadCMgraphics()
 
-    this.loadCardIframe();
-    
-
-   this.appendInitCMtoLeft();
+    this.appendInitCMtoLeft();
     
 
   }

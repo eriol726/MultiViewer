@@ -80,12 +80,12 @@
                 </div>
                 <div [id]="collapseArray[i]" class="collapse show" [attr.aria-labelledby]="headingArray[i]" data-parent="#right">
                   <div class="card-body" style="padding:0px" >
-                      <div class="swiper-container" [swiper]="config">
+                      <div class="swiper-container" [swiper]="config" (indexChange)="changeCard($event)">
                           <!-- Additional required wrapper -->
                           <div class="swiper-wrapper" >
                             <div class="swiper-slide" *ngFor="let card of createRange(item.cards+1); let n=index" >
                   
-                                <iframe id="card_{{i}}_{{n}}"  [src]='"assets/Tablet/Right/r_"+i+"_"+n+"_Tablet.svg" | safe'  style="height: 300px; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
+                                <iframe id="card_{{i}}_{{n}}"  (load)="loadCardIframe((i+n))" [src]='"assets/Tablet/Right/r_"+i+"_"+n+"_Tablet.svg" | safe'  style="height: 300px; width: 100%; border: 0px;  padding: 0px 10px;  " ></iframe>
                                   <div class="iframeOverlay">
                                       <div id="switchFunction"  (click)="switch()" style="width:50px; height: 20px; position:absolute;" [style.top.px]="switchTop" [style.left.px]="switchLeft" #cardSwitch_3_1></div>
                                   </div>
