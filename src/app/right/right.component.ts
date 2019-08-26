@@ -120,8 +120,9 @@ export class RightComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility ="visible";
     });
 
-    
+    console.log("expand1");
     this.display.expandPanelItem().subscribe(data=>{
+      console.log("expand2");
       this.panelManager(data);
     });
     
@@ -156,7 +157,7 @@ export class RightComponent implements OnInit, AfterViewInit {
         this.panelParams.isExpanded = this.isExpanded;
         this.panelParams.panelIndex = 0;
         
-        //this.panelManager(this.panelParams);
+        this.panelManager(this.panelParams);
         
         this.hidePanel = false;
       }
@@ -203,6 +204,7 @@ export class RightComponent implements OnInit, AfterViewInit {
 
   panelManager(data){
     console.log("data.panelIndex: ", data.panelIndex);
+    console.log("data.isExpanded: ", data.isExpanded);
     // -1 when some is closed eighter the index
     this.isExpanded = data.isExpanded;
     // always the index no matter if closed/open
