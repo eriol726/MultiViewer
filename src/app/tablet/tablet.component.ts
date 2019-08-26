@@ -195,10 +195,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
 
   closeLeftPanel(elementRef){
-    // for (let index = 0; index < this.ACTIONPLAN.length; index++) {
-    //   this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.height = "0px";
-    //   this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.visibility = "hidden";
-    // }
+    for (let index = 0; index < this.ACTIONPLAN.length; index++) {
+      this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.height = "0px";
+      this.elRef.nativeElement.querySelector('.example-list-left').children[index].children[1].style.visibility = "hidden";
+    }
   }
 
   expandTaskPanel(index){
@@ -227,9 +227,10 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.elRef.nativeElement.querySelector('#panel_item_'+index).style.flex = "initial";
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
-        // remove all exept from the opened
+        // close all exept from the opened
         if(i != index ){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.visibility = "hidden";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "initial";
 
           let closedPanelItem = this.elRef.nativeElement.querySelector("#cm_svg_"+(i));
@@ -240,6 +241,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         //show the panel item under clicked item
         if(i == index+1){
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
+          this.elRef.nativeElement.querySelector('#panel_item_'+i).style.visibility = "visible";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0 0 16%";
         }
         if(i < index && i != this.COUNTERMEASURES.length-2){
@@ -250,6 +252,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       if(index == this.COUNTERMEASURES.length-1){
         this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.flex = "0 0 16%";
+        this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.visibility = "visible";
       }
     }
     else{
@@ -268,7 +271,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-        //this.elRef.nativeElement.querySelector('#panel_item_5').style.height = "auto";
+        this.elRef.nativeElement.querySelector('#panel_item_'+i).style.visibility = "visible";
         this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
       }
     }
@@ -450,9 +453,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
         this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+chartAreaWidth+" "+chartAreaHeight);
         this.elRef.nativeElement.querySelector('#chart1').style.width = window.innerWidth;
-        this.elRef.nativeElement.querySelector('#chart1').style.left = 0+"px";
+        this.elRef.nativeElement.querySelector('#chart1').style.left = "0px";
         this.elRef.nativeElement.querySelector('#chart1').style.top = ""; 
-        this.elRef.nativeElement.querySelector('#chart1').style.bottom = 0+"px";
+        this.elRef.nativeElement.querySelector('#chart1').style.bottom = "0px";
         this.focus.attr('transform', 'translate(0,140) scale(1.0,0.50)');
         
       },100)
