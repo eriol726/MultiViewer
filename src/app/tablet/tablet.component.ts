@@ -40,9 +40,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('chart1') chart1: any;
   @ViewChildren('chart2') chart2: any;
   @ViewChildren('cardList') cardList: ElementRef;
-  @ViewChild('chart') mainChart: ElementRef;
-  @ViewChild('dropZone', {read: ViewContainerRef}) dropZone: ViewContainerRef;
-  @ViewChild('usefulSwiper2') usefulSwiper: SwiperComponent;
+  @ViewChild('chart', { static: false }) mainChart: ElementRef;
+  @ViewChild('dropZone', { read: ViewContainerRef, static: false }) dropZone: ViewContainerRef;
+  @ViewChild('usefulSwiper2', { static: false }) usefulSwiper: SwiperComponent;
 
   private lockedCM = [{"locked": false, "graphFactor": 5},
                       {"locked": false, "graphFactor": 20},
@@ -314,11 +314,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
 
       let cardSwitch = mainSvg.contentWindow.document.getElementById("card_3_1_switch");
-      console.log("cardSwitch: ", cardSwitch);
-      console.log("getBoundingClientRect: ", cardSwitch.getBoundingClientRect());
+
       this.switchLeft = cardSwitch.getBoundingClientRect().x;
       this.switchTop = cardSwitch.getBoundingClientRect().y;
-      console.log("this.switchLeft: ", this.switchLeft);
 
       setTimeout(()=>{
         this.collapseArray.forEach(item =>{

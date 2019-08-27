@@ -12,7 +12,7 @@ import { DOCUMENT } from '@angular/common';
 
 export class LeftComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('chart') mainChart: ElementRef;
+  @ViewChild('chart', { static: true }) mainChart: ElementRef;
 
   private elem;
 

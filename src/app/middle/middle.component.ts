@@ -27,9 +27,9 @@ type MyType = {
 })
 
 export class MiddleComponent implements OnInit, AfterViewInit {
-  @ViewChild('areaChart') private areaChart: any;
-  @ViewChild('row') private rowContainer: ElementRef;
-  @ViewChild('contentPlaceholder', {read: ViewContainerRef}) viewContainerRef;
+  @ViewChild('areaChart', { static: true }) private areaChart: any;
+  @ViewChild('row', { static: true }) private rowContainer: ElementRef;
+  @ViewChild('contentPlaceholder', { read: ViewContainerRef, static: false }) viewContainerRef;
   @Input() private data: Array<any>;
 
   private elem;

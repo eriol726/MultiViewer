@@ -20,8 +20,8 @@ export class RightComponent implements OnInit, AfterViewInit {
   @ViewChildren(IgxExpansionPanelComponent) public accordion: QueryList<IgxExpansionPanelComponent>;
 
   @ViewChildren('panel') panel;
-  @ViewChild('panelRight') panelRight;
-  @ViewChild('firstItemIframe') firstItemIframe: ElementRef;
+  @ViewChild('panelRight', { static: false }) panelRight;
+  @ViewChild('firstItemIframe', { static: false }) firstItemIframe: ElementRef;
   @ViewChildren('panelHeader') panelheader: QueryList<any>;
 
 
@@ -66,9 +66,6 @@ export class RightComponent implements OnInit, AfterViewInit {
       }
       this.isLoaded =true;
     });
-      
-
-      
   }
 
   ngAfterViewInit(){

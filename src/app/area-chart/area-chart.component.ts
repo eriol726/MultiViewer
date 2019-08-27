@@ -19,8 +19,8 @@ export interface Margin {
 // @Injectable()
 export class AreaChartComponent implements OnInit {
 
-  @ViewChild('chartContainer') private chartContainer: ElementRef;
-  @ViewChild('chart') private mainChart: ElementRef;
+  @ViewChild('chartContainer', { static: true }) private chartContainer: ElementRef;
+  @ViewChild('chart', { static: true }) private mainChart: ElementRef;
 
   private panelIndex : number = 0;
   private margin2: Margin;
