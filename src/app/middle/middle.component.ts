@@ -101,20 +101,30 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let layer6Boundings = this.chartBackground.contentWindow.document.getElementById("Layer_6").getBoundingClientRect();
       this.chartPaddingRight = screenWidth - (layer6Boundings.width + layer6Boundings.x);
 
-      let graphStartHeight = this.chartBackground.contentWindow.document.getElementById("Bottom_line").getBoundingClientRect().y;
+      let bottomLineMeasurs = this.chartBackground.contentWindow.document.getElementById("Bottom_line").getBoundingClientRect();
+      let iconHeaderMeasurs = this.chartBackground.contentWindow.document.getElementById("icon-header").getBoundingClientRect();
+      let graphMeasures = this.areaChart.focus._groups[0][0].getBoundingClientRect();
       
+      let mainChart = this.areaChart.focus._groups[0][0];
+      console.log("bottomLineMeasurs: ", bottomLineMeasurs);
+      console.log("graphMeasures: ", graphMeasures);
+      console.log("mainChart: ", mainChart );
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
+      let graphResizedHeight = bottomLineMeasurs.top - iconHeaderMeasurs.bottom;
+      let scaleGraphY = (graphResizedHeight)/graphMeasures.height;
+
       let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
-      let scaleGraphY = 0.7;
+      scaleGraphY = 0.7;
 
       let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
-      this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
-      this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
+      //this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
+      //this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
       
       //put the graph on it's right position
-      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(355)+") scale(1,"+scaleGraphY+")");
+      this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(bottomLineMeasurs.top - graphMeasures.bottom*(scaleGraphY))+") scale(1,"+(scaleGraphY)+")");
+
   }
 
   ngAfterViewInit(){
@@ -211,13 +221,13 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       if(!this.isExpanded){
         //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
 
-        this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
+       // this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+0+"px 0px "+0+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "hidden";
 
         this.isExpanded = true;
       }
       else{
-        this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
+       // this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
         this.chartBackground.contentWindow.document.getElementById("Scale").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#history_layer_2").style.visibility = "visible";
         this.isExpanded = false;

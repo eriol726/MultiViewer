@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { SwiperConfigInterface, SwiperPaginationInterface, SwiperComponent } from 'ngx-swiper-wrapper';
 import { SwiperModule } from 'awesome-swiper';
+import { Route, ActivatedRoute } from '@angular/router';
 
 type CMstruct = {
   id: string ;
@@ -85,84 +86,87 @@ export class TabletComponent implements OnInit, AfterViewInit {
               public dragulaService: DragulaService,
               public sanitizer: DomSanitizer,
               private cdRef:ChangeDetectorRef,
+              private activeRoute : ActivatedRoute,
               private render: Renderer2) { 
+      if(!dragulaService.find('COPYABLE')){
+        dragulaService.createGroup('COPYABLE', {
+          copy: (el, source) => { 
+            return source.id === 'right';
+          },
+          accepts: (el, target, source, sibling) => {
+            // To avoid dragging from left to right container
+            let isCopyAble = (target.id !== 'right');
+            
+            let taskIndex = el.id.toString()[el.id.toString().length-1];
+            
+            // if moved element exsist in this.ACTIONPLAN, dont copy it
+            if (this.ACTIONPLAN.some((x,i) => x.id == taskIndex) ){
+              isCopyAble = false;
+            }
+            return isCopyAble;
+          }
+        }).drake.on("drop", function(el,target, source){
+          console.log("drop target", target, " el: ", el);
+          if(target){
+            
+            // if CM is not in action plan push it to the ACTIONPLAN array
+            let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
+            if (!this.ACTIONPLAN.some((x,i) => x.id == taskIndex) ){
               
-      dragulaService.createGroup('COPYABLE', {
-        copy: (el, source) => { 
-          return source.id === 'right';
-        },
-        accepts: (el, target, source, sibling) => {
-          // To avoid dragging from left to right container
-          let isCopyAble = (target.id !== 'right');
-          
-          let taskIndex = el.id.toString()[el.id.toString().length-1];
-          
-          // if moved element exsist in this.ACTIONPLAN, dont copy it
-          if (this.ACTIONPLAN.some((x,i) => x.id == taskIndex) ){
-            isCopyAble = false;
+              this.ACTIONPLAN.push(this.COUNTERMEASURES[taskIndex]);
+              this.lockedCM[taskIndex].locked=true;
+              this.socketService.sendMove(taskIndex,this.COUNTERMEASURES[taskIndex]);
+              
+              // we must change the name of the copied elements so we now which background color we will change
+              el.id = "panel_item_copy_"+taskIndex;
+              console.log("taskIndex: ", taskIndex);
+              console.log("#panel_item_: ", el.querySelector('#panel_item_'+(taskIndex)));
+              //el.querySelector('#'+this.collapseArray[taskIndex]).style.height = this.initPanelItemHeight;
+              
+              el.querySelector('#'+this.collapseArray[taskIndex]).id = this.collapseArray[taskIndex]+"-copy";
+              let collapsedClass = el.querySelector('#'+this.collapseArray[taskIndex]+"-copy");
+              console.log("collapsedClass: ", collapsedClass);
+              collapsedClass.setAttribute("aria-labelledby", this.headingArray[taskIndex]+"-copy");
+              collapsedClass.setAttribute("data-parent", "#left");
+              el.querySelector('#cm_svg_'+taskIndex).id = "cm_svg_"+taskIndex+"-copy";
+              let ctrl = el.querySelector('#controller-'+taskIndex);
+              
+              ctrl.setAttribute("data-target", "#"+this.collapseArray[taskIndex]+"-copy");
+              ctrl.setAttribute("aria-controls", this.collapseArray[taskIndex]+"-copy");
+  
+              ctrl.id = "controller-"+taskIndex+"-copy";
+           
+              //el.querySelector('[data-target="collapseOne"]')
+              //el.querySelector('#mat-expansion-panel-header-'+(taskIndex)+'-copy').style.height = this.initPanelItemHeight;
+              
+              //el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
+              // gray out when CM is chosen
+              this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
+  
+              //el.querySelector('#cm_header_'+taskIndex).id = "cm_header_copy_"+taskIndex;
+            }
+  
+            // resize all right panel items when a expanded panel item is droped
+            // for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
+            //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
+            //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
+            //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
+              
+            // }
+  
+            let mainSvg = this.elRef.nativeElement.querySelector("#cm_svg_"+(taskIndex));
+            mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
+            mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
+            mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
+            
+            //update infobox 
+            this.centralBarInfo = this.COUNTERMEASURES[taskIndex].text + " APPLIED";
+            this.elRef.nativeElement.querySelector('.applied-box').style.backgroundColor = "#40bd73";
           }
-          return isCopyAble;
-        }
-      }).drake.on("drop", function(el,target, source){
-        console.log("drop target", target, " el: ", el);
-        if(target){
-          
-          // if CM is not in action plan push it to the ACTIONPLAN array
-          let taskIndex = parseInt(el.id.toString()[el.id.toString().length-1]);
-          if (!this.ACTIONPLAN.some((x,i) => x.id == taskIndex) ){
             
-            this.ACTIONPLAN.push(this.COUNTERMEASURES[taskIndex]);
-            this.lockedCM[taskIndex].locked=true;
-            this.socketService.sendMove(taskIndex,this.COUNTERMEASURES[taskIndex]);
-            
-            // we must change the name of the copied elements so we now which background color we will change
-            el.id = "panel_item_copy_"+taskIndex;
-            console.log("taskIndex: ", taskIndex);
-            console.log("#panel_item_: ", el.querySelector('#panel_item_'+(taskIndex)));
-            //el.querySelector('#'+this.collapseArray[taskIndex]).style.height = this.initPanelItemHeight;
-            
-            el.querySelector('#'+this.collapseArray[taskIndex]).id = this.collapseArray[taskIndex]+"-copy";
-            let collapsedClass = el.querySelector('#'+this.collapseArray[taskIndex]+"-copy");
-            console.log("collapsedClass: ", collapsedClass);
-            collapsedClass.setAttribute("aria-labelledby", this.headingArray[taskIndex]+"-copy");
-            collapsedClass.setAttribute("data-parent", "#left");
-            el.querySelector('#cm_svg_'+taskIndex).id = "cm_svg_"+taskIndex+"-copy";
-            let ctrl = el.querySelector('#controller-'+taskIndex);
-            
-            ctrl.setAttribute("data-target", "#"+this.collapseArray[taskIndex]+"-copy");
-            ctrl.setAttribute("aria-controls", this.collapseArray[taskIndex]+"-copy");
-
-            ctrl.id = "controller-"+taskIndex+"-copy";
-         
-            //el.querySelector('[data-target="collapseOne"]')
-            //el.querySelector('#mat-expansion-panel-header-'+(taskIndex)+'-copy').style.height = this.initPanelItemHeight;
-            
-            //el.querySelector("#iframeOverlay_"+taskIndex).id = "iframeOverlay_"+taskIndex+"_copy";
-            // gray out when CM is chosen
-            this.elRef.nativeElement.querySelector('#panel_item_'+taskIndex).style.backgroundColor = "rgba(217,217,217,0.68)";
-
-            //el.querySelector('#cm_header_'+taskIndex).id = "cm_header_copy_"+taskIndex;
-          }
-
-          // resize all right panel items when a expanded panel item is droped
-          // for (let i = 0; i < this.COUNTERMEASURES.length; i++) {
-          //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "auto";
-          //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "1";
-          //   this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '10px', 'important');
-            
-          // }
-
-          let mainSvg = this.elRef.nativeElement.querySelector("#cm_svg_"+(taskIndex));
-          mainSvg.contentWindow.document.getElementById("switch").setAttribute("fill" , "#b3b3b3");
-          mainSvg.contentWindow.document.getElementById("switch").setAttribute("transform", "translate(0,0)")
-          mainSvg.contentWindow.document.getElementsByClassName("arrow")[0].setAttribute("visibility" , "visible");
-          
-          //update infobox 
-          this.centralBarInfo = this.COUNTERMEASURES[taskIndex].text + " APPLIED";
-          this.elRef.nativeElement.querySelector('.applied-box').style.backgroundColor = "#40bd73";
-        }
-          
-      }.bind(this));
+        }.bind(this));
+      }
+      
 
      
   }
@@ -389,9 +393,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
   
 
   ngAfterViewInit() {
-    this.loadCMgraphics()
 
-    this.appendInitCMtoLeft();
+    console.log("snapshot: ", this.activeRoute.snapshot.params['load']);
+
+    this.activeRoute.params.subscribe(params =>{
+      console.log("params: ", params["load"]);
+    })
+    if(this.activeRoute.snapshot.params['dontLoad'] != 'true'){
+      this.loadCMgraphics()
+
+      this.appendInitCMtoLeft();
+    }
     
 
   }

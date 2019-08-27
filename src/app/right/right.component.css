@@ -16,6 +16,8 @@ body{
     width: 100%;
     padding: 2px 10px 5px 10px;
     height: calc(100vh - 20px);
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
 .iframe-overlay-right{
