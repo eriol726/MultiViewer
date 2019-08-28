@@ -105,19 +105,17 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let iconHeaderMeasurs = this.chartBackground.contentWindow.document.getElementById("icon-header").getBoundingClientRect();
       let graphMeasures = this.areaChart.focus._groups[0][0].getBoundingClientRect();
       
-      let mainChart = this.areaChart.focus._groups[0][0];
-      console.log("bottomLineMeasurs: ", bottomLineMeasurs);
-      console.log("graphMeasures: ", graphMeasures);
-      console.log("mainChart: ", mainChart );
+      //let mainChart = this.areaChart.focus._groups[0][0];
+
       // we cant use querySelector(.focus) because int is not rendered. Use a viewChild decorator instead
       let graphResizedHeight = bottomLineMeasurs.top - iconHeaderMeasurs.bottom;
       let scaleGraphY = (graphResizedHeight)/graphMeasures.height;
 
-      let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
+      //let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
 
       scaleGraphY = 0.7;
 
-      let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
+      //let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
       //this.elRef.nativeElement.querySelector("svg").setAttribute("viewBox", "0 0 "+screenWidth+" "+screenHeight);
       //this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
@@ -217,7 +215,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
 
     
     this.socketService.maximizeChart().subscribe(data=>{
-      
+      console.log("maximize");
       if(!this.isExpanded){
         //this.renderer.appendChild(this.rowContainer.nativeElement,this.areaChart.svg._groups[0][0] );
 

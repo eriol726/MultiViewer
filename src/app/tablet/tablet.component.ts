@@ -88,6 +88,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
               private cdRef:ChangeDetectorRef,
               private activeRoute : ActivatedRoute,
               private render: Renderer2) { 
+
       if(!dragulaService.find('COPYABLE')){
         dragulaService.createGroup('COPYABLE', {
           copy: (el, source) => { 
@@ -125,7 +126,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
               
               el.querySelector('#'+this.collapseArray[taskIndex]).id = this.collapseArray[taskIndex]+"-copy";
               let collapsedClass = el.querySelector('#'+this.collapseArray[taskIndex]+"-copy");
-              console.log("collapsedClass: ", collapsedClass);
+
               collapsedClass.setAttribute("aria-labelledby", this.headingArray[taskIndex]+"-copy");
               collapsedClass.setAttribute("data-parent", "#left");
               el.querySelector('#cm_svg_'+taskIndex).id = "cm_svg_"+taskIndex+"-copy";
@@ -312,7 +313,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   loadCardIframe(i){
-    console.log("i :", i);
       // get the switch element
     if(i == 5){
       let mainSvg = this.elRef.nativeElement.querySelector("#card_3_2");
@@ -371,13 +371,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
     let taskIndex = 0;
     cln.id = "panel_item_copy_"+taskIndex;
-    console.log("taskIndex: ", cln);
-    console.log("#panel_item_: ", cln.querySelector('#panel_item_'+(taskIndex)));
     //el.querySelector('#'+this.collapseArray[taskIndex]).style.height = this.initPanelItemHeight;
 
     cln.querySelector('#'+this.collapseArray[taskIndex]).id = this.collapseArray[taskIndex]+"-copy";
     let collapsedClass = cln.querySelector('#'+this.collapseArray[taskIndex]+"-copy");
-    console.log("collapsedClass: ", collapsedClass);
+
     collapsedClass.setAttribute("aria-labelledby", this.headingArray[taskIndex]+"-copy");
     collapsedClass.setAttribute("data-parent", "#left");
     cln.querySelector('#cm_svg_'+taskIndex).id = "cm_svg_"+taskIndex+"-copy";
@@ -393,19 +391,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
   
 
   ngAfterViewInit() {
+    this.loadCMgraphics();
 
-    console.log("snapshot: ", this.activeRoute.snapshot.params['load']);
-
-    this.activeRoute.params.subscribe(params =>{
-      console.log("params: ", params["load"]);
-    })
-    if(this.activeRoute.snapshot.params['dontLoad'] != 'true'){
-      this.loadCMgraphics()
-
-      this.appendInitCMtoLeft();
-    }
-    
-
+    this.appendInitCMtoLeft();
   }
 
   loadCMgraphics(){
@@ -420,23 +408,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.middleTopMargin = middleCellHeader+middleCellAppliedbox;
     this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
     
-    console.log("middleCellHeader: ", middleCellHeader);
-    console.log("middleCellHeader: ", middleCellHeader);
     this.elRef.nativeElement.querySelector('#chart1').style.height = this.cellOffsetHeight+"px";
     this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px";
     this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
     this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
-    //this.elRef.nativeElement.querySelector("#cm_header_0").src = "assets/Tablet/Right/cm_header_start.svg";
+    
 
     this.focus = d3.select(".focus");
-    this.focus.attr('transform', 'translate(-430,100) scale(1.4,0.7)');
-
-   // this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "rgba(217,217,217,0.68)";
-    //this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
-    //this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
-    //this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
-    
-    
+    //hårdkodat
+    this.focus.attr('transform', 'translate(-430,150) scale(1.4,0.7)');
   }
 
 
@@ -450,28 +430,44 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.hideTabletPanels = true;
       
       this.socketService.sendMaximized(true);
-      this.elRef.nativeElement.querySelector('#chart1').style.height = "100%";
-      this.elRef.nativeElement.querySelector('#chart1').style.width = "100%";
-      this.elRef.nativeElement.querySelector('#chart1').style.left = "0px";
 
       setTimeout(()=>{
         let chartBackground = this.elRef.nativeElement.querySelector('#chartBackground');
         chartBackground.contentWindow.document.querySelector('#Scale').style.visibility = "visible";
         
-        let chartAreaHeight = chartBackground.contentWindow.document.querySelector('#Layer_6').getBoundingClientRect().height;
-        let chartAreaWidth = chartBackground.contentWindow.document.querySelector('#Layer_6').getBoundingClientRect().width;
 
-        this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+chartAreaWidth+" "+chartAreaHeight);
-        this.elRef.nativeElement.querySelector('#chart1').style.width = window.innerWidth;
+
+        let chartAreaWidth = chartBackground.contentWindow.document.querySelector('#Layer_3').getBoundingClientRect().width;
+        let chartAreaHeight = chartBackground.contentWindow.document.querySelector('#Layer_3').getBoundingClientRect().height;
+        this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+chartAreaWidth+" "+window.innerHeight);
+        this.elRef.nativeElement.querySelector('#chart1').style.width = "100%";
+        this.elRef.nativeElement.querySelector('#chart1').style.height = "100%";
         this.elRef.nativeElement.querySelector('#chart1').style.left = "0px";
-        this.elRef.nativeElement.querySelector('#chart1').style.top = ""; 
-        this.elRef.nativeElement.querySelector('#chart1').style.bottom = "0px";
-        this.focus.attr('transform', 'translate(0,140) scale(1.0,0.50)');
-        
-      },100)
+        this.elRef.nativeElement.querySelector('#chart1').style.top = "0px"; 
+
+        let bottomLineMeasurs = chartBackground.contentWindow.document.getElementById("Bottom_line").getBoundingClientRect();
+        let iconHeaderMeasurs = chartBackground.contentWindow.document.getElementById("icon-header").getBoundingClientRect();
+
+        let graphMeasures = this.focus._groups[0][0].getBoundingClientRect();
+
+        let gapHeight = bottomLineMeasurs.top-iconHeaderMeasurs.bottom;
+        console.log("gapHeight: ", gapHeight);
+        gapHeight = graphMeasures.height - gapHeight ;
+
+        let scale = (gapHeight / window.innerHeight);
+        console.log("scale: ", scale);
+        scale=1;
+        console.log("this.focus._groups[0][0]: ", this.focus._groups[0][0]);
+
+        //put the graph on it's right position
+        this.focus.attr("transform", "translate(0,"+(bottomLineMeasurs.top-graphMeasures.bottom*(scale))+") scale(1,"+(scale)+")");
+        this.focus.attr("height", 10+"px");
+        this.focus._groups[0][0].style.height="12px";
+      },200)
     }
     else{
-      
+      console.log("minimize ");
+
       this.chart1._results[0].mainChart.nativeElement.setAttribute("viewBox", "0 0 "+this.cellOffsetWidth+" "+this.cellOffsetHeight);
 
       this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px";
@@ -480,10 +476,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
       this.elRef.nativeElement.querySelector('#chart1').style.height = this.cellOffsetHeight+"px";
 
       this.focus = d3.select(".focus");
+      //hårdkodat
       this.focus.attr('transform', 'translate(-1050,150) scale(1.4,0.7)');
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);
+
     }
   }
 

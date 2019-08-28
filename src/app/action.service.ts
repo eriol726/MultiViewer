@@ -16,7 +16,6 @@ export class ActionService {
     ]
 
   public getActions() : any{
-    console.log("this.actions: ", this.actions);
     const data = new Observable(observer => {
 
         
