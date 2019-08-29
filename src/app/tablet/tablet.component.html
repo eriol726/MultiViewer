@@ -27,8 +27,7 @@
           </div>
         </div>
 
-        <div class="cell" id="graph-cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >
-          
+        <div class="cell" id="graph-cell" style="z-index: 3; flex: 0 0 55%; position: relative;" >  
           <iframe id="svg_time_scale" src="assets/Tablet/Central/CentralFrame_noGraph_4.svg" style="position: absolute; bottom: 0px; width: 100%; height: 100%;  border: 0px;  padding: 0px 0px;  " ></iframe>
         </div>
 
@@ -104,6 +103,7 @@
         </div> <!-- cell -->
       </div> <!-- column -->
   </div>
+  <!-- we need this to render the chart background -->
   <div [hidden]="!hideTabletPanels" style="width: 100%; height: 100%;" id="expandedView">
     <app-middle id="chart-background" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: relative" #chart2></app-middle>
     <!-- <iframe src="assets/Tablet/Central/ExpandedView_CM4_Graph_for_Tablet.svg" id="chartBackground" style="width: 100%; height: 100%;  border: 0px;  padding: 0px 0px; position: absolute; top: 0px; left: 0px; z-index: 99" ></iframe> -->

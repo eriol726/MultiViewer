@@ -207,7 +207,7 @@ export class AreaChartComponent implements OnInit {
     let screenWidth = window.innerWidth;
     let screenHeight = window.innerHeight;
 
-    this.svg.attr("viewBox", "0 0 "+screenWidth+" "+screenHeight)
+    //this.svg.attr("viewBox", "0 0 "+screenWidth+" "+screenHeight)
 
     this.margin2 = {top: 430, right: 20, bottom: 30, left: 40};
     

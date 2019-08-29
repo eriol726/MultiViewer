@@ -39,7 +39,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   @ViewChildren('panel') panel: ElementRef;
   @ViewChildren('cell') cell: ElementRef;
   @ViewChildren('chart1') chart1: any;
-  @ViewChildren('chart2') chart2: any;
+  @ViewChild('chart2', {static: false}) chart2: any;
   @ViewChildren('cardList') cardList: ElementRef;
   @ViewChild('chart', { static: false }) mainChart: ElementRef;
   @ViewChild('dropZone', { read: ViewContainerRef, static: false }) dropZone: ViewContainerRef;
@@ -291,6 +291,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
     observableCM.subscribe(CMdata => {
       this.COUNTERMEASURES = CMdata;
     })
+    
   }
 
   selectCard(index){
@@ -394,6 +395,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.loadCMgraphics();
 
     this.appendInitCMtoLeft();
+
+    this.focus = d3.select(".focus");
+    console.log("graphMeasures.height: ", this.focus._groups[0][0].getBoundingClientRect().height);
   }
 
   loadCMgraphics(){
@@ -434,8 +438,9 @@ export class TabletComponent implements OnInit, AfterViewInit {
       setTimeout(()=>{
         let chartBackground = this.elRef.nativeElement.querySelector('#chartBackground');
         chartBackground.contentWindow.document.querySelector('#Scale').style.visibility = "visible";
-        
+        this.focus = d3.select(".focus");
 
+        this.focus.attr("transform", "scale(1,1)");
 
         let chartAreaWidth = chartBackground.contentWindow.document.querySelector('#Layer_3').getBoundingClientRect().width;
         let chartAreaHeight = chartBackground.contentWindow.document.querySelector('#Layer_3').getBoundingClientRect().height;
@@ -447,22 +452,14 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
         let bottomLineMeasurs = chartBackground.contentWindow.document.getElementById("Bottom_line").getBoundingClientRect();
         let iconHeaderMeasurs = chartBackground.contentWindow.document.getElementById("icon-header").getBoundingClientRect();
-
+   
         let graphMeasures = this.focus._groups[0][0].getBoundingClientRect();
-
         let gapHeight = bottomLineMeasurs.top-iconHeaderMeasurs.bottom;
-        console.log("gapHeight: ", gapHeight);
-        gapHeight = graphMeasures.height - gapHeight ;
 
-        let scale = (gapHeight / window.innerHeight);
-        console.log("scale: ", scale);
-        scale=1;
-        console.log("this.focus._groups[0][0]: ", this.focus._groups[0][0]);
+        let scale = ( gapHeight / graphMeasures.height)*0.90;
 
         //put the graph on it's right position
         this.focus.attr("transform", "translate(0,"+(bottomLineMeasurs.top-graphMeasures.bottom*(scale))+") scale(1,"+(scale)+")");
-        this.focus.attr("height", 10+"px");
-        this.focus._groups[0][0].style.height="12px";
       },200)
     }
     else{
