@@ -57,7 +57,6 @@ export class TabletComponent implements OnInit, AfterViewInit {
   public headingArray: Array<string> = ["headingOne", "headingTwo","headingThree","headingFour","headingFive","headingSix"]
  
   public tja:string ="hello";
-
   public panelOpenState = false;
   public isExpanded: number  = -1;
   public isFullScreen: boolean = false;
@@ -76,8 +75,13 @@ export class TabletComponent implements OnInit, AfterViewInit {
   private nextMessageIndex = 0;
   private prioritize: boolean = false;
   private loaded:boolean = false;
-  //private initPanelItemHeight: string = "auto";
+  private scaleY:number = 1;
+  private scaleX:number = 1;
+  private scale:number = 1;
+  private initGraphY :number = 0;
+
   middleTopMargin: any;
+  private isDone: boolean = false;
 
   constructor(@Inject(DOCUMENT) private document: any,
               private actionService : ActionService, 
@@ -403,8 +407,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
   loadCMgraphics(){
 
     //this.initPanelItemHeight = this.elRef.nativeElement.querySelector('#panel_item_5').getBoundingClientRect().height+"px";
+    this.focus = d3.select(".focus");
+
     this.cdRef.detectChanges();
-    this.cellOffsetWidth = this.elRef.nativeElement.querySelector(".cell").offsetWidth;
+
+    this.cellOffsetWidth = this.elRef.nativeElement.querySelector("#graph-cell").offsetWidth;
     this.cellOffsetHeight = this.elRef.nativeElement.querySelector("#graph-cell").offsetHeight;
     let middleCellHeader = this.elRef.nativeElement.querySelector("#middle-cell-header").offsetHeight;
     let middleCellAppliedbox = this.elRef.nativeElement.querySelector("#middle-cell-appliedbox").offsetHeight;
@@ -417,10 +424,15 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
     this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
     
-
-    this.focus = d3.select(".focus");
     //hårdkodat
-    this.focus.attr('transform', 'translate(-430,150) scale(1.4,0.7)');
+    //this.focus.attr('transform', 'translate(-430,150) scale(1.4,0.7)');
+    let graphMeasures = this.focus._groups[0][0].getBoundingClientRect();
+    this.scaleY =  (this.cellOffsetHeight / graphMeasures.height)*1.7;
+    this.scaleX =  (this.cellOffsetWidth / graphMeasures.width)*3.7;
+    let cellMeasures = this.elRef.nativeElement.querySelector("#graph-cell").getBoundingClientRect();
+    //put the graph on it's right position
+    this.initGraphY = cellMeasures.bottom-(-300+this.middleTopMargin+graphMeasures.bottom)*this.scaleY;
+    this.focus.attr("transform", "translate("+-280*this.scaleX+","+(this.initGraphY)+") scale("+this.scaleX +","+( this.scaleY)+")");
   }
 
 
@@ -452,14 +464,17 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
         let bottomLineMeasurs = chartBackground.contentWindow.document.getElementById("Bottom_line").getBoundingClientRect();
         let iconHeaderMeasurs = chartBackground.contentWindow.document.getElementById("icon-header").getBoundingClientRect();
-   
+
         let graphMeasures = this.focus._groups[0][0].getBoundingClientRect();
         let gapHeight = bottomLineMeasurs.top-iconHeaderMeasurs.bottom;
-
-        let scale = ( gapHeight / graphMeasures.height)*0.90;
+        
+        if(!this.isDone){
+          this.scale = ( gapHeight / graphMeasures.height)*0.90;
+          this.isDone = true;
+        }
 
         //put the graph on it's right position
-        this.focus.attr("transform", "translate(0,"+(bottomLineMeasurs.top-graphMeasures.bottom*(scale))+") scale(1,"+(scale)+")");
+        this.focus.attr("transform", "translate(0,"+(bottomLineMeasurs.top-graphMeasures.bottom*(this.scale))+") scale(1,"+(this.scale)+")");
       },200)
     }
     else{
@@ -474,7 +489,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.focus = d3.select(".focus");
       //hårdkodat
-      this.focus.attr('transform', 'translate(-1050,150) scale(1.4,0.7)');
+      this.focus.attr('transform', 'translate('+-710*this.scaleX+','+this.initGraphY+') scale('+this.scaleX +','+( this.scaleY)+')');
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);
@@ -509,7 +524,8 @@ export class TabletComponent implements OnInit, AfterViewInit {
         svg_time_scale.contentWindow.document.getElementById("timeText2").innerHTML = "19:00";
         svg_time_scale.contentWindow.document.getElementById("timeText3").innerHTML = "20:00";
 
-        this.focus.attr('transform', 'translate(-1050,150) scale(1.4,0.7)');
+        this.focus = d3.select(".focus");
+        this.focus.attr('transform', 'translate('+-710*this.scaleX+','+this.initGraphY+') scale('+this.scaleX +','+( this.scaleY)+')');
 
         
         break;
