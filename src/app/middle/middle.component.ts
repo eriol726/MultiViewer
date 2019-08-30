@@ -112,8 +112,9 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       let scaleGraphY = (graphResizedHeight)/graphMeasures.height;
 
       //let focusHeight = this.areaChart.focus._groups[0][0].getBoundingClientRect().height;
+      let gapHeight = bottomLineMeasurs.top-iconHeaderMeasurs.bottom;
+      scaleGraphY = ( gapHeight / graphMeasures.height)*0.90;
 
-      scaleGraphY = 0.7;
 
       //let scaleHeightRest = focusHeight - focusHeight*scaleGraphY;
 
@@ -121,6 +122,7 @@ export class MiddleComponent implements OnInit, AfterViewInit {
       //this.elRef.nativeElement.querySelector("#chart2").style.padding = "0px "+this.chartPaddingRight+"px 0px "+this.x+"px";
       
       //put the graph on it's right position
+
       this.areaChart.focus._groups[0][0].setAttribute("transform", "translate(0,"+(bottomLineMeasurs.top - graphMeasures.bottom*(scaleGraphY))+") scale(1,"+(scaleGraphY)+")");
 
   }
