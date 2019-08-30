@@ -424,15 +424,16 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
     this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
     
-    //hårdkodat
+    
     //this.focus.attr('transform', 'translate(-430,150) scale(1.4,0.7)');
     let graphMeasures = this.focus._groups[0][0].getBoundingClientRect();
-    this.scaleY =  (this.cellOffsetHeight / graphMeasures.height)*1.7;
-    this.scaleX =  (this.cellOffsetWidth / graphMeasures.width)*3.7;
+    this.scaleY = (this.cellOffsetHeight / graphMeasures.height)*1.4;
+    this.scaleX = (this.cellOffsetWidth / graphMeasures.width)*3.5;
     let cellMeasures = this.elRef.nativeElement.querySelector("#graph-cell").getBoundingClientRect();
-    //put the graph on it's right position
-    this.initGraphY = cellMeasures.bottom-(-300+this.middleTopMargin+graphMeasures.bottom)*this.scaleY;
-    this.focus.attr("transform", "translate("+-280*this.scaleX+","+(this.initGraphY)+") scale("+this.scaleX +","+( this.scaleY)+")");
+    //-250(hardcode) should not be necessary
+    this.initGraphY = 200+cellMeasures.bottom-(graphMeasures.bottom)*this.scaleY;
+    //translate the graph on it's right position
+    this.focus.attr("transform", "translate("+-30+this.scaleX+","+(this.initGraphY  )+") scale("+this.scaleX +","+( this.scaleY)+")");
   }
 
 
@@ -489,7 +490,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.focus = d3.select(".focus");
       //hårdkodat
-      this.focus.attr('transform', 'translate('+-710*this.scaleX+','+this.initGraphY+') scale('+this.scaleX +','+( this.scaleY)+')');
+      this.focus.attr("transform", "translate("+-80+this.scaleX+","+(this.initGraphY  )+") scale("+this.scaleX +","+( this.scaleY)+")");
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);
@@ -525,7 +526,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         svg_time_scale.contentWindow.document.getElementById("timeText3").innerHTML = "20:00";
 
         this.focus = d3.select(".focus");
-        this.focus.attr('transform', 'translate('+-710*this.scaleX+','+this.initGraphY+') scale('+this.scaleX +','+( this.scaleY)+')');
+        this.focus.attr("transform", "translate("+-80+this.scaleX+","+(this.initGraphY  )+") scale("+this.scaleX +","+( this.scaleY)+")");
 
         
         break;
