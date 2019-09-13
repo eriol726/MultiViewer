@@ -1,0 +1,113 @@
+
+
+@import url(//fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+
+svg {
+  width: 100%;
+  font: 14px 'Open Sans';
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+
+.focus {
+  width: 100%;
+}
+
+.above { fill: rgb(252,141,89,0); }
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  fill: #000;
+}
+
+.axis .tick line {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+.area {
+  opacity: 0.24;
+  fill: rgba(242,161,32,1);
+  clip-path: url(#clip);
+}
+
+.areaOuterLower1{
+  opacity: 0.24;
+  fill: rgba(242, 161, 32,1);
+}
+
+.areaInner1 {
+  opacity: 0.50;
+  fill: rgba(242, 161, 32, 1);
+}
+
+.areaOuterUpper1{
+  opacity: 0.24;
+  fill: rgba(242, 161, 32,1);
+}
+
+
+.areaOuterUpper2{
+  opacity: 0.24;
+  fill: rgba(62, 115, 247, 1);
+}
+
+.areaInner2 {
+  opacity: 0.50;
+  fill: rgba(62, 115, 247, 1);
+  }
+
+.areaOuterLower2{
+  opacity: 0.24;
+  fill: rgba(62, 115, 247, 1);
+  }
+
+
+
+
+
+
+.marker path {
+  fill: none;
+}
+
+.legend text,
+.marker text {
+  fill: #fff;
+  font-weight: bold;
+}
+
+.marker text {
+  text-anchor: middle;
+}
+
+.rect {
+  background-color: blue;
+  width: 100px;
+  height: 100px;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill: steelblue;
+  fill-opacity: .25;
+  shape-rendering: crispEdges;
+}
+
+rect.mover {
+          stroke: red;
+          stroke-opacity: .1;
+          fill: lightSteelBlue;
+          fill-opacity: .5;
+      }

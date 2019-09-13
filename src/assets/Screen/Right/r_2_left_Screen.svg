@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 639 207">
+	<title>
+		Asset 3
+	</title>
+	<g style="isolation:isolate">
+		<g id="Layer_2" data-name="Layer 2">
+			<g id="Layer_5" data-name="Layer 5">
+				<rect id="cm_rect_background" x="3.75" y="1.71" width="631.5" height="200.13" fill="rgba(0,0,0,0)" />
+			</g>
+			<g id="Layer_1-2" data-name="Layer 1">
+				<text transform="translate(120.12 45.21)" font-size="21" font-family="Titillium-Regular, Titillium">
+					MANUAL X-RAY CHECK
+				</text>
+                <g id="Clock_Layer">
+                    <text transform="translate(518.41 137.01)" font-size="15.34" font-family="Titillium-Semibold, Titillium" font-weight="600">
+                        17:00 - 20:00
+                    </text>
+                    <text transform="translate(547.35 118.17)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+                        <tspan letter-spacing="-0.05em">
+                            T
+                        </tspan>
+                        <tspan x="5.86" y="0" letter-spacing="0em">
+                            od
+                        </tspan>
+                        <tspan x="18.96" y="0" letter-spacing="-0.01em">
+                            a
+                        </tspan>
+                        <tspan x="24.99" y="0">
+                            y
+                        </tspan>
+                    </text>
+                    <text transform="translate(582.43 38.28) scale(1.07 1)" font-size="27.2" fill="#2277d6" font-family="Titillium-Semibold, Titillium" font-weight="600">
+                        3h
+                    </text>
+                    <circle cx="562.84" cy="65.35" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4" />
+                    <path d="M562.84,48.41A18.17,18.17,0,0,1,581,66.58H562.84Z" fill="#8dc5f2" />
+                </g>
+				<text transform="translate(120.12 79.29)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Assigning a person to conduct x-ray check may help
+					<tspan x="0" y="25">
+						make the security control process faster.
+					</tspan>
+				</text>
+				
+			</g>
+			<g id="Layer_2-2" data-name="Layer 2">
+				<path d="M85.06,57.7A33.12,33.12,0,1,1,52,24.58,33.11,33.11,0,0,1,85.06,57.7" fill="#e3f0fc" />
+				<path d="M46.9,58.78a9.21,9.21,0,0,1,15.28-7V49.08a2.31,2.31,0,0,0-2.32-2.32H55.23V44.44a2.31,2.31,0,0,0-2.32-2.31H48.28A2.31,2.31,0,0,0,46,44.44v2.32H41.33A2.3,2.3,0,0,0,39,49.08V61.82a2.31,2.31,0,0,0,2.32,2.32h7.3A9.19,9.19,0,0,1,46.9,58.78Zm1.38-14.34h4.63v2.32H48.28Z" fill="#2277d6" />
+				<path d="M63.37,64.21h-.95l-.34-.32a8,8,0,1,0-.85.84l.33.34v1l6,6,1.8-1.8Zm-7.24-1.38a4.06,4.06,0,1,1,4-4A4.06,4.06,0,0,1,56.13,62.83Z" fill="#2277d6" />
+			</g>
+		</g>
+	</g>
+</svg>

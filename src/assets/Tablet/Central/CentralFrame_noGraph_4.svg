@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 0 564 591" style="transform: scale(1.0,1.0)">
+    <title>CentralFrame_noGraph_4</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+            <line x1="126.46" y1="0.75" x2="126.46" y2="541.75" fill="none" stroke="#b3b3b3" stroke-miterlimit="10"/>
+            <line x1="252.88" y1="0.75" x2="252.88" y2="541.75" fill="none" stroke="#b3b3b3" stroke-miterlimit="10"/>
+            <line x1="379.14" y1="0.75" x2="379.14" y2="541.75" fill="none" stroke="#b3b3b3" stroke-miterlimit="10"/>
+            <line x1="506" x2="506" y2="542.5" fill="none" stroke="#b3b3b3" stroke-miterlimit="10"/>
+            <text id="timeText0" transform="translate(100.93 571.89)" font-size="21" font-family="Titillium-Thin, Titillium" font-weight="200">06:00</text>
+            <text id="timeText1" transform="translate(227.17 571.81)" font-size="21" font-family="Titillium-Thin, Titillium" font-weight="200">07:00</text>
+            <text id="timeText2" transform="translate(353.59 571.81)" font-size="21" font-family="Titillium-Thin, Titillium" font-weight="200">08:00</text>
+            <text id="timeText3" transform="translate(480.16 571.81)" font-size="21" font-family="Titillium-Thin, Titillium" font-weight="200">09:00</text>
+        </g>
+    </g>
+</svg>

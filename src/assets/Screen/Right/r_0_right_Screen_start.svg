@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1132 250">
+	<title>
+		r_4_right_Screen
+	</title>
+	<g style="isolation:isolate">
+		<g id="Layer_2" data-name="Layer 2">
+			<g id="Starting_CM0">
+				<use opacity="0.15" xlink:href="#image" style="mix-blend-mode:multiply" />
+				<rect x="3.47" y="1.44" width="1125.31" height="243.16" fill="#fff" />
+				<text transform="translate(40.11 57.42)" font-size="20" font-family="Titillium-Regular, Titillium">
+					X-RAY
+				</text>
+				<text transform="translate(143 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Mar
+				</text>
+				<text transform="translate(201.07 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Apr
+				</text>
+				<text transform="translate(256.11 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Jun
+				</text>
+				<text transform="translate(309.6 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Jul
+				</text>
+				<text transform="translate(358.83 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Aug
+				</text>
+				<text transform="translate(416.26 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Sep
+				</text>
+				<text transform="translate(472.76 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Oct
+				</text>
+				<text transform="translate(527.5 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					N
+					<tspan x="9.39" y="0" letter-spacing="-0.01em">
+						o
+					</tspan>
+					<tspan x="16.6" y="0" letter-spacing="0em">
+						v
+					</tspan>
+				</text>
+				<text transform="translate(585.42 183.43)" font-size="13.89" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Dec
+				</text>
+				<text transform="translate(148.06 33.33)" font-size="16" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Maintenance
+				</text>
+				<line x1="631.62" y1="164.59" x2="142.87" y2="164.59" fill="none" stroke="#adadad" stroke-miterlimit="10" />
+				<polyline points="147.92 158.91 165.6 158.91 188.33 155.12 203.49 147.54 221.17 136.17 241.38 128.6 259.06 119.76 269.16 112.18 293.16 100.81 315.89 95.76 344.94 100.81 363.88 108.39 387.88 118.49 405.56 136.17 420.71 142.49 448.5 147.54 477.54 152.59 496.49 153.85 538.16 155.12 581.1 158.91 613.94 155.12 626.57 147.54" fill="none" stroke="#f2a120" stroke-miterlimit="10" stroke-width="3" />
+				<text transform="translate(689.27 33.33)" font-size="16" fill="#4c4c4c" font-family="Titillium-Regular, Titillium">
+					Staff in Charge
+				</text>
+				<text transform="translate(734.85 193.9)" font-size="14.22" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					06:00
+				</text>
+				<text transform="translate(799.42 193.9)" font-size="14.22" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					07:00
+				</text>
+				<text transform="translate(866.38 193.9)" font-size="14.22" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					08:00
+				</text>
+				<text transform="translate(930.95 193.9)" font-size="14.22" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					09:00
+				</text>
+				<text transform="translate(994.55 193.9)" font-size="14.22" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					10:00
+				</text>
+				<rect x="722.86" y="157.67" width="61.43" height="21.73" fill="#ed0000" />
+				<rect x="686.52" y="157.67" width="32.57" height="21.73" fill="#76ce89" opacity="0.3" />
+				<rect x="1046.85" y="157.67" width="35.09" height="21.73" fill="#cc7676" opacity="0.3" />
+				<rect x="787.65" y="157.67" width="61.43" height="21.73" fill="#76ce89" />
+				<rect x="852.54" y="157.67" width="61.43" height="21.73" fill="#76ce89" />
+				<rect x="917.29" y="157.67" width="61.43" height="21.73" fill="#76ce89" />
+				<rect x="982.25" y="157.67" width="61.43" height="21.73" fill="#ed0000" />
+				<text transform="translate(796.32 77.22)" font-size="18" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					Name:
+					<tspan x="54.52" y="0" font-family="Titillium-Regular, Titillium" font-weight="400" letter-spacing="0em">
+						Martin
+					</tspan>
+				</text>
+				<text transform="translate(796.32 99.68)" font-size="18" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					Surname:
+					<tspan x="78.44" y="0" font-family="Titillium-Regular, Titillium" font-weight="400">
+						Nolskog
+					</tspan>
+				</text>
+				<text transform="translate(796.32 122.14)" font-size="18" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+					Role:
+					<tspan x="39.38" y="0" xml:space="preserve" font-family="Titillium-Regular, Titillium" font-weight="400">
+						Maintenance Technician
+					</tspan>
+				</text>
+				<circle cx="728.73" cy="94.77" r="39.47" fill="#c2e3f2" stroke="#2277d6" stroke-miterlimit="10" stroke-width="3" />
+				<text transform="translate(702.26 105.45)" font-size="32.76" fill="#2f4249" font-family="Titillium-Regular, Titillium" letter-spacing="0.05em">
+					MN
+				</text>
+			</g>
+		</g>
+	</g>
+</svg>

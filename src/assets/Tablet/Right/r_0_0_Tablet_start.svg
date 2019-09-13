@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 579.59 444.89">
+	<title>
+		ap_2_overview_Tablet
+	</title>
+	<g id="Layer_2" data-name="Layer 2">
+		<g id="AP_CM0_Overview">
+			<rect y="0.5" width="579.59" height="444.39" fill="#f7f7f7" />
+			<line x1="0.23" y1="0.5" x2="579.59" y2="0.5" fill="none" stroke="#ddd" stroke-miterlimit="10" />
+			<text transform="translate(25.44 43.74)" font-size="20" font-family="Titillium-Regular, Titillium">
+				OVERVIEW
+			</text>
+			<text transform="translate(25.44 321.15)" font-size="20" font-family="Titillium-Regular, Titillium">
+				WHY IS THIS RECOMMENDED?
+			</text>
+			<text transform="translate(25.44 357.23)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+				There is an available time slot this morning to perform the regular
+				<tspan x="0" y="28">
+					maintenance of our X-Ray machine. This would help us identify and fix
+				</tspan>
+				<tspan x="0" y="56">
+					potential issues before tomorrow’s busy schedule.
+				</tspan>
+			</text>
+			<text transform="translate(25.78 193.34)" font-size="20" font-family="Titillium-Regular, Titillium" letter-spacing="-0.01em">
+				STAFF IN CHARGE
+			</text>
+			<text transform="translate(41.15 143.73)" font-size="27.11" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+				1
+			</text>
+			<text transform="translate(118.66 143.73)" font-size="27.11" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+				+50
+			</text>
+			<text transform="translate(210.1 143.73)" font-size="27.11" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+				10%
+			</text>
+			<rect x="242.96" y="68.49" width="10.84" height="41.27" transform="translate(496.77 178.25) rotate(-180)" fill="#2277d6" />
+			<rect x="227.83" y="82.23" width="10.84" height="27.53" transform="translate(466.51 191.99) rotate(-180)" fill="#2277d6" />
+			<rect x="211.81" y="95.99" width="10.84" height="13.77" transform="translate(434.46 205.76) rotate(-180)" fill="#2277d6" />
+			<path d="M159.46,77.26h-8.67V72.92a4.33,4.33,0,0,0-4.33-4.33h-8.67a4.33,4.33,0,0,0-4.33,4.33v4.34h-8.67a4.29,4.29,0,0,0-4.31,4.33l0,23.84a4.32,4.32,0,0,0,4.34,4.33h34.09a4.91,4.91,0,0,0,4.91-4.92V81.59A4.33,4.33,0,0,0,159.46,77.26Zm-13,0h-8.67V72.92h8.67Z" fill="#2277d6" />
+			<path d="M49.36,91.7A10.64,10.64,0,1,0,38.72,81.06,10.64,10.64,0,0,0,49.36,91.7Zm0,5.32c-7.1,0-21.28,3.56-21.28,10.64V113H70.64v-5.32C70.64,100.58,56.46,97,49.36,97Z" fill="#2277d6" />
+			<text transform="translate(96.54 241.08)" font-size="16.47" fill="#4c4c4c" font-family="Titillium-Bold, Titillium" font-weight="700">
+				Martin Nolskog,
+				<tspan font-family="Titillium-Regular, Titillium" font-weight="400">
+					<tspan x="0" y="19.76">
+						Maintenance Technician
+					</tspan>
+				</tspan>
+			</text>
+			<circle cx="52.04" cy="244.22" r="26.61" fill="#c2e3f2" stroke="#2277d6" stroke-miterlimit="10" stroke-width="3" />
+			<text transform="translate(34.19 251.43)" font-size="22.09" fill="#2f4249" font-family="Titillium-Regular, Titillium" letter-spacing="0.05em">
+				MN
+			</text>
+		</g>
+	</g>
+</svg>

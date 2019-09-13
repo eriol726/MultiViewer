@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+@font-face {
+  font-family: Titillium;
+  src: url(assets/Titillium/Titillium-Regular.otf) format("opentype");
+}
+
+html, body{
+  padding: 0;
+  margin: 0;
+  /* overflow:auto; */
+}
+html{
+  min-height: 100%;
+}
+body{
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; 
+} 
+
+[hidden] { display: none !important;}

@@ -23,4 +23,15 @@
 hs_err_pid*
 
 /node_modules
+<<<<<<< HEAD
 package-lock.json
+=======
+
+/server/.env
+
+/src/environments/environment.ts
+
+/server/node_modules
+
+dist/
+>>>>>>> develop

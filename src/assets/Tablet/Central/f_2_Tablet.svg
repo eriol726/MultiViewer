@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 638 371.41">
+	<defs>
+		<clipPath id="clip-path">
+			<rect x="2" width="633.92" height="4.5" fill="#f22020" />
+		</clipPath>
+	</defs>
+	<title>
+		f_2_Tablet
+	</title>
+	<g style="isolation:isolate">
+		<g id="Layer_2" data-name="Layer 2">
+			<g id="Layer_2-2" data-name="Layer 2">
+				<rect x="3.33" y="4.5" width="631.5" height="361.44" fill="#fff" />
+				<text transform="translate(143.38 97.3)" font-size="21" font-family="Titillium-Semibold, Titillium" font-weight="600">
+					AB59
+				</text>
+				<text transform="translate(218.74 42.33)" font-size="21" font-family="Titillium-Regular, Titillium">
+					FLIGHT INFORMATION
+				</text>
+				<text transform="translate(143.38 122.44)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Stockholm - Lisbon
+				</text>
+				<text transform="translate(238.11 193.45)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Current Registrations
+				</text>
+				<text transform="translate(143.38 145.29)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					18:30
+				</text>
+				<text transform="translate(532.38 234.93)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					75/160
+				</text>
+				<text transform="translate(532.38 286.08)" font-size="18" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					88/230
+				</text>
+				<path d="M67.93,126.42h34.63v3.64H67.93Zm35.66-17.06a2.72,2.72,0,0,0-3.35-1.93L90.56,110,78,98.3l-3.52.93L82,112.29,73,114.72l-3.59-2.81-2.64.71L70,118.38l1.41,2.43,2.91-.79L84,117.43,92,115.32l9.67-2.59A2.76,2.76,0,0,0,103.59,109.36Z" fill="#f2a120" />
+				<path d="M64.51,227.31a6.9,6.9,0,1,0-6.9-6.89A6.88,6.88,0,0,0,64.51,227.31Zm0,3.45c-4.61,0-13.8,2.31-13.8,6.9v3.45H78.3v-3.45C78.3,233.07,69.11,230.76,64.51,230.76Z" fill="#f2a120" />
+				<path d="M76.76,270.43H70.64v-3.06a3.07,3.07,0,0,0-3.07-3.06H61.44a3.06,3.06,0,0,0-3.06,3.06v3.06H52.25a3,3,0,0,0-3,3.07v16.85a3,3,0,0,0,3.06,3.06h24.1a3.47,3.47,0,0,0,3.48-3.47V273.5A3.06,3.06,0,0,0,76.76,270.43Zm-9.19,0H61.44v-3.06h6.13Z" fill="#f2a120" />
+			</g>
+			<g id="Ground_Bars">
+				<rect x="107.47" y="216.53" width="410.25" height="23.57" fill="#f2f2f2" />
+				<rect x="107.47" y="269.74" width="410.25" height="23.57" fill="#f2f2f2" />
+			</g>
+			<g id="Info_Bars">
+				<rect x="107.47" y="216.53" width="122.6" height="23.57" fill="#40bd73" />
+				<rect x="107.47" y="269.74" width="162.7" height="23.57" fill="#40bd73" />
+			</g>
+		</g>
+	</g>
+</svg>

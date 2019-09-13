@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 639 207">
+	<title>
+		Asset 4
+	</title>
+	<g style="isolation:isolate">
+		<g id="Layer_2" data-name="Layer 2">
+			<g id="Layer_5" data-name="Layer 5">
+				<rect id="cm_rect_background" x="3.61" y="1.47" width="631.5" height="200.13" fill="rgba(0,0,0,0)" />
+			</g>
+			<g id="Layer_1-2" data-name="Layer 1">
+				<text transform="translate(121.12 38.91)" font-size="21" font-family="Titillium-Regular, Titillium">
+					PRIORITIZING FLIGHTS
+				</text>
+                <g id="Clock_Layer">
+                    <text transform="translate(519.21 132.71)" font-size="15.34" font-family="Titillium-Semibold, Titillium" font-weight="600">
+                        17:00 - 20:00
+                    </text>
+                    <text transform="translate(548.35 113.87)" font-size="12.39" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+                        <tspan letter-spacing="-0.05em">
+                            T
+                        </tspan>
+                        <tspan x="5.86" y="0" letter-spacing="0em">
+                            od
+                        </tspan>
+                        <tspan x="18.96" y="0" letter-spacing="-0.01em">
+                            a
+                        </tspan>
+                        <tspan x="24.99" y="0">
+                            y
+                        </tspan>
+                    </text>
+                    <text transform="translate(583.43 37.61) scale(1.07 1)" font-size="27.2" fill="#2277d6" font-family="Titillium-Semibold, Titillium" font-weight="600">
+                        1h
+                    </text>
+                    <circle cx="563.84" cy="61.51" r="23.9" fill="none" stroke="#3899e8" stroke-miterlimit="10" stroke-width="4" />
+                    <path d="M563.84,44.57A18.16,18.16,0,0,1,582,62.73H563.84Z" fill="#8dc5f2" />
+                </g>
+				<path d="M90,53a33.5,33.5,0,1,1-33.5-33.5A33.5,33.5,0,0,1,90,53" fill="#e3f0fc" />
+				<text transform="translate(121.12 72.99)" font-size="16" fill="#3a3d3f" font-family="Titillium-Regular, Titillium">
+					Assigning dedicated check-in desks to certain flights
+					<tspan x="0" y="25">
+						might distribute the passenger load and may help
+					</tspan>
+					<tspan x="0" y="50">
+						carrying the bags faster.
+					</tspan>
+				</text>
+				
+			</g>
+			<g id="Layer_2-2" data-name="Layer 2">
+				<path d="M76.78,51.71a2.78,2.78,0,0,0-3.41-2l-9.81,2.63L50.8,40.49l-3.57.94,7.65,13.26-9.19,2.46L42.05,54.3,39.37,55l3.36,5.85,1.43,2.46,3-.8,9.81-2.62L65,57.76l9.82-2.63A2.81,2.81,0,0,0,76.78,51.71Z" fill="#2277d6" />
+			</g>
+		</g>
+	</g>
+</svg>
