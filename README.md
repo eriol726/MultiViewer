@@ -2,13 +2,21 @@
 
 # MultiViewer
 
+Web application to manage and visualize the luggage handling at an airport. The user gives commands via a interface on a tablet and the affect will be shown in the other screen.
+
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
 
-## Development server
-1. Start with installing node modules by running `npm install`
+## Instructions
+1. Installing node modules by running `npm install`
 2. Navigate to `./websocet-server` and run  `node main.js` to start the websocket server.
-3. Run `ng serve --host 0.0.0.0` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-4. Find your your local ip adress with by running `ipconfig` in cmd and use this adress followed with `:4200` to run the app on your tablet
+3. Find your your local ip adress by running `ipconfig` in your terminal and copy it. Replace `http://192.168.2.194` with the copied adress in `websocket.service.ts`.
+4. Run `ng serve --host 0.0.0.0` to start a dev server. Open three new tabs in your browser and run this endpoints:
+  - `http://localhost:4200/displayLeft`
+  - `http://localhost:4200/displayMiddle`
+  - `http://localhost:4200/displayRight`
+  
+5. In you tablet open a web browser and run `http://localhost:4200` to open the GUI.
 
 ## Code scaffolding
 
