@@ -423,6 +423,11 @@ export class TabletComponent implements OnInit, AfterViewInit {
     this.elRef.nativeElement.querySelector('#chart1').style.width = this.cellOffsetWidth+1+"px";
     this.elRef.nativeElement.querySelector('#chart1').style.top = this.middleTopMargin+"px"; 
     this.elRef.nativeElement.querySelector('#chart1').style.left = this.cellOffsetWidth+5+"px"; 
+    this.elRef.nativeElement.querySelector("#cm_svg_0").src = "assets/Tablet/Right/cm_header_start.svg";
+
+    this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "hidden";
+    this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "hidden";
+    this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "hidden";
     
     
     //this.focus.attr('transform', 'translate(-430,150) scale(1.4,0.7)');
@@ -463,6 +468,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         this.elRef.nativeElement.querySelector('#chart1').style.height = "100%";
         this.elRef.nativeElement.querySelector('#chart1').style.left = "0px";
         this.elRef.nativeElement.querySelector('#chart1').style.top = "0px"; 
+        
 
         let bottomLineMeasurs = chartBackground.contentWindow.document.getElementById("Bottom_line").getBoundingClientRect();
         let iconHeaderMeasurs = chartBackground.contentWindow.document.getElementById("icon-header").getBoundingClientRect();
@@ -514,7 +520,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
         this.messageNumber = 1;
         this.elRef.nativeElement.querySelector('#iframeOverlay_0').style.backgroundColor = "";
-        this.elRef.nativeElement.querySelector("#card_header_0").src = "assets/Tablet/Right/cm_header_0.svg";
+        this.elRef.nativeElement.querySelector("#cm_svg_0").src = "assets/Tablet/Right/cm_header_0.svg";
         this.elRef.nativeElement.querySelector("#panel_item_1").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#panel_item_2").style.visibility = "visible";
         this.elRef.nativeElement.querySelector("#panel_item_3").style.visibility = "visible";
