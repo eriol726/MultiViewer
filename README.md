@@ -16,7 +16,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
   - `http://localhost:4200/displayMiddle`
   - `http://localhost:4200/displayRight`
   
-5. In you tablet open a web browser and run `http://localhost:4200` to open the GUI.
+5. In you tablet open a web browser and run `http://yourIPadress:4200` to open the GUI.
 
 ## Code scaffolding
 
