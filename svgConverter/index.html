@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.js"></script>
+<script src="svg.parser.js"></script>
+
+
+  <div id="drawing1" style="height: 800px">
+      <svg id="drawing" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920.04 454.49">
+        <g opacity="0.9" style="isolation:isolate">
+          <path id="path1" d="M0,446.05s332.76-.15,385.31-7.41,65.64-84.92,68-98.06,4-28.88,31.25-51.74, M482.94,251.65s25.5-17.4,40.89-25.14L548,215.86c8.93-5.74,17.86-14.36,28.58-29.68s33.51-48,56.73-55.64S669.46,97.6,690.9,96.65s53.59,4.78,69.67,0,30.37-25.85,33.94-33.51,37.36-24.68,64.31-25.85c76.81-3.35,141.13,14.52,153.62,14.84,37.51,1,53.36-8.11,71.45-10.53,21.44-2.88,35.73-8.62,50-8.62s53.59,19.14,78.6,21.06,54.29,17.24,60.73,17.24c16.08,0,32.16-2.88,51.81,1s23.22,8.14,39.29,8.14,32.15-1,46.45,5.75,25,.95,33.94-4.79,21.43-31.6,55.37-32.55,73.24-13.41,84-19.15,39.29-3.82,51.81,1,9.56,20.34,19.64,22.5c17.86,3.83,53.81,14.85,63.4,20.12,0,0,23.13,7.11,26.76,106.79l2.28,28.74,3.11,26.93,3.66,33.56,4.24,33.28,4.62,31.34,3.69,21.66,4.39,22.19,4.29,17.92,3.42,11.67s5.82,20.2,14.05,22.83h0a112.06,112.06,0,0,0,37,6.68c20.77.16,4.61,2.26,89.66,1.59h0v7.66" fill="none" stroke="#f2a120" stroke-miterlimit="10" />
+        </g>
+      </svg>
+  </div>
+
+  <button onclick="download()">Try it</button>
+
+</body>
+</html>
+
+<script>
+    //var rawSvg = '<?xml version="1.0" encoding="utf-8"?><!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"	 width="500px" height="500px" viewBox="0 0 500 500" enable-background="new 0 0 500 500" xml:space="preserve"><line id="line1234" fill="none" stroke="#FF7BAC" stroke-width="20" stroke-linecap="round" stroke-miterlimit="10" x1="138.682" y1="250" x2="293.248" y2="95.433"/><rect id="rect1235" x="22.48" y="19.078" fill="#F7931E" stroke="#C1272D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="94.972" height="94.972"/><path id="path1236" opacity="0.5" fill="#29ABE2" d="M189.519,131.983c0,5.523-4.477,10-10,10H92.257c-5.523,0-10-4.477-10-10V53.659	c0-5.523,4.477-10,10-10h87.262c5.523,0,10,4.477,10,10V131.983z"/><circle id="circle1237" opacity="0.8" fill="#8CC63F" cx="201.603" cy="159.508" r="69.067"/><polygon id="polygon1238" fill="none" stroke="#8C6239" stroke-width="20" stroke-linecap="round" stroke-miterlimit="10" points="286.331,287.025 	227.883,271.365 212.221,212.915 255.009,170.127 313.459,185.789 329.119,244.237 "/></svg>'
+
+    //var draw = SVG('paper');
+    //var draw = SVG('drawing')
+
+    let path = document.getElementById("path1");
+    let svg = document.getElementById("drawing");
+
+    // The first important function getTotalLength
+    let totalLength = path.getTotalLength();
+    let intersections = 360;
+
+    let vtx = [];
+
+    for(var i = 0; i <= intersections; i ++){
+      let distance = i * 1/intersections * totalLength;
+
+      // The second important function getPointAtLength
+      let point = path.getPointAtLength(distance);
+      vtx.push({x:point.x, y:(447-point.y)});
+      addCircleToSVG(point.x, point.y);
+      addTextToSVG(point.x, point.y);
+    }
+
+    
+
+    var formatedData = [];
+
+    //draw.svg(rawSvg);
+
+    // var ajax = new XMLHttpRequest()
+    // ajax.open('GET', 'CentralScreen_CM1_Graph.svg', true)
+    // ajax.send()
+    // ajax.onload = function(e) {
+    //   draw.svg(ajax.responseText)
+
+    //   var data= toVertex(SVG.select('#path1').members[0].node,6);
+      
+    //   console.log("data: ", data);
+
+      var dateA = new Date(2018,0,1,0,0,0);
+      var dateB = new Date(2018,0,1,24,0,0);
+      var dateList= [];
+      var i = 0;
+      str1= "";
+      for(var myDate = dateA; myDate <= dateB; myDate = new Date(myDate.getTime() + 1000 * 60 * 4))
+      {
+          var formatedDate = myDate.getFullYear();
+          formatedDate += "-" + (myDate.getMonth()+1) + "-" + myDate.getDate();
+
+          formatedDate = ( myDate.getFullYear() + ','
+                + (myDate.getMonth()+1) + ','
+                + (myDate.getDate()) + ','
+            + (myDate.getHours()) + ','
+            + (myDate.getMinutes()) + ','
+            + (myDate.getSeconds()) );
+          dateList.push(formatedDate);
+          console.log("myDate: ", formatedDate);
+          
+          
+          str1 = "\n" + "{'date': new Date(" + dateList[i] +"), 'temperature': " + vtx[i].y.toFixed(2) + "}";
+          formatedData.push(str1 );
+          
+          i++;
+      }
+      
+    //}
+    
+    function toVertex(pathSVG, n){
+      let pathLength = pathSVG.getTotalLength();
+      let vtx = [];
+      var i = 0;
+      while(i < pathLength){
+        let arr =  pathSVG.getPointAtLength(i);
+        vtx.push({x:arr.x, y:arr.y});
+        i+=n;
+      }
+      return vtx;
+    }
+
+    function download() {
+	    var a = document.createElement("a");
+	    var file = new Blob([formatedData], {type: 'text/plain'});
+	    a.href = URL.createObjectURL(file);
+	    a.download = 'json.txt';
+	    a.click();
+    }
+    
+    function addCircleToSVG(x, y){
+      let circle = document.createElementNS("http://www.w3.org/2000/svg",'circle');
+      circle.setAttribute("cx", x);
+      circle.setAttribute("cy", y);
+      circle.setAttribute("r", "5");
+      circle.setAttribute("fill", "#8888ff");
+      svg.appendChild(circle);
+    }
+
+    function addTextToSVG(x, y){
+      let text = document.createElementNS("http://www.w3.org/2000/svg",'text');
+      text.setAttribute("x", x + 10);
+      text.setAttribute("y", y);
+      text.setAttribute("fill", "orange");
+      text.innerHTML = Math.round(y);
+      svg.appendChild(text);
+    }
+  </script>
+

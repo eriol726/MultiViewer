@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+.rect {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  background-color: red;
+  height: 50px;
+  width: 50px;
+}
+
+.relative-rect {
+  background-color: blue;
+  height: 50px;
+  width: 50px;
+}
+
+#area {
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+#container {
+	position: relative;
+}
+
+body {
+  height: 500px;
+  margin: 0px;
+}
+</style>
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+</head>
+<body>
+
+<input type="textarea" id="area" disabled />
+  <div class="rect" id="rect2"></div>
+  <div id="container" style="width: 100%">
+  	<img src="curve.png" id="rect" width="1330px"></img>
+  </div>
+  <div class="relative-rect" id="relative-rect"></div>
+  <button onclick="download()">Try it</button>
+
+<script>
+	document.getElementById('rect').addEventListener('onmousedown', printPosition)
+
+	var container = document.getElementById('container')
+
+	document.getElementById('rect').draggable = false;
+
+	var nextDate = 0;
+
+	var vLine = document.createElement("div");
+	vLine.className = "vLine0";
+	vLine.style.width = "2.0px";
+	//vLine.style.paddingRight = "2px";
+	vLine.style.height = "100%";
+	vLine.style.position = "absolute";
+	vLine.style.backgroundColor = "black";
+	vLine.style.top = "-1px";
+	vLine.style.left = "0px";
+
+	var dateA = new Date(2018,0,1,0,0,0);
+	var dateB = new Date(2018,0,1,24,0,0);
+	var dateList= [];
+	var i = 0;
+	for(var myDate = dateA; myDate <= dateB; myDate = new Date(myDate.getTime() + 1000 * 60 * 4))
+	{
+		
+	    var formatedDate = myDate.getFullYear();
+	    formatedDate += "-" + (myDate.getMonth()+1) + "-" + myDate.getDate();
+
+	    formatedDate = ( myDate.getFullYear() + ','
+             + (myDate.getMonth()+1) + ','
+             + (myDate.getDate()) + ','
+	    	 + (myDate.getHours()) + ','
+	    	 + (myDate.getMinutes()) + ','
+	    	 + (myDate.getSeconds()) );
+	    dateList.push(formatedDate);
+	    console.log("myDate: ", formatedDate);
+	    i++;
+	    console.log("i: ", i);
+	    
+	}
+	
+
+	container.appendChild(vLine);
+
+	var yCoord = [];
+
+	for (var i = 1; i < 360; i++) {
+		var vLine2 = vLine.cloneNode(true);
+		vLine2.className = "vLine" + i;
+		vLine2.style.left = 0 + i*3.7 + "px";
+
+		container.appendChild(vLine2);
+		vLine2.addEventListener("mousedown", function(e){
+			console.log("mouse down");
+			this.addEventListener("mousemove", mouseMove);
+			e.preventDefault();
+			vLine2.onmousemove = mouseMove;
+			vLine2.onmousemove = function(e) {
+		        console.log("mouse moving");;
+		     }
+		});
+		//vLine2.onmousedown = mouseDown;
+		vLine2.onmousemove = mouseMove;
+		
+
+		//vLine2.addEventListener('click', changeBackground);
+		
+		
+		 
+	}
+	
+	//container.appendChild(vLine);  
+
+	document.getElementById('relative-rect').addEventListener('click', printPosition)
+	
+	//download(jsonData, 'json.txt', 'text/plain');
+	//vLine2.addEventListener('click', changeBackground())
+	
+
+	function getPosition(e) {
+	  var rect = e.target.getBoundingClientRect();
+	  var x = e.clientX - rect.left;
+	  var y = e.clientY - rect.top;
+	  return {
+	    x,
+	    y
+	  }
+	}
+
+	function printPosition(e) {
+	  var position = getPosition(e);
+	  document.getElementById('area').value = 'X: ' + position.x + ' Y: ' + position.y;
+	}
+
+	function mouseDown(e){
+		e.path[0].style.width = "0px";
+		e.preventDefault();
+		
+	}
+
+	function mouseMove(e){
+		var bags = -(e.clientY)*0.33+150;
+		e.path[0].style.width = "0px"; 
+		console.log(bags.toFixed(2));
+		
+	
+
+		str1 = "\n" + "{'date': new Date(" + dateList[nextDate++] +"), 'temperature': " + bags.toFixed(2) + "}";
+		yCoord.push(str1);
+		//e.path[0].style.width = "0px";
+		console.log(yCoord);
+		
+	}
+
+	function download() {
+	    var a = document.createElement("a");
+	    var file = new Blob([yCoord], {type: 'text/plain'});
+	    a.href = URL.createObjectURL(file);
+	    a.download = 'json.txt';
+	    a.click();
+	}
+
+
+	$("#test").click(function(e) {
+	  var offset = $(this).offset();
+	  var relativeX = (e.pageX - offset.left);
+	  var relativeY = (e.pageY - offset.top);
+	  alert(relativeX+':'+relativeY);
+	  $(".position").val("afaf");
+	});
+
+</script>
+
+</body>
+</html>
+
+
+

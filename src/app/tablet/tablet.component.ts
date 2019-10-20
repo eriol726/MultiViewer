@@ -434,12 +434,12 @@ export class TabletComponent implements OnInit, AfterViewInit {
     
     let graphMeasures = this.focus._groups[0][0].getBoundingClientRect();
     this.scaleY =(this.cellOffsetHeight / graphMeasures.height)*1.4;
-    this.scaleX = (this.cellOffsetWidth / graphMeasures.width)*3.7;
+    this.scaleX = (this.cellOffsetWidth / graphMeasures.width)*4.5;
     let cellMeasures = this.elRef.nativeElement.querySelector("#graph-cell").getBoundingClientRect();
     //-250(hardcode) should not be necessary
     this.initGraphY = 200+cellMeasures.bottom-(graphMeasures.bottom)*this.scaleY;
     //translate the graph on it's right position
-    this.focus.attr("transform", "translate("+-35+this.scaleX+","+(this.initGraphY  )+") scale("+this.scaleX +","+( this.scaleY)+")");
+    this.focus.attr("transform", "translate("+-47+this.scaleX+","+(this.initGraphY  )+") scale("+this.scaleX +","+( this.scaleY)+")");
   }
 
 
@@ -497,7 +497,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
 
       this.focus = d3.select(".focus");
       //hårdkodat
-      this.focus.attr("transform", "translate("+-85+this.scaleX+","+(this.initGraphY  )+") scale("+this.scaleX +","+( this.scaleY)+")");
+      this.focus.attr("transform", "translate("+-112+this.scaleX+","+(this.initGraphY-10  )+") scale("+this.scaleX +","+( this.scaleY)+")");
       
       this.hideTabletPanels = false;
       this.socketService.sendMaximized(false);
@@ -533,7 +533,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
         svg_time_scale.contentWindow.document.getElementById("timeText3").innerHTML = "20:00";
 
         this.focus = d3.select(".focus");
-        this.focus.attr("transform", "translate("+-85+this.scaleX+","+(this.initGraphY  )+") scale("+this.scaleX +","+( this.scaleY)+")");
+        this.focus.attr("transform", "translate("+-112+this.scaleX+","+(this.initGraphY-10  )+") scale("+(this.scaleX) +","+( this.scaleY)+")");
 
         
         break;
@@ -548,6 +548,7 @@ export class TabletComponent implements OnInit, AfterViewInit {
   }
 
   openFullscreen() {
+    this.focus.attr("transform", "translate("+-47+this.scaleX+","+(this.initGraphY-50  )+") scale("+this.scaleX +","+( this.scaleY)+")");
     this.isFullScreen = true;
     console.log("sendFullscreen");
     this.socketService.sendFullscreen(true);
