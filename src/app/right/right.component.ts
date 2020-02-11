@@ -247,12 +247,17 @@ export class RightComponent implements OnInit, AfterViewInit {
           console.log("close index: ", data.panelIndex);
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.height = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.flex = "0";
+          this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-'+i).style.height = "0px";
           this.elRef.nativeElement.querySelector('#panel_item_'+i).style.setProperty('margin-bottom', '0px', 'important');
         }
 
         // when the last cm is opened
         if(data.panelIndex == this.COUNTERMEASURES.length-1){
           this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-'+i).style.height = this.initPanelItemHeight;
+
+          this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-'+0).style.height = "0px";
+          this.elRef.nativeElement.querySelector('#mat-expansion-panel-header-'+1).style.height = "0px";
+          
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.height = "100%";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.flex = "1";
           this.elRef.nativeElement.querySelector('#panel_item_'+(this.COUNTERMEASURES.length-2)).style.setProperty('margin-bottom', '20px', 'important');
