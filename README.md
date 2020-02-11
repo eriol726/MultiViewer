@@ -9,8 +9,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Instructions
 1. Installing node modules by running `npm install`
-2. Find your your local ip adress by running `ipconfig` in your terminal and copy it. Replace `http://192.168.2.194` with the copied adress in `websocket.service.ts`.
-3. Navigate to `./websocet-server` and run  `node main.js` to start the websocket server.
+2. Find your your local ip adress by running `ipconfig` in your terminal and copy it. Replace `http://192.168.2.194` with the copied adress in `MultiViewer/src/appwebsocket.service.ts`.
+3. Navigate to `MultiViewer/websocet-server` and run  `node main` to start the websocket server.
 
 4. Run `ng serve --host 0.0.0.0` to start a dev server. Open three new tabs in your browser and run this routes:
   - `http://localhost:4200/displayLeft`
