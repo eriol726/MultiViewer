@@ -8,16 +8,17 @@ Web application to manage and visualize the luggage handling at an airport. The 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
 
 ## Instructions
-1. Installing node modules by running `npm install`
-2. Find your your local ip adress by running `ipconfig` in your terminal and copy it. Replace `http://192.168.2.194` with the copied adress in `MultiViewer/src/appwebsocket.service.ts`.
-3. Navigate to `MultiViewer/websocet-server` and run  `node main` to start the websocket server.
+1. Install node modules by running `npm install`.
+2. Install font by navigate to `MultiViewer\src\assets\Titillium` open `Titillium-Regular.otf` and install it.
+3. Find your your local ip adress by running `ipconfig` in your terminal and copy it. Replace `http://192.168.2.194` with the copied adress in `MultiViewer/src/appwebsocket.service.ts`.
+4. Navigate to `MultiViewer/websocet-server` and run  `node main` to start the websocket server.
 
-4. Run `ng serve --host 0.0.0.0` to start a dev server. Open three new tabs in your browser and run this routes:
+5. Run `ng serve --host 0.0.0.0` to start a dev server. Open three new tabs in your browser and run this routes:
   - `http://localhost:4200/displayLeft`
   - `http://localhost:4200/displayMiddle`
   - `http://localhost:4200/displayRight`
   
-5. In you tablet open a web browser and run `http://yourIPadress:4200` to open the GUI.
+6. In you tablet open a web browser and run `http://yourIPadress:4200` to open the GUI.
 
 ## Code scaffolding
 
