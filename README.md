@@ -4,7 +4,6 @@
 
 # MultiViewer
 
----
 Web application created as a prototype to demonstrate the design of an automated warehouse control room concept that comprises three screens and a tablet. The concept is a result of an ongoing collaboration between Linköping University and Toyota Material Handling in Mjölby, Sweden and it focuses on human-automation collaboration. 
 
 The prototype demonstrates a future scenario of baggage handling in an airport where human operators in the control room plan and oversees the system operations with the support of an AI that draws on real-time and historical data to analyze the status of the various system components and predict maintenance needs. It enables the user to play the role of a human operator that tries to manage an emergent situation in this future scenario. The application drives the screens and the tablet and enables the user interaction with them. The user can view predictions and actions suggested by the AI and manipulate the relevant content on each screen via tablet using touch gestures.
